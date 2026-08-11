@@ -62,5 +62,21 @@ int main(int argc, const char* argv[]) {
     assert(r.is_solved());
     edge_apply(r, {bL, L, bL, L, bL, L, bL, L, bL, L});
     assert(r.is_solved());
+
+    Permutation<NT> s;
+    for (auto m : {U, R, F, L, B, bR, D, bL}){
+        s.compose(TP[m]);
+        s.compose(TP[m]);
+        s.compose(TP[m]);
+        assert(s.is_solved());
+    }
+
+    Sequence seq {U, R, F, L, B, bR, D, bL, bL2, D2, bR2, B2, L2, F2, R2, U2};
+    corner_apply(q, seq);
+    edge_apply(r, seq);
+    triangle_apply(s, seq);
+    assert(q.is_solved());
+    assert(r.is_solved());
+    assert(s.is_solved());
     return 0;
 }
