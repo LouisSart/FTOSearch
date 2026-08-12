@@ -218,3 +218,14 @@ struct CubieFTO {
         return cp.is_solved() && co.is_solved() && ep.is_solved() && tri1.is_solved() && tri2.is_solved();
     }
 };
+
+unsigned order(const Sequence &seq) {
+    CubieFTO fto;
+    fto.apply(seq);
+    unsigned count = 1;
+    while (!fto.is_solved()){
+        fto.apply(seq);
+        count += 1;
+    }
+    return count;
+}
