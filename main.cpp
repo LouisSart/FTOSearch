@@ -2,11 +2,12 @@
 #include "move.hpp"
 #include<cassert>
 
+static Sequence sequences[5] {{R, U}, {R, U2}, {R, U, L, F}, {R2, L, R, L2}, {R, B2, R2, D, L2}};
+
 int main(int argc, const char* argv[]) {
-    print(order({R, U}));
-    print(order({R, U2}));
-    print(order({R, U, L, F}));
-    print(order({R2, L, R, L2}));
-    print(order({R, B2, R2, D, L2}));
+    for (const auto seq : sequences) {
+        print(seq, false, false); 
+        print(":", order(seq));
+    }
     return 0;
 }
