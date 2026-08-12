@@ -4,79 +4,46 @@
 
 
 int main(int argc, const char* argv[]) {
-    
-    Permutation<NC> q;
+
+    CubieFTO fto;
+    assert(fto.is_solved());
+
     for (auto m : {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2}){
-        corner_apply(q, {m, m, m});
-        assert(q.is_solved());
+        fto.apply({m, m, m});
+        assert(fto.cp.is_solved());
+        assert(fto.co.is_solved());
+        assert(fto.tri1.is_solved());
     }
 
-    corner_apply(q, {R, U, R, U, R, U, R, U, R, U, R, U});
-    assert(q.is_solved());
-    corner_apply(q, {R, F, R, F, R, F, R, F, R, F, R, F});
-    assert(q.is_solved());
-    corner_apply(q, {R, bR, R, bR, R, bR, R, bR, R, bR, R, bR});
-    assert(q.is_solved());
-    corner_apply(q, {B, bR, B, bR, B, bR, B, bR, B, bR, B, bR});
-    assert(q.is_solved());
-    corner_apply(q, {D, bR, D, bR, D, bR, D, bR, D, bR, D, bR});
-    assert(q.is_solved());
-    corner_apply(q, {D, F, D, F, D, F, D, F, D, F, D, F});
-    assert(q.is_solved());
-    corner_apply(q, {D, bR, D, bR, D, bR, D, bR, D, bR, D, bR});
-    assert(q.is_solved());
-    corner_apply(q, {U, L, U, L, U, L, U, L, U, L, U, L});
-    assert(q.is_solved());
-    corner_apply(q, {U, B, U, B, U, B, U, B, U, B, U, B});
-    assert(q.is_solved());
-    corner_apply(q, {bL, B, bL, B, bL, B, bL, B, bL, B, bL, B});
-    assert(q.is_solved());
-    corner_apply(q, {bL, L, bL, L, bL, L, bL, L, bL, L, bL, L});
-    assert(q.is_solved());
-    
-    Permutation<NE> r;
-    for (auto m : {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2}){
-        edge_apply(r, {m, m, m});
-        assert(r.is_solved());
-    }
+    fto.corner_apply({R, U, R, U, R, U, R, U, R, U, R, U});
+    fto.corner_apply({R, F, R, F, R, F, R, F, R, F, R, F});
+    fto.corner_apply({R, bR, R, bR, R, bR, R, bR, R, bR, R, bR});
+    fto.corner_apply({B, bR, B, bR, B, bR, B, bR, B, bR, B, bR});
+    fto.corner_apply({D, bR, D, bR, D, bR, D, bR, D, bR, D, bR});
+    fto.corner_apply({D, F, D, F, D, F, D, F, D, F, D, F});
+    fto.corner_apply({D, bR, D, bR, D, bR, D, bR, D, bR, D, bR});
+    fto.corner_apply({U, L, U, L, U, L, U, L, U, L, U, L});
+    fto.corner_apply({U, B, U, B, U, B, U, B, U, B, U, B});
+    fto.corner_apply({bL, B, bL, B, bL, B, bL, B, bL, B, bL, B});
+    fto.corner_apply({bL, L, bL, L, bL, L, bL, L, bL, L, bL, L});
+    assert(fto.cp.is_solved());
+    assert(fto.co.is_solved());
 
-    edge_apply(r, {R, U, R, U, R, U, R, U, R, U});
-    assert(r.is_solved());
-    edge_apply(r, {R, F, R, F, R, F, R, F, R, F});
-    assert(r.is_solved());
-    edge_apply(r, {R, bR, R, bR, R, bR, R, bR, R, bR});
-    assert(r.is_solved());
-    edge_apply(r, {B, bR, B, bR, B, bR, B, bR, B, bR});
-    assert(r.is_solved());
-    edge_apply(r, {D, bR, D, bR, D, bR, D, bR, D, bR});
-    assert(r.is_solved());
-    edge_apply(r, {D, F, D, F, D, F, D, F, D, F});
-    assert(r.is_solved());
-    edge_apply(r, {D, bR, D, bR, D, bR, D, bR, D, bR});
-    assert(r.is_solved());
-    edge_apply(r, {U, L, U, L, U, L, U, L, U, L});
-    assert(r.is_solved());
-    edge_apply(r, {U, B, U, B, U, B, U, B, U, B});
-    assert(r.is_solved());
-    edge_apply(r, {bL, B, bL, B, bL, B, bL, B, bL, B});
-    assert(r.is_solved());
-    edge_apply(r, {bL, L, bL, L, bL, L, bL, L, bL, L});
-    assert(r.is_solved());
-
-    Permutation<NT> s;
-    for (auto m : {U, R, F, L, B, bR, D, bL}){
-        s.compose(TP[m]);
-        s.compose(TP[m]);
-        s.compose(TP[m]);
-        assert(s.is_solved());
-    }
+    fto.edge_apply({R, U, R, U, R, U, R, U, R, U});
+    fto.edge_apply({R, F, R, F, R, F, R, F, R, F});
+    fto.edge_apply({R, bR, R, bR, R, bR, R, bR, R, bR});
+    fto.edge_apply({B, bR, B, bR, B, bR, B, bR, B, bR});
+    fto.edge_apply({D, bR, D, bR, D, bR, D, bR, D, bR});
+    fto.edge_apply({D, F, D, F, D, F, D, F, D, F});
+    fto.edge_apply({D, bR, D, bR, D, bR, D, bR, D, bR});
+    fto.edge_apply({U, L, U, L, U, L, U, L, U, L});
+    fto.edge_apply({U, B, U, B, U, B, U, B, U, B});
+    fto.edge_apply({bL, B, bL, B, bL, B, bL, B, bL, B});
+    fto.edge_apply({bL, L, bL, L, bL, L, bL, L, bL, L});
+    assert(fto.ep.is_solved());
 
     Sequence seq {U, R, F, L, B, bR, D, bL, bL2, D2, bR2, B2, L2, F2, R2, U2};
-    corner_apply(q, seq);
-    edge_apply(r, seq);
-    triangle_apply(s, seq);
-    assert(q.is_solved());
-    assert(r.is_solved());
-    assert(s.is_solved());
+    fto.apply(seq);
+    assert(fto.is_solved());
     return 0;
 }
