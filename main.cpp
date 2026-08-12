@@ -2,6 +2,16 @@
 #include "move.hpp"
 #include<cassert>
 
+unsigned order(const Sequence &seq) {
+    CubieFTO fto;
+    fto.apply(seq);
+    unsigned count = 1;
+    while (!fto.is_solved()){
+        fto.apply(seq);
+        count += 1;
+    }
+    return count;
+}
 
 int main(int argc, const char* argv[]) {
 
@@ -45,5 +55,7 @@ int main(int argc, const char* argv[]) {
     Sequence seq {U, R, F, L, B, bR, D, bL, bL2, D2, bR2, B2, L2, F2, R2, U2};
     fto.apply(seq);
     assert(fto.is_solved());
+
+    assert(order({R, U, L, F}) == order({bL, B, bR, D}));
     return 0;
 }
