@@ -7,6 +7,7 @@ constexpr unsigned NE = 12;
 constexpr unsigned NT = 12;
 
 enum Move : unsigned {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+
 using Sequence = std::vector<Move>;
 
 template<unsigned N>
@@ -157,6 +158,8 @@ static Permutation<NT> TP[NMOVES] {
     {0,1,2,3,11,9,5,7,4,6,10,8}  // bL'
 };
 
+static Move zSHIFT[NMOVES] {L, L2, U, U2, R, R2, F, F2, bL, bL2, B, B2, bR, bR2, D, D2};
+
 struct CubieFTO {
     Permutation<NC> cp;   // Corner permutation
     Orientation<NC> co;   // Corner orientation
@@ -190,7 +193,7 @@ struct CubieFTO {
 
     void triangle_apply(const Move& m){
         permute<NT>(tri1, TP[m]);
-        // TODO tri 2?
+        permute<NT>(tri2, TP[zSHIFT[m]]); // second tetrad is the same as the first through a z shift
     }
 
     void triangle_apply(const Sequence &seq) {
