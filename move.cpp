@@ -1,4 +1,6 @@
 #include <vector>
+#include <string>
+#include <iostream>
 
 constexpr unsigned NMOVES = 16;
 enum Move : unsigned {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
@@ -19,5 +21,5 @@ struct Sequence : std::vector<Move> {
     }
 };
 
-Move moves[NMOVES] {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+inline constexpr Move moves[NMOVES] = {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
 

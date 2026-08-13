@@ -1,9 +1,8 @@
-#pragma once
 #include <array>
 #include <iostream>
 #include <vector>
 
-void init_array(unsigned *l, unsigned size, unsigned value) {
+inline void init_array(unsigned *l, unsigned size, unsigned value) {
     for (unsigned i = 0; i < size; ++i) {
         l[i] = value;
     }
