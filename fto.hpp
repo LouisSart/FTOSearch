@@ -51,6 +51,27 @@ struct Permutation : std::array<unsigned, N> {
             this->operator[](k) = ret[other[k]];
         }
     }
+    unsigned index(const bool even = false) const {
+        // Compute the lexicographic index of the permutation
+
+        // If the permutation has even parity,
+        // do not encode the information of the last two digits
+        unsigned n;
+        if (even) n = N - 1;
+        else n = N;
+
+        unsigned t = 0;
+        for (unsigned i = 0; i < n - 1; ++i){
+            t = t * (N - i);
+            for (unsigned j = i; j < n; ++j) {
+                if ((*this)[i] > (*this)[j]) t = t + 1;
+            }
+        }
+        return t;
+    }
+    void set_from_index(const unsigned &c, const bool even = false){
+
+    }
 };
 
 template<unsigned N>
