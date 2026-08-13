@@ -1,5 +1,6 @@
 #pragma once
 #include "utils.hpp"
+#include <cassert>
 
 constexpr unsigned NMOVES = 16;
 constexpr unsigned NC = 6;
@@ -69,8 +70,26 @@ struct Permutation : std::array<unsigned, N> {
         }
         return t;
     }
-    void set_from_index(const unsigned &c, const bool even = false){
-
+    void set_from_index(unsigned c, const bool even = false){
+        // k = j - 1
+        // j = k + 1
+        (*this)[N - 1] = 0;
+        for (unsigned i = N - 2; i < N; --i) {
+            (*this)[i] = (c % (N - i));
+            c = c / (N - i);
+            for (auto j = i + 1; j < N; ++j) {
+                if ((*this)[j] >= (*this)[i]) {
+                    (*this)[j] += 1;
+                }
+            }
+        }
+    }
+    void swap(const unsigned &i, const unsigned &j) {
+        assert(i < N);
+        assert(j < N);
+        unsigned buf = (*this)[i];
+        (*this)[i] = (*this)[j];
+        (*this)[j] = buf;
     }
 };
 
