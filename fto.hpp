@@ -146,6 +146,18 @@ struct CubieFTO {
     bool is_solved() const {
         return cp.is_solved() && co.is_solved() && ep.is_solved() && tri1.is_solved() && tri2.is_solved();
     }
+
+    unsigned corner_index() const {
+        // Return the index for cp + co
+        return co.index(true) * 360 + cp.index(true);
+    }
+
+    void set_corners_from_index(const unsigned &c) {
+        unsigned coc = c / 360;
+        unsigned cpc = c % 360;
+        cp.set_from_index(cpc, true);
+        co.set_from_index(coc);
+    }
 };
 
 unsigned order(const Sequence &seq) {
