@@ -1,10 +1,10 @@
 #include "utils.hpp"
-#include "move.hpp"
+#include "fto.hpp"
 #include<cassert>
 
-// Test if cubie-level permutations are defined correctly
 int main(int argc, const char* argv[]) {
 
+    // Test if cubie-level permutations are defined correctly
     CubieFTO fto;
     assert(fto.is_solved());
 
@@ -47,5 +47,12 @@ int main(int argc, const char* argv[]) {
     assert(fto.is_solved());
 
     assert(order({R, U, L, F}) == order({bL, B, bR, D}));
+
+    // Test if indexing is correct
+    Permutation<6> p;
+    for(unsigned c = 0; c < 720; ++c) {
+        p.set_from_index(c);
+        assert(p.index() == c);
+    }
     return 0;
 }
