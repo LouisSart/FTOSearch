@@ -1,158 +1,12 @@
 #pragma once
 #include "utils.hpp"
+#include "move.hpp"
+#include "permutation.hpp"
 #include <cassert>
 
-constexpr unsigned NMOVES = 16;
 constexpr unsigned NC = 6;
 constexpr unsigned NE = 12;
 constexpr unsigned NT = 12;
-
-enum Move : unsigned {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
-
-struct Sequence : std::vector<Move> {
-    template<typename... Args>
-    Sequence(Args... args) : std::vector<Move>{{ args... }} {} // Constructeur par brace-enclosed
-    void show(const bool show_length=true, const bool line_break=true) const {
-        static const std::string notation[NMOVES]
-            {"U", "U'", "R", "R'", "F", "F'", "L", "L'", "B", "B'", "bR", "bR'", "D", "D'", "bL", "bL'"};
-        
-        for (const auto m : *this) {
-            std::cout << notation[m] << " ";
-        }
-        
-        if (show_length) std::cout << "(" << size() << ")";
-        if (line_break) std::cout << std::endl;
-    }
-};
-
-template<unsigned N>
-struct Permutation : std::array<unsigned, N> {
-    Permutation() { // Constructeur sans arguments
-        for (unsigned k = 0; k < N; ++k){
-            this->operator[](k) = k;
-        }
-    }
-    template<typename... Args>
-    Permutation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
-
-    bool is_solved() const {
-        for (unsigned k = 0; k < N; ++k){
-            if (this->operator[](k) != k) return false;
-        }
-        return true;
-    }
-    void reset() {
-        for (unsigned k = 0; k < N; ++k){
-            this->operator[](k) = k;
-        }
-    }
-    void compose(const Permutation<N> & other) {
-        Permutation<N> ret = *this;
-        for (unsigned k = 0; k < N; ++k){
-            this->operator[](k) = ret[other[k]];
-        }
-    }
-    unsigned index(const bool even = false) const {
-        // Compute the lexicographic index of the permutation
-        static_assert(N > 0); // empty permutations are a problem
-        // If the permutation necessarily has even parity,
-        // do not encode the information of the last two digits
-        unsigned n;
-        if (even) {n = N - 1;
-            assert(N > 2); // trivial case do not implement
-        }
-        else n = N;
-        
-        unsigned t = 0;
-        for (unsigned i = 0; i < n - 1; ++i){
-            t = t * (N - i);
-            for (unsigned j = i; j < N; ++j) {
-                if ((*this)[i] > (*this)[j]) t = t + 1;
-            }
-        }
-        return t;
-    }
-    void set_from_index(unsigned c, const bool even = false){
-        // Reconstruct the permutation having index c
-        static_assert(N > 0); // empty permutations are a problem
-
-        if (even) {
-            assert(N > 2); // trivial case do not implement
-            unsigned s = 0;
-            (*this)[N - 1] = 1;
-            (*this)[N - 2] = 0;
-            for (unsigned i = N - 3; i < N; --i) {
-                (*this)[i] = (c % (N - i));
-                s += (*this)[i];
-                c = c / (N - i);
-                for (auto j = i + 1; j < N; ++j) {
-                    if ((*this)[j] >= (*this)[i]) {
-                        (*this)[j] += 1;
-                    }
-                }
-            }
-            if (s % 2 == 1) swap(N - 1, N - 2);
-        } else {
-            (*this)[N - 1] = 0;
-            for (unsigned i = N - 2; i < N; --i) {
-                (*this)[i] = (c % (N - i));
-                c = c / (N - i);
-                for (auto j = i + 1; j < N; ++j) {
-                    if ((*this)[j] >= (*this)[i]) {
-                        (*this)[j] += 1;
-                    }
-                }
-            }
-        }
-    }
-    void swap(const unsigned &i, const unsigned &j) {
-        assert(i < N);
-        assert(j < N);
-        unsigned buf = (*this)[i];
-        (*this)[i] = (*this)[j];
-        (*this)[j] = buf;
-    }
-};
-
-template<unsigned N>
-struct Orientation : std::array<unsigned, N> {
-    Orientation() { // Constructeur sans arguments
-        std::array<unsigned, N>::fill(0);
-    }
-    template<typename... Args>
-    Orientation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
-
-    bool is_solved() const {
-        for (unsigned k : *this){
-            if (k != 0) return false;
-        }
-        return true;
-    }
-};
-
-struct Triangles : std::array<unsigned, NT> {
-    // Solved_state is {0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3}
-    Triangles() {
-        for (unsigned k = 0; k < NT; ++k) {
-            this->operator[](k) = k / 3;
-        }
-    }
-
-    bool is_solved() const {
-        for (unsigned k = 0; k < NT; ++k) {
-            if (this->operator[](k) != k / 3) return false;
-        }
-        return true;
-    }
-};
-
-template<unsigned N>
-void permute(std::array<unsigned, N> &items, const Permutation<N> &perm) {
-    std::array<unsigned, N> buf = items;
-    for (unsigned k = 0; k < N; ++k){
-        items[k] = buf[perm[k]];
-    }
-}
 
 // Corner permutations
 static Permutation<NC> CP[NMOVES] {
@@ -239,8 +93,8 @@ struct CubieFTO {
     Permutation<NC> cp;   // Corner permutation
     Orientation<NC> co;   // Corner orientation
     Permutation<NE> ep;   // Edge permutation
-    Triangles tri1; // Triangles of first tetrad
-    Triangles tri2; // Triangles of second tetrad
+    Triangles<NT, 3> tri1; // Triangles of first tetrad
+    Triangles<NT, 3> tri2; // Triangles of second tetrad
 
     void corner_apply(const Move& m) {
         cp.compose(CP[m]);
