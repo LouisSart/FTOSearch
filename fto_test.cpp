@@ -54,11 +54,9 @@ int main(int argc, const char* argv[]) {
         p.set_from_index(c);
         assert(p.index() == c);
     }
-    for(unsigned c = 0; c < 720 / 2; ++c) { // Even parity only
+    for(unsigned c = 0; c < 360; ++c) { // Even parity only
         p.set_from_index(c, true);
-        print_array(p);
-        print(p.index(true), p.index(), c);
-        // assert(p.index(true) == c);
+        assert(p.index(true) == c);
     }
     return 0;
 }
