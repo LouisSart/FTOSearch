@@ -71,17 +71,36 @@ struct Permutation : std::array<unsigned, N> {
         return t;
     }
     void set_from_index(unsigned c, const bool even = false){
-        // k = j - 1
-        // j = k + 1
-        (*this)[N - 1] = 0;
-        for (unsigned i = N - 2; i < N; --i) {
-            (*this)[i] = (c % (N - i));
-            c = c / (N - i);
-            for (auto j = i + 1; j < N; ++j) {
-                if ((*this)[j] >= (*this)[i]) {
-                    (*this)[j] += 1;
+        static_assert(N > 0); // do not run this for N = 0
+        if constexpr (N == 1) {
+            // Trivial case N = 1
+            (*this)[0] = 0;
+            return;
+        } else {
+            unsigned n = N;
+            if (even) {
+                (*this)[N - 1] = 1;
+                (*this)[N - 2] = 0;
+                n = N - 1;
+                if (N == 2) {// only one possible even permutation of 2 elements
+                    (*this)[0] = 0;
+                    (*this)[1] = 1;
+                    return;
                 }
             }
+            else (*this)[N - 1] = 0;
+            unsigned s = 0; // unused in case of odd parity
+            for (unsigned i = n - 2; i < N; --i) {
+                (*this)[i] = (c % (N - i));
+                s += (*this)[i];
+                c = c / (N - i);
+                for (auto j = i + 1; j < N; ++j) {
+                    if ((*this)[j] >= (*this)[i]) {
+                        (*this)[j] += 1;
+                    }
+                }
+            }
+            if (even && s % 2 == 1) this->swap(N - 1, N - 2);
         }
     }
     void swap(const unsigned &i, const unsigned &j) {

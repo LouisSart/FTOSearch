@@ -50,9 +50,15 @@ int main(int argc, const char* argv[]) {
 
     // Test if indexing is correct
     Permutation<6> p;
-    for(unsigned c = 0; c < 720; ++c) {
+    for(unsigned c = 0; c < 720; ++c) { // Any parity
         p.set_from_index(c);
         assert(p.index() == c);
+    }
+    for(unsigned c = 0; c < 720 / 2; ++c) { // Even parity only
+        p.set_from_index(c, true);
+        print_array(p);
+        print(p.index(true), p.index(), c);
+        // assert(p.index(true) == c);
     }
     return 0;
 }
