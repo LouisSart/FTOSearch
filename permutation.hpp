@@ -90,13 +90,57 @@ struct Permutation : std::array<unsigned, N> {
     }
 };
 
-template<unsigned N>
+template<unsigned N, unsigned v = 2>
 struct Orientation : std::array<unsigned, N> {
+    // array that stores the orientations of N pieces modulo v
+
     Orientation() { // Constructeur sans arguments
         std::array<unsigned, N>::fill(0);
     }
     template<typename... Args>
     Orientation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
+
+    unsigned index(const bool even = true){
+        static_assert(N > 0); // 0 size orientations are a no go
+
+        unsigned n;
+        if (even) { // most puzzles have a 0 net orientation
+            assert(N > 1); // trivial case
+            n = N - 1;
+        }
+        else n = N;
+
+        unsigned ret = 0;
+        unsigned base = 1;
+        for (unsigned k = 0; k < n; ++k) {
+            assert((*this)[k] < v);
+            ret *= v;
+            ret += (*this)[k];
+        }
+        return ret;
+    }
+
+    void set_from_index(unsigned c, const bool even = true) {
+        static_assert(N > 0); // 0 size orientations are a no go
+
+        unsigned n;
+        if (even) {
+            assert(N > 1); // trivial case
+            n = N - 1;
+            unsigned s = 0;
+        }
+        else n = N;
+        
+        unsigned s = 0; // unused for non even global orientation
+        for (unsigned i = n - 1; i < N; --i){
+            (*this)[i] = c % v;
+            s += (*this)[i];
+            c = c / v;
+        }
+        if (even) {
+            (*this)[n] = (v - (s % v)) % v;
+        }
+    }
 
     bool is_solved() const {
         for (unsigned k : *this){

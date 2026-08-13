@@ -58,5 +58,10 @@ int main(int argc, const char* argv[]) {
         p.set_from_index(c, true);
         assert(p.index(true) == c);
     }
+    Orientation<6> o;
+    for (unsigned k = 0; k < 32; ++k) {
+        o.set_from_index(k);
+        assert(o.index() == k);
+    }
     return 0;
 }
