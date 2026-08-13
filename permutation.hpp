@@ -100,7 +100,7 @@ struct Orientation : std::array<unsigned, N> {
     template<typename... Args>
     Orientation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
 
-    unsigned index(const bool even = true){
+    unsigned index(const bool even = true) const {
         static_assert(N > 0); // 0 size orientations are a no go
 
         unsigned n;
