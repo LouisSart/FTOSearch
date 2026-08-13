@@ -54,11 +54,13 @@ struct Permutation : std::array<unsigned, N> {
     }
     unsigned index(const bool even = false) const {
         // Compute the lexicographic index of the permutation
-
+        static_assert(N > 0); // empty permutations are a problem
         // If the permutation necessarily has even parity,
         // do not encode the information of the last two digits
         unsigned n;
-        if (even) n = N - 1;
+        if (even) {n = N - 1;
+            assert(N > 2); // trivial case do not implement
+        }
         else n = N;
         
         unsigned t = 0;
@@ -71,7 +73,11 @@ struct Permutation : std::array<unsigned, N> {
         return t;
     }
     void set_from_index(unsigned c, const bool even = false){
+        // Reconstruct the permutation having index c
+        static_assert(N > 0); // empty permutations are a problem
+
         if (even) {
+            assert(N > 2); // trivial case do not implement
             unsigned s = 0;
             (*this)[N - 1] = 1;
             (*this)[N - 2] = 0;
