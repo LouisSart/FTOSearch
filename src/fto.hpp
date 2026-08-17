@@ -1,7 +1,7 @@
 #pragma once
-#include "permutation.cpp"
-#include "utils.cpp"
-#include "move.cpp"
+#include "permutation.hpp"
+#include "utils.hpp"
+#include "move.hpp"
 
 constexpr unsigned NC = 6;
 constexpr unsigned NE = 12;
