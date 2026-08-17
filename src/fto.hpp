@@ -5,14 +5,15 @@
 
 constexpr unsigned NC = 6;
 constexpr unsigned NE = 12;
-constexpr unsigned NT = 12;
+constexpr unsigned NT = 12; // 12 triangles per tetrad
+constexpr unsigned NF = 4; // 4 faces per tetrad
 
 struct CubieFTO {
     Permutation<NC> cp;   // Corner permutation
     Orientation<NC> co;   // Corner orientation
     Permutation<NE> ep;   // Edge permutation
-    Triangles<NT, 3> tri1; // Triangles of first tetrad
-    Triangles<NT, 3> tri2; // Triangles of second tetrad
+    Center<NT, NF> tri1; // Triangles of first tetrad
+    Center<NT, NF> tri2; // Triangles of second tetrad
 
     void corner_apply(const Move& m);
     void corner_apply(const Sequence &seq);

@@ -1,5 +1,55 @@
 #include <array>
 #include <cassert>
+#include "utils.hpp"
+
+constexpr unsigned ipow(unsigned k, unsigned n) {
+    // unsigned integer power
+    // computes ret = k^n
+    unsigned ret{1};
+    for (unsigned i = 0; i < n; i++) {
+        ret *= k;
+    }
+    return ret;
+};
+
+constexpr auto factorial_table = [] {
+    std::array<unsigned, 13> arr = {};
+    arr[0] = 1;
+    for (unsigned n = 1; n <= 12; ++n) {
+        arr[n] = n * arr[n - 1];
+    }
+    return arr;
+}();
+
+constexpr unsigned factorial(unsigned n) {
+    assert(n <= 12);
+    return factorial_table[n];
+}
+
+constexpr auto binomial_table = [] {
+    // Using constexpr lambda to fill up binomial table
+    // at compile time
+    std::array<unsigned, (13) * (13)> arr = {};
+    for (unsigned n = 0; n <= 12; ++n) {
+        for (unsigned k = 0; k <= 12; ++k) {
+            if (n < k) {
+                arr[n * 13 + k] = 0;
+            } else if (k == 0 || k == n) {
+                arr[n * 13 + k] = 1;
+            } else {
+                arr[n * 13 + k] =
+                    arr[(n - 1) * 13 + k - 1] + arr[(n - 1) * 13 + k];
+            }
+        }
+    }
+    return arr;
+}();
+
+constexpr unsigned binomial(unsigned n, unsigned k) {
+    // The function just does a lookup in the table for better performance
+    assert(n < 13 && k < 13);  // "Binomial numbers computed up to n=12"
+    return binomial_table[n * 13 + k];
+}
 
 template<unsigned N>
 struct Permutation : std::array<unsigned, N> {
@@ -150,21 +200,63 @@ struct Orientation : std::array<unsigned, N> {
     }
 };
 
-template<unsigned N, unsigned M>
-struct Triangles : std::array<unsigned, N> {
-    // For N=12 and M=3 the
-    // solved_state is {0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3}
-    Triangles() {
-        for (unsigned k = 0; k < N; ++k) {
-            this->operator[](k) = k / M;
+template <std::size_t n>
+unsigned layout_index(const std::array<unsigned, n> &layout, unsigned r) {
+    // n: number of positions
+    // r: number of pieces
+    unsigned t = 0;
+    for (unsigned i = n - 1; i > 0; --i) {
+        if (layout[i] == 1) {
+            t += binomial(i, r);
+            r -= 1;
         }
     }
+    return t;
+}
+
+template<unsigned N, unsigned M>
+struct Center : std::array<unsigned, N> {
+    // Holds the position of one color pieces, like the center pieces
+    // of an NxNxN cubic puzzle
+    // N = total number of pieces
+    // M = number of colors (faces)
+    // M must divide N
+    // NP number of equivalent pieces on each face
+    // For N=12 and M=4 the
+    // solved state is {0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3}
+
+    static constexpr unsigned NP = N / M; // number of equivalent pieces on each face
+    Center() {
+        for (unsigned k = 0; k < N; ++k) {
+            this->operator[](k) = k / NP;
+        }
+    }
+    template<typename... Args>
+    Center(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
 
     bool is_solved() const {
         for (unsigned k = 0; k < N; ++k) {
-            if (this->operator[](k) != k / M) return false;
+            if (this->operator[](k) != k / NP) return false;
         }
         return true;
+    }
+
+    template<unsigned K>
+    unsigned index() const {
+        if constexpr (K == M - 1) return 0;
+        else {
+            std::array<unsigned, N - NP * K> layout;
+            unsigned k = 0;
+            for (unsigned i = 0; i < N; ++i) {
+                if ((*this)[i] == K) {layout[k] = 1; ++k;}
+                else if ((*this)[i] > K) {layout[k] = 0; ++k;}
+            }
+            return layout_index(layout, NP) + binomial(N - NP * K, NP) * index<K + 1>();
+        }
+    }
+
+    unsigned index() const {
+        return index<0>();
     }
 };
 
