@@ -20,6 +20,5 @@ struct Sequence : std::vector<Move> {
         if (line_break) std::cout << std::endl;
     }
 };
-
 inline constexpr Move moves[NMOVES] = {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
 

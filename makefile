@@ -1,33 +1,53 @@
 # Définition des variables
 CC = g++
-CFLAGS = -Wall
+CFLAGS = -Wall -I/src
 STD = -std=c++20
-OPT = -O1
+SRC_DIR = src
+OPT = -O1 -I$(SRC_DIR)/
+OBJ_DIR = obj
+EXE = $(OBJ_DIR)/fto
+TEST = $(OBJ_DIR)/test
+MAIN_SRC = $(SRC_DIR)/main.cpp
+TEST_SRC = $(SRC_DIR)/test.cpp
+
+SRC := $(filter-out $(SRC_DIR)/main.cpp $(SRC_DIR)/test.cpp, $(wildcard $(SRC_DIR)/*.cpp)) # Tous les fichiers sources sauf main et test
+HDR := $(filter-out $(SRC_DIR)/main.hpp $(SRC_DIR)/test.hpp, $(wildcard $(SRC_DIR)/*.hpp)) # Tous les headers sauf main et test
+OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o) # Tous les fichiers objets
+
+all : fto test
+
 
 # linking
-fto: main.o permutation.o move.o utils.o
-	$(CC) $(STD) $(OPT) main.o permutation.o move.o utils.o -o fto
+fto: $(OBJ) $(HDR) $(OBJ_DIR)/main.o
+	$(CC) $(STD) $(OPT) $(OBJ_DIR)/main.o $(OBJ) -o $(EXE)
 
-test: test.o permutation.o move.o utils.o
-	$(CC) $(STD) $(OPT) test.o permutation.o move.o utils.o -o test
+test: $(OBJ) $(HDR) $(OBJ_DIR)/test.o
+	$(CC) $(STD) $(OPT) $(OBJ_DIR)/test.o $(OBJ) -o $(TEST)
 
 
 # Compilation
-main.o: main.cpp
-	$(CC) $(STD) $(OPT) -c main.cpp -o main.o
+$(OBJ_DIR)/main.o: $(MAIN_SRC)
+	$(CC) $(STD) $(OPT) -c $(MAIN_SRC) -o $(OBJ_DIR)/main.o
 
-test.o: fto_test.cpp
-	$(CC) $(STD) $(OPT) -c fto_test.cpp -o test.o
+$(OBJ_DIR)/test.o: $(TEST_SRC)
+	$(CC) $(STD) $(OPT) -c $(TEST_SRC) -o $(OBJ_DIR)/test.o
 
-permutation.o : permutation.cpp
-	$(CC) $(STD) $(OPT) -c permutation.cpp -o permutation.o
 
-move.o : move.cpp
-	$(CC) $(STD) $(OPT) -c move.cpp -o move.o
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CC) $(STD) $(OPT) -c $< -o $@
 
-utils.o : utils.cpp
-	$(CC) $(STD) $(OPT) -c utils.cpp -o utils.o
+
+# permutation.o : permutation.cpp
+# 	$(CC) $(STD) $(OPT) -c permutation.cpp -o permutation.o
+
+# move.o : move.cpp
+# 	$(CC) $(STD) $(OPT) -c move.cpp -o move.o
+
+# utils.o : utils.cpp
+# 	$(CC) $(STD) $(OPT) -c utils.cpp -o utils.o
+
+.PHONY: all clean
 
 # Règle de nettoyage
 clean:
-	rm -f *.o fto test
+	rm -f $(OBJ_DIR)/*.o fto test

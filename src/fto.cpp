@@ -1,14 +1,8 @@
-#include "utils.cpp"
-#include "move.cpp"
-#include "permutation.cpp"
+#include "fto.hpp"
 #include <cassert>
 
-constexpr unsigned NC = 6;
-constexpr unsigned NE = 12;
-constexpr unsigned NT = 12;
-
 // Corner permutations
-static Permutation<NC> CP[NMOVES] {
+static const Permutation<NC> CP[NMOVES] {
     {3,1,2,4,0,5}, // U
     {4,1,2,0,3,5}, // U'
     {2,1,3,0,4,5}, // R
@@ -27,7 +21,7 @@ static Permutation<NC> CP[NMOVES] {
     {0,5,2,3,1,4}, // bL'
 };
 
-static Orientation<NC> CO[NMOVES] {
+static const Orientation<NC> CO[NMOVES] {
     {1,0,0,1,0,0}, // U
     {0,0,0,1,1,0}, // U'
     {0,0,0,0,0,0}, // R
@@ -47,7 +41,7 @@ static Orientation<NC> CO[NMOVES] {
 };
 
 // Edge permutations
-static Permutation<NE> EP[NMOVES] {
+static const Permutation<NE> EP[NMOVES] {
     {1,6,2,3,4,5,0,7,8,9,10,11}, // U
     {6,0,2,3,4,5,1,7,8,9,10,11}, // U'
     {0,2,5,3,4,1,6,7,8,9,10,11}, // R
@@ -67,7 +61,7 @@ static Permutation<NE> EP[NMOVES] {
 };
 
 // Triangles permutation
-static Permutation<NT> TP[NMOVES] {
+static const Permutation<NT> TP[NMOVES] {
     {7,8,2,1,4,0,6,5,3,9,10,11}, // U
     {5,3,2,8,4,7,6,0,1,9,10,11}, // U'
     {2,0,1,3,4,5,6,7,8,9,10,11}, // R
@@ -86,78 +80,75 @@ static Permutation<NT> TP[NMOVES] {
     {0,1,2,3,11,9,5,7,4,6,10,8}  // bL'
 };
 
-static Move zSHIFT[NMOVES] {L, L2, U, U2, R, R2, F, F2, bL, bL2, B, B2, bR, bR2, D, D2};
+static const Move zSHIFT[NMOVES] {L, L2, U, U2, R, R2, F, F2, bL, bL2, B, B2, bR, bR2, D, D2};
 
-struct CubieFTO {
-    Permutation<NC> cp;   // Corner permutation
-    Orientation<NC> co;   // Corner orientation
-    Permutation<NE> ep;   // Edge permutation
-    Triangles<NT, 3> tri1; // Triangles of first tetrad
-    Triangles<NT, 3> tri2; // Triangles of second tetrad
+// struct CubieFTO {
+//     Permutation<NC> cp;   // Corner permutation
+//     Orientation<NC> co;   // Corner orientation
+//     Permutation<NE> ep;   // Edge permutation
+//     Triangles<NT, 3> tri1; // Triangles of first tetrad
+//     Triangles<NT, 3> tri2; // Triangles of second tetrad
 
-    void corner_apply(const Move& m) {
-        cp.compose(CP[m]);
-        permute<NC>(co, CP[m]);
-        for (unsigned k = 0; k < NC; ++k) {
-            co[k] = (co[k] + CO[m][k]) % 2;
-        }
-    };
+    
+// };
 
-    void corner_apply(const Sequence &seq) {
-        for (auto m : seq){
-            corner_apply(m);
-        }
-    }
-
-    void edge_apply(const Move& m){
-        ep.compose(EP[m]);
-    }
-
-    void edge_apply(const Sequence &seq) {
-        for (auto m : seq){
-            edge_apply(m);
-        }
-    }
-
-    void triangle_apply(const Move& m){
-        permute<NT>(tri1, TP[m]);
-        permute<NT>(tri2, TP[zSHIFT[m]]); // second tetrad is the same as the first through a z shift
-    }
-
-    void triangle_apply(const Sequence &seq) {
-        for (auto m : seq){
-            triangle_apply(m);
-        }
-    }
-
-    void apply(const Move &m){
-        corner_apply(m);
-        edge_apply(m);
-        triangle_apply(m);
-    };
-
-    void apply(const Sequence &seq){
-        corner_apply(seq);
-        edge_apply(seq);
-        triangle_apply(seq);
-    };
-
-    bool is_solved() const {
-        return cp.is_solved() && co.is_solved() && ep.is_solved() && tri1.is_solved() && tri2.is_solved();
-    }
-
-    unsigned corner_index() const {
-        // Return the index for cp + co
-        return co.index(true) * 360 + cp.index(true);
-    }
-
-    void set_corners_from_index(const unsigned &c) {
-        unsigned coc = c / 360;
-        unsigned cpc = c % 360;
-        cp.set_from_index(cpc, true);
-        co.set_from_index(coc);
+void CubieFTO::corner_apply(const Move& m) {
+    cp.compose(CP[m]);
+    permute<NC>(co, CP[m]);
+    for (unsigned k = 0; k < NC; ++k) {
+        co[k] = (co[k] + CO[m][k]) % 2;
     }
 };
+
+void CubieFTO::corner_apply(const Sequence &seq) {
+    for (auto m : seq){
+        corner_apply(m);
+    }
+}
+void CubieFTO::edge_apply(const Move& m){
+    ep.compose(EP[m]);
+}
+
+void CubieFTO::edge_apply(const Sequence &seq) {
+    for (auto m : seq){
+        edge_apply(m);
+    }
+}
+
+void CubieFTO::triangle_apply(const Move& m){
+    permute<NT>(tri1, TP[m]);
+    permute<NT>(tri2, TP[zSHIFT[m]]); // second tetrad is the same as the first through a z shift
+}
+    
+void CubieFTO::triangle_apply(const Sequence &seq) {
+    for (auto m : seq){
+        triangle_apply(m);
+    }
+}
+void CubieFTO::apply(const Move &m){
+    corner_apply(m);
+    edge_apply(m);
+    triangle_apply(m);
+}
+void CubieFTO::apply(const Sequence &seq){
+    corner_apply(seq);
+    edge_apply(seq);
+    triangle_apply(seq);
+}
+
+bool CubieFTO::is_solved() const {
+    return cp.is_solved() && co.is_solved() && ep.is_solved() && tri1.is_solved() && tri2.is_solved();
+}
+unsigned CubieFTO::corner_index() const {
+    // Return the index for cp + co
+    return co.index(true) * 360 + cp.index(true);
+}
+void CubieFTO::set_corners_from_index(const unsigned &c) {
+    unsigned coc = c / 360;
+    unsigned cpc = c % 360;
+    cp.set_from_index(cpc, true);
+    co.set_from_index(coc);
+}
 
 unsigned order(const Sequence &seq) {
     CubieFTO fto;

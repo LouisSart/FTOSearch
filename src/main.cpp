@@ -1,4 +1,4 @@
-#include "fto.cpp"
+#include "fto.hpp"
 #include <cassert>
 #include <set>
 #include <cstdint>

@@ -1,4 +1,4 @@
-#include "fto.cpp"
+#include "fto.hpp"
 #include<cassert>
 
 int main(int argc, const char* argv[]) {
