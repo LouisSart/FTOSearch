@@ -1,4 +1,5 @@
 #include "fto.hpp"
+#include "table.hpp"
 #include<cassert>
 
 int main(int argc, const char* argv[]) {
@@ -62,5 +63,8 @@ int main(int argc, const char* argv[]) {
         o.set_from_index(k);
         assert(o.index() == k);
     }
+
+    generate_corner_table();
+
     return 0;
 }

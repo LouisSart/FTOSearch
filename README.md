@@ -15,3 +15,36 @@ make fto
 ## Running
 
 ./obj/fto
+
+## Pruning tables
+
+Full pruning distances for corners and edges are shown below:
+
+Corners (permutation + orientation)
+Table size = 11520
+0 1
+1 16
+2 204
+3 1893
+4 7228
+5 2174
+6 4
+Mean value: 3.98516
+
+Edges (only one possible orientation)
+Table size = 239500800
+ 0 1
+ 1 16
+ 2 160
+ 3 1408
+ 4 11712
+ 5 90912
+ 6 644756
+ 7 4070826
+ 8 21433009
+ 9 76410122
+10 109897795
+11 26611502
+12 328215
+13 366
+Mean value: 9.55184
