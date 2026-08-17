@@ -1,5 +1,5 @@
 # Définition des variables
-CC = g++
+# CC = g++
 CFLAGS = -Wall -I/src
 STD = -std=c++20
 SRC_DIR = src
@@ -19,15 +19,15 @@ all : fto test
 
 # linking
 fto: $(OBJ) $(HDR) $(OBJ_DIR)/main.o
-	$(CC) $(STD) $(OPT) $(OBJ_DIR)/main.o $(OBJ) -o $(EXE)
+	$(CXX) $(STD) $(OPT) $(OBJ_DIR)/main.o $(OBJ) -o $(EXE)
 
 test: $(OBJ) $(HDR) $(OBJ_DIR)/test.o
-	$(CC) $(STD) $(OPT) $(OBJ_DIR)/test.o $(OBJ) -o $(TEST)
+	$(CXX) $(STD) $(OPT) $(OBJ_DIR)/test.o $(OBJ) -o $(TEST)
 
 
 # Compilation
 $(OBJ_DIR)/main.o: $(MAIN_SRC)
-	$(CC) $(STD) $(OPT) -c $(MAIN_SRC) -o $(OBJ_DIR)/main.o
+	$(CXX) $(STD) $(OPT) -c $(MAIN_SRC) -o $(OBJ_DIR)/main.o
 
 $(OBJ_DIR)/test.o: $(TEST_SRC)
 	$(CC) $(STD) $(OPT) -c $(TEST_SRC) -o $(OBJ_DIR)/test.o

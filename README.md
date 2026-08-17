@@ -8,4 +8,10 @@ Below is the numbering of pieces that I use for defining permutations of pieces.
 
 ## Compiling
 
+This should do the trick if you have a c++ compiler and make installed
+
+make fto
+
 ## Running
+
+./obj/fto
