@@ -66,5 +66,11 @@ int main(int argc, const char* argv[]) {
 
     generate_corner_table();
 
+    Center<12, 4> center;
+    for (unsigned c = 0; c < 369600; ++c){
+        center.from_index(c);
+        assert(center.index() == c);
+    }
+
     return 0;
 }

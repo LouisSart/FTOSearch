@@ -214,6 +214,24 @@ unsigned layout_index(const std::array<unsigned, n> &layout, unsigned r) {
     return t;
 }
 
+template <std::size_t n>
+void layout_from_index(unsigned c, std::array<unsigned, n> &layout,
+                       unsigned r) {
+    // n: number of positions
+    // r: number of pieces
+    assert(r <= n);
+    assert(c < binomial(n, r));
+    for (auto i = n - 1; i < n; --i) {
+        if (c >= binomial(i, r)) {
+            c = c - binomial(i, r);
+            layout[i] = 1;
+            r = r - 1;
+        } else {
+            layout[i] = 0;
+        }
+    }
+}
+
 template<unsigned N, unsigned M>
 struct Center : std::array<unsigned, N> {
     // Holds the position of one color pieces, like the center pieces
@@ -241,7 +259,7 @@ struct Center : std::array<unsigned, N> {
         return true;
     }
 
-    template<unsigned K>
+    template<unsigned K = 0>
     unsigned index() const {
         if constexpr (K == M - 1) return 0;
         else {
@@ -255,8 +273,28 @@ struct Center : std::array<unsigned, N> {
         }
     }
 
-    unsigned index() const {
-        return index<0>();
+    template<unsigned K = 0>
+    void from_index(const unsigned c) {
+        if constexpr(K == 0) this->fill(M); // fill with inconsistent value
+        if constexpr(K == M - 1){
+            for (unsigned i = 0; i < N; ++i){
+                if ((*this)[i] >= M) {(*this)[i] = M - 1;}
+            }
+        } else {
+            std::array<unsigned, N - K * NP> loc_layout;
+            unsigned k = 0;
+            layout_from_index(c % binomial(N - K * NP, NP), loc_layout, NP);
+            for (unsigned i = 0; i < N; ++i) {
+                if ((*this)[i] >= M) {
+                    if (loc_layout[k] == 1) {
+                        (*this)[i] = K;
+                    }
+                    ++k;
+                }
+            }
+            assert(k == N - K * NP);
+            from_index<K + 1>(c / binomial(N - K * NP, NP));
+        }
     }
 };
 
