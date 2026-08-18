@@ -22,12 +22,12 @@ fs::path edge_table_path = table_dir / "edges";
 
 // EDGES
 auto edge_index(const CubieFTO& fto){
-    return fto.ep.index(true);
+    return fto.ep.index();
 }
 
 auto edges_from_index(const unsigned &c) {
     CubieFTO fto;
-    fto.ep.set_from_index(c, true);
+    fto.ep.set_from_index(c);
     return fto;
 }
 
@@ -35,11 +35,14 @@ void edge_apply(const Move &m, CubieFTO& fto){
     fto.edge_apply(m);
 }
 
-static constexpr unsigned CORNER_TABLE_SIZE = 360 * 32;
+static constexpr unsigned CORNER_TABLE_SIZE = Permutation<6, true>::CARD * Orientation<6>::CARD;
 PruningTable<CORNER_TABLE_SIZE> corner_table;
 
-static constexpr unsigned EDGE_TABLE_SIZE = 239500800;
+static constexpr unsigned EDGE_TABLE_SIZE = Permutation<12, true>::CARD;
 PruningTable<EDGE_TABLE_SIZE> edge_table;
+
+static constexpr unsigned TRIANGLE_TABLE_SIZE = Center<12, 4>::CARD;
+PruningTable<EDGE_TABLE_SIZE> triangle_table;
 
 void generate_corner_table(){    
     corner_table.generate(CubieFTO(), corner_apply, corner_index, corners_from_index, moves);

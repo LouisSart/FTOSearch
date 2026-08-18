@@ -1,3 +1,4 @@
+#pragma once
 #include <array>
 #include <cassert>
 #include "utils.hpp"
@@ -51,8 +52,9 @@ constexpr unsigned binomial(unsigned n, unsigned k) {
     return binomial_table[n * 13 + k];
 }
 
-template<unsigned N>
+template<unsigned N, bool even = false>
 struct Permutation : std::array<unsigned, N> {
+
     Permutation() { // Constructeur sans arguments
         for (unsigned k = 0; k < N; ++k){
             this->operator[](k) = k;
@@ -67,6 +69,13 @@ struct Permutation : std::array<unsigned, N> {
         }
         return true;
     }
+
+    static constexpr unsigned cardinality() {
+        if constexpr (even) return factorial(N) / 2;
+        return factorial(N);
+    }
+    static constexpr unsigned CARD = cardinality();
+
     void reset() {
         for (unsigned k = 0; k < N; ++k){
             this->operator[](k) = k;
@@ -78,13 +87,13 @@ struct Permutation : std::array<unsigned, N> {
             this->operator[](k) = ret[other[k]];
         }
     }
-    unsigned index(const bool even = false) const {
+    unsigned index() const {
         // Compute the lexicographic index of the permutation
         static_assert(N > 0); // empty permutations are a problem
         // If the permutation necessarily has even parity,
         // do not encode the information of the last two digits
         unsigned n;
-        if (even) {n = N - 1;
+        if constexpr (even) {n = N - 1;
             assert(N > 2); // trivial case do not implement
         }
         else n = N;
@@ -98,11 +107,11 @@ struct Permutation : std::array<unsigned, N> {
         }
         return t;
     }
-    void set_from_index(unsigned c, const bool even = false){
+    void set_from_index(unsigned c) {
         // Reconstruct the permutation having index c
         static_assert(N > 0); // empty permutations are a problem
 
-        if (even) {
+        if constexpr (even) {
             assert(N > 2); // trivial case do not implement
             unsigned s = 0;
             (*this)[N - 1] = 1;
@@ -140,9 +149,13 @@ struct Permutation : std::array<unsigned, N> {
     }
 };
 
-template<unsigned N, unsigned v = 2>
+template<unsigned N, unsigned v = 2, bool even = true>
 struct Orientation : std::array<unsigned, N> {
     // array that stores the orientations of N pieces modulo v
+    // if an Orientation is even, then the total
+    // orientation of the pieces is 0 modulo v.
+    // In this case the orientation of the last piece
+    // is forced by the others.
 
     Orientation() { // Constructeur sans arguments
         std::array<unsigned, N>::fill(0);
@@ -150,11 +163,17 @@ struct Orientation : std::array<unsigned, N> {
     template<typename... Args>
     Orientation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
 
-    unsigned index(const bool even = true) const {
+    static constexpr unsigned cardinality() {
+        if constexpr (even) return ipow(v, N - 1);
+        return ipow(v, N);
+    }
+    static constexpr unsigned CARD = cardinality();
+
+    unsigned index() const {
         static_assert(N > 0); // 0 size orientations are a no go
 
         unsigned n;
-        if (even) { // most puzzles have a 0 net orientation
+        if constexpr (even) { // most puzzles have a 0 net orientation
             assert(N > 1); // trivial case
             n = N - 1;
         }
@@ -170,11 +189,11 @@ struct Orientation : std::array<unsigned, N> {
         return ret;
     }
 
-    void set_from_index(unsigned c, const bool even = true) {
+    void set_from_index(unsigned c) {
         static_assert(N > 0); // 0 size orientations are a no go
 
         unsigned n;
-        if (even) {
+        if constexpr (even) {
             assert(N > 1); // trivial case
             n = N - 1;
             unsigned s = 0;
@@ -187,7 +206,7 @@ struct Orientation : std::array<unsigned, N> {
             s += (*this)[i];
             c = c / v;
         }
-        if (even) {
+        if constexpr (even) {
             (*this)[n] = (v - (s % v)) % v;
         }
     }
@@ -251,6 +270,15 @@ struct Center : std::array<unsigned, N> {
     }
     template<typename... Args>
     Center(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
+
+    template<unsigned K = 0>
+    static constexpr unsigned cardinality() {
+        if constexpr (K == M - 1) return 1;
+        else {
+            return binomial(N - K * NP, NP) * cardinality<K + 1>();
+        }
+    }
+    static constexpr unsigned CARD = cardinality();
 
     bool is_solved() const {
         for (unsigned k = 0; k < N; ++k) {

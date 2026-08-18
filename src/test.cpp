@@ -50,27 +50,34 @@ int main(int argc, const char* argv[]) {
 
     // Test if indexing is correct
     Permutation<6> p;
-    for(unsigned c = 0; c < 720; ++c) { // Any parity
+    for(unsigned c = 0; c < p.cardinality(); ++c) { // Any parity
         p.set_from_index(c);
         assert(p.index() == c);
     }
-    for(unsigned c = 0; c < 360; ++c) { // Even parity only
-        p.set_from_index(c, true);
-        assert(p.index(true) == c);
+    Permutation<6, true> q;
+    for(unsigned c = 0; c < q.cardinality(); ++c) { // Even parity only
+        q.set_from_index(c);
+        assert(q.index() == c);
     }
-    Orientation<6> o;
-    for (unsigned k = 0; k < 32; ++k) {
+    Orientation<7> o; // even orientations
+    for (unsigned k = 0; k < o.cardinality(); ++k) {
         o.set_from_index(k);
         assert(o.index() == k);
+    }
+    Orientation<6, false> O; // any orientation
+    for (unsigned k = 0; k < O.cardinality(); ++k) {
+        O.set_from_index(k);
+        assert(O.index() == k);
+    }
+
+    Center<12, 4> center;
+    for (unsigned c = 0; c < center.cardinality(); ++c){
+        center.from_index(c);
+        assert(center.index() == c);
     }
 
     generate_corner_table();
 
-    Center<12, 4> center;
-    for (unsigned c = 0; c < 369600; ++c){
-        center.from_index(c);
-        assert(center.index() == c);
-    }
 
     return 0;
 }
