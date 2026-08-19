@@ -29,11 +29,11 @@ $(OBJ_DIR)/main.o: $(MAIN_SRC) $(HDR)
 	$(CXX) $(STD) $(OPT) -c $(MAIN_SRC) -o $(OBJ_DIR)/main.o
 
 $(OBJ_DIR)/test.o: $(TEST_SRC) $(HDR)
-	$(CC) $(STD) $(OPT) -c $(TEST_SRC) -o $(OBJ_DIR)/test.o
+	$(CXX) $(STD) $(OPT) -c $(TEST_SRC) -o $(OBJ_DIR)/test.o
 
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CC) $(STD) $(OPT) -c $< -o $@
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/%.hpp | $(OBJ_DIR)
+	$(CXX) $(STD) $(OPT) -c $< -o $@
 
 .PHONY: all clean
 
