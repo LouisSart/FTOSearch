@@ -72,7 +72,7 @@ int main(int argc, const char* argv[]) {
 
     Center<12, 4> center;
     for (unsigned c = 0; c < center.cardinality(); ++c){
-        center.from_index(c);
+        center.set_from_index(c);
         assert(center.index() == c);
     }
 

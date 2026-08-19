@@ -82,7 +82,7 @@ struct Permutation : std::array<unsigned, N> {
         }
     }
     void compose(const Permutation<N> & other) {
-        Permutation<N> ret = *this;
+        auto ret = *this;
         for (unsigned k = 0; k < N; ++k){
             this->operator[](k) = ret[other[k]];
         }
@@ -302,7 +302,7 @@ struct Center : std::array<unsigned, N> {
     }
 
     template<unsigned K = 0>
-    void from_index(const unsigned c) {
+    void set_from_index(const unsigned c) {
         if constexpr(K == 0) this->fill(M); // fill with inconsistent value
         if constexpr(K == M - 1){
             for (unsigned i = 0; i < N; ++i){
@@ -321,7 +321,7 @@ struct Center : std::array<unsigned, N> {
                 }
             }
             assert(k == N - K * NP);
-            from_index<K + 1>(c / binomial(N - K * NP, NP));
+            set_from_index<K + 1>(c / binomial(N - K * NP, NP));
         }
     }
 };
