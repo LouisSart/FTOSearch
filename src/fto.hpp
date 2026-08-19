@@ -9,9 +9,9 @@ constexpr unsigned NT = 12; // 12 triangles per tetrad
 constexpr unsigned NF = 4; // 4 faces per tetrad
 
 struct CubieFTO {
-    Permutation<NC> cp;   // Corner permutation
+    Permutation<NC, true> cp;   // Corner permutation
     Orientation<NC> co;   // Corner orientation
-    Permutation<NE> ep;   // Edge permutation
+    Permutation<NE, true> ep;   // Edge permutation
     Center<NT, NF> tri1; // Triangles of first tetrad
     Center<NT, NF> tri2; // Triangles of second tetrad
 

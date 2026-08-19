@@ -141,12 +141,12 @@ bool CubieFTO::is_solved() const {
 }
 unsigned CubieFTO::corner_index() const {
     // Return the index for cp + co
-    return co.index(true) * 360 + cp.index(true);
+    return co.index() * cp.cardinality() + cp.index();
 }
 void CubieFTO::set_corners_from_index(const unsigned &c) {
-    unsigned coc = c / 360;
-    unsigned cpc = c % 360;
-    cp.set_from_index(cpc, true);
+    unsigned coc = c / cp.cardinality();
+    unsigned cpc = c % cp.cardinality();
+    cp.set_from_index(cpc);
     co.set_from_index(coc);
 }
 
