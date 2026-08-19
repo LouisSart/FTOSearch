@@ -249,3 +249,4 @@ struct PruningTable {
 
 void generate_corner_table();
 void generate_edge_table();
+void generate_triangle_table();

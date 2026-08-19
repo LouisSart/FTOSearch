@@ -48,3 +48,16 @@ Table size = 239500800
 12 328215
 13 366
 Mean value: 9.55184
+
+Triangles of one tetrad
+Table size = 369600
+ 0 1
+ 1 8
+ 2 96
+ 3 1020
+ 4 10354
+ 5 83779
+ 6 240962
+ 7 33374
+ 8 6
+Mean value: 5.79818
