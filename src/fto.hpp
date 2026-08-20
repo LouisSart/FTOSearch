@@ -26,6 +26,7 @@ struct CubieFTO {
     bool is_solved() const;
     unsigned corner_index() const;
     void set_corners_from_index(const unsigned &c);
+    void random_moves(const unsigned &n);
 };
 
 unsigned order(const Sequence<Move> &seq);

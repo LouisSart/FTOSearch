@@ -19,9 +19,10 @@ int main(int argc, const char* argv[]) {
     load_edge_table();
 
     CubieFTO fto;
-    fto.apply({U, R, L, R, bR, D2, bL2, F, D2, R2, U});
+    // fto.apply({U, R, L, R, bR, D2, bL2, F, D2, R2, U, D2, bR2, L2});
+    fto.random_moves(14);
     auto root = make_root(fto);
-    auto solutions = depth_first_search(root, apply, estimate, is_solved, standard_directions, 11);
+    auto solutions = IDAstar(root, apply, estimate, is_solved, standard_directions, 14);
     solutions.show<Move>();
     return 0;
 }

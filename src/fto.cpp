@@ -1,5 +1,7 @@
-#include "fto.hpp"
 #include <cassert>
+#include <cstdlib>
+#include <ctime>
+#include "fto.hpp"
 
 // Corner permutations
 static const Permutation<NC> CP[NMOVES] {
@@ -139,10 +141,20 @@ void CubieFTO::apply(const Sequence<Move> &seq){
 bool CubieFTO::is_solved() const {
     return cp.is_solved() && co.is_solved() && ep.is_solved() && tri1.is_solved() && tri2.is_solved();
 }
+
 unsigned CubieFTO::corner_index() const {
     // Return the index for cp + co
     return co.index() * cp.cardinality() + cp.index();
 }
+
+void CubieFTO::random_moves(const unsigned &n){
+    srand(time(0));
+    for (unsigned k = 0; k < n; ++k) {
+        unsigned r = rand() % NMOVES;
+        apply(moves[r]);
+    }
+}
+
 void CubieFTO::set_corners_from_index(const unsigned &c) {
     unsigned coc = c / cp.cardinality();
     unsigned cpc = c % cp.cardinality();
