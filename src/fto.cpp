@@ -100,7 +100,7 @@ void CubieFTO::corner_apply(const Move& m) {
     }
 };
 
-void CubieFTO::corner_apply(const Sequence &seq) {
+void CubieFTO::corner_apply(const Sequence<Move> &seq) {
     for (auto m : seq){
         corner_apply(m);
     }
@@ -109,7 +109,7 @@ void CubieFTO::edge_apply(const Move& m){
     ep.compose(EP[m]);
 }
 
-void CubieFTO::edge_apply(const Sequence &seq) {
+void CubieFTO::edge_apply(const Sequence<Move> &seq) {
     for (auto m : seq){
         edge_apply(m);
     }
@@ -120,7 +120,7 @@ void CubieFTO::triangle_apply(const Move& m){
     permute<NT>(tri2, TP[zSHIFT[m]]); // second tetrad is the same as the first through a z shift
 }
     
-void CubieFTO::triangle_apply(const Sequence &seq) {
+void CubieFTO::triangle_apply(const Sequence<Move> &seq) {
     for (auto m : seq){
         triangle_apply(m);
     }
@@ -130,7 +130,7 @@ void CubieFTO::apply(const Move &m){
     edge_apply(m);
     triangle_apply(m);
 }
-void CubieFTO::apply(const Sequence &seq){
+void CubieFTO::apply(const Sequence<Move> &seq){
     corner_apply(seq);
     edge_apply(seq);
     triangle_apply(seq);
@@ -150,7 +150,7 @@ void CubieFTO::set_corners_from_index(const unsigned &c) {
     co.set_from_index(coc);
 }
 
-unsigned order(const Sequence &seq) {
+unsigned order(const Sequence<Move> &seq) {
     CubieFTO fto;
     fto.apply(seq);
     unsigned count = 1;
@@ -159,4 +159,54 @@ unsigned order(const Sequence &seq) {
         count += 1;
     }
     return count;
+}
+
+void apply(const Move &m, CubieFTO &fto) {
+    fto.apply(m);
+}
+
+// CORNERS WITH ORIENTATION
+unsigned corner_index(const CubieFTO& fto){
+    return fto.corner_index();
+}
+
+CubieFTO corners_from_index(const unsigned &c) {
+    CubieFTO fto;
+    fto.set_corners_from_index(c);
+    return fto;
+}
+
+void corner_apply(const Move &m, CubieFTO& fto){
+    fto.corner_apply(m);
+}
+
+
+// EDGES
+unsigned edge_index(const CubieFTO& fto){
+    return fto.ep.index();
+}
+
+CubieFTO edges_from_index(const unsigned &c) {
+    CubieFTO fto;
+    fto.ep.set_from_index(c);
+    return fto;
+}
+
+void edge_apply(const Move &m, CubieFTO& fto){
+    fto.edge_apply(m);
+}
+
+// TRIANGLES
+unsigned tri1_index(const CubieFTO& fto){
+    return fto.tri1.index();
+}
+
+CubieFTO tri1_from_index(const unsigned &c) {
+    CubieFTO fto;
+    fto.tri1.set_from_index(c);
+    return fto;
+}
+
+void triangle_apply(const Move &m, CubieFTO& fto){
+    fto.triangle_apply(m);
 }

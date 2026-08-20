@@ -16,16 +16,26 @@ struct CubieFTO {
     Center<NT, NF> tri2; // Triangles of second tetrad
 
     void corner_apply(const Move& m);
-    void corner_apply(const Sequence &seq);
+    void corner_apply(const Sequence<Move> &seq);
     void edge_apply(const Move& m);
-    void edge_apply(const Sequence &seq);
+    void edge_apply(const Sequence<Move> &seq);
     void triangle_apply(const Move& m);
-    void triangle_apply(const Sequence &seq);
+    void triangle_apply(const Sequence<Move> &seq);
     void apply(const Move &m);
-    void apply(const Sequence &seq);
+    void apply(const Sequence<Move> &seq);
     bool is_solved() const;
     unsigned corner_index() const;
     void set_corners_from_index(const unsigned &c);
 };
 
-unsigned order(const Sequence &seq);
+unsigned order(const Sequence<Move> &seq);
+void apply(const Move &m, CubieFTO &fto);;
+unsigned corner_index(const CubieFTO& fto);
+CubieFTO corners_from_index(const unsigned &c);
+void corner_apply(const Move &m, CubieFTO& fto);
+unsigned edge_index(const CubieFTO& fto);
+CubieFTO edges_from_index(const unsigned &c);
+void edge_apply(const Move &m, CubieFTO& fto);
+unsigned tri1_index(const CubieFTO& fto);
+CubieFTO tri1_from_index(const unsigned &c);
+void triangle_apply(const Move &m, CubieFTO& fto);

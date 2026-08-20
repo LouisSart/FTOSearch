@@ -1,57 +1,10 @@
 #include "table.hpp"
 #include "fto.hpp"
 
-
 fs::path table_dir = "pruning_tables";
 fs::path corner_table_path = table_dir / "corners";
 fs::path edge_table_path = table_dir / "edges";
 fs::path triangle_table_path = table_dir / "triangles";
-
-// CORNERS WITH ORIENTATION
-auto corner_index(const CubieFTO& fto){
-    return fto.corner_index();
-}
-
-auto corners_from_index(const unsigned &c) {
-    CubieFTO fto;
-    fto.set_corners_from_index(c);
-    return fto;
-}
-
-void corner_apply(const Move &m, CubieFTO& fto){
-    fto.corner_apply(m);
-}
-
-
-// EDGES
-auto edge_index(const CubieFTO& fto){
-    return fto.ep.index();
-}
-
-auto edges_from_index(const unsigned &c) {
-    CubieFTO fto;
-    fto.ep.set_from_index(c);
-    return fto;
-}
-
-void edge_apply(const Move &m, CubieFTO& fto){
-    fto.edge_apply(m);
-}
-
-// TRIANGLES
-auto tri1_index(const CubieFTO& fto){
-    return fto.tri1.index();
-}
-
-auto tri1_from_index(const unsigned &c) {
-    CubieFTO fto;
-    fto.tri1.set_from_index(c);
-    return fto;
-}
-
-void triangle_apply(const Move &m, CubieFTO& fto){
-    fto.triangle_apply(m);
-}
 
 static constexpr unsigned CORNER_TABLE_SIZE = Permutation<6, true>::CARD * Orientation<6>::CARD;
 PruningTable<CORNER_TABLE_SIZE> corner_table;
