@@ -86,6 +86,7 @@ int main(int argc, const char* argv[]) {
     }
     node->get_path<Move>();
     auto root = node->get_root();
+    allowed_next(bL);
 
     return 0;
 }

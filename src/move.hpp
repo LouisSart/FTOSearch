@@ -36,3 +36,16 @@ std::ostream& operator<< (std::ostream& out, const Move& m);
 constexpr unsigned NMOVES = 16;
 constexpr Move moves[NMOVES] = {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
 
+// Reduce branching by preventing turning twice the same layer / 
+// chaining opposite moves
+const std::vector<Move> &allowed_next(const Move m);
+
+template <typename NodePtr>
+auto standard_directions(const NodePtr node) {
+    static constexpr Move moves[NMOVES] = {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+    if (node->parent == nullptr) {
+        return moves;
+    } else {
+        return allowed_next(node->last_move);
+    }
+}
