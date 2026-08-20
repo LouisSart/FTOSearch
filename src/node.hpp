@@ -19,7 +19,7 @@ struct Node : public std::enable_shared_from_this<Node<Cube>> {
 
     Node() : state{Cube()}, parent{nullptr}, depth{0}, inverse{false} {}
     Node(const Cube &c, const unsigned &d = 0, sptr p = nullptr,
-         bool inv = false, const Move &move = D)
+         bool inv = false, const unsigned &move = 0)
         : state{c}, parent{p}, depth{d}, inverse{inv}, last_move{move} {}
 
    public:
