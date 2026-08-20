@@ -29,7 +29,8 @@ struct CubieFTO {
 };
 
 unsigned order(const Sequence<Move> &seq);
-void apply(const Move &m, CubieFTO &fto);;
+void apply(const Move &m, CubieFTO &fto);
+bool is_solved(const CubieFTO &fto);
 unsigned corner_index(const CubieFTO& fto);
 CubieFTO corners_from_index(const unsigned &c);
 void corner_apply(const Move &m, CubieFTO& fto);

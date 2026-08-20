@@ -165,6 +165,10 @@ void apply(const Move &m, CubieFTO &fto) {
     fto.apply(m);
 }
 
+bool is_solved(const CubieFTO &fto){
+    return fto.is_solved();
+}
+
 // CORNERS WITH ORIENTATION
 unsigned corner_index(const CubieFTO& fto){
     return fto.corner_index();

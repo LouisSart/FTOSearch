@@ -10,7 +10,6 @@ std::ostream& operator<< (std::ostream& out, const Move& m){
 }
 
 const std::vector<Move> &allowed_next(const Move m) {
-    static std::vector<Move> all {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
     static std::vector<Move> afterU {R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
     static std::vector<Move> afterD {R, R2, F, F2, L, L2, B, B2, bR, bR2, bL, bL2};
     static std::vector<Move> afterF {U, U2, R, R2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
@@ -19,6 +18,7 @@ const std::vector<Move> &allowed_next(const Move m) {
     static std::vector<Move> afterbL {U, U2, F, F2, L, L2, B, B2, bR, bR2, D, D2};
     static std::vector<Move> afterL {U, U2, R, R2, F, F2, B, B2, bR, bR2, D, D2, bL, bL2};
     static std::vector<Move> afterbR {U, U2, R, R2, F, F2, B, B2, D, D2, bL, bL2};
+    static std::vector<Move> dflt;
 
     switch (m) {
         case U ... U2:
@@ -38,7 +38,7 @@ const std::vector<Move> &allowed_next(const Move m) {
         case bL ... bL2:
             return afterbL;
         default:
-            return all;
+            return dflt;
     }
 }
 
