@@ -1,5 +1,6 @@
 #include "fto.hpp"
 #include "table.hpp"
+#include "node.hpp"
 #include<cassert>
 
 int main(int argc, const char* argv[]) {
@@ -42,7 +43,7 @@ int main(int argc, const char* argv[]) {
     fto.edge_apply({bL, L, bL, L, bL, L, bL, L, bL, L});
     assert(fto.ep.is_solved());
 
-    Sequence seq {U, R, F, L, B, bR, D, bL, bL2, D2, bR2, B2, L2, F2, R2, U2};
+    Sequence<Move> seq {U, R, F, L, B, bR, D, bL, bL2, D2, bR2, B2, L2, F2, R2, U2};
     fto.apply(seq);
     assert(fto.is_solved());
 
@@ -78,6 +79,13 @@ int main(int argc, const char* argv[]) {
 
     generate_corner_table();
 
+    // Some testing on sequences and moves
+    auto node = make_root(CubieFTO(), true);
+    for (unsigned k = 0; k < NMOVES; ++k) {
+        node = node->expand(apply, moves)[k];
+    }
+    node->get_path<Move>();
+    auto root = node->get_root();
 
     return 0;
 }
