@@ -1,18 +1,18 @@
+#include <algorithm>
 #include "table.hpp"
-#include "fto.hpp"
 
 fs::path table_dir = "pruning_tables";
 fs::path corner_table_path = table_dir / "corners";
 fs::path edge_table_path = table_dir / "edges";
 fs::path triangle_table_path = table_dir / "triangles";
 
-static constexpr unsigned CORNER_TABLE_SIZE = Permutation<6, true>::CARD * Orientation<6>::CARD;
+constexpr unsigned CORNER_TABLE_SIZE = Permutation<6, true>::CARD * Orientation<6>::CARD;
 PruningTable<CORNER_TABLE_SIZE> corner_table;
 
-static constexpr unsigned EDGE_TABLE_SIZE = Permutation<12, true>::CARD;
+constexpr unsigned EDGE_TABLE_SIZE = Permutation<12, true>::CARD;
 PruningTable<EDGE_TABLE_SIZE> edge_table;
 
-static constexpr unsigned TRIANGLE_TABLE_SIZE = Center<12, 4>::CARD;
+constexpr unsigned TRIANGLE_TABLE_SIZE = Center<12, 4>::CARD;
 PruningTable<TRIANGLE_TABLE_SIZE> triangle_table;
 
 void generate_corner_table(){    
@@ -32,3 +32,26 @@ void generate_triangle_table(){
     triangle_table.write(triangle_table_path);
     // triangle_table.show_distribution();
 }
+
+void load_corner_table(){
+    assert(fs::exists(corner_table_path));
+    corner_table.load(corner_table_path);
+}
+
+void load_edge_table(){
+    assert(fs::exists(edge_table_path));
+    edge_table.load(edge_table_path);
+}
+
+void load_triangle_table(){
+    assert(fs::exists(triangle_table_path));
+    triangle_table.load(triangle_table_path);
+}
+
+unsigned estimate(const CubieFTO &fto){
+    return std::max({corner_table.estimate(fto.corner_index()),
+                    edge_table.estimate(fto.ep.index()),
+                    triangle_table.estimate(fto.tri1.index()),
+                    triangle_table.estimate(fto.tri2.index())}
+        );
+};

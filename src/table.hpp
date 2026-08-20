@@ -9,10 +9,10 @@
 #include <fstream>     // write tables into files
 #include <limits>      // std::numeric_limits
 #include <memory>      // std::shared_ptr
+#include "fto.hpp"
 #include "utils.hpp"
 
 namespace fs = std::filesystem;
-
 
 template <std::size_t N>
 struct PruningTable {
@@ -247,6 +247,11 @@ struct PruningTable {
     }
 };
 
+
 void generate_corner_table();
 void generate_edge_table();
 void generate_triangle_table();
+void load_corner_table();
+void load_edge_table();
+void load_triangle_table();
+unsigned estimate(const CubieFTO& fto);
