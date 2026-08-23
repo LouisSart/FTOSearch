@@ -92,4 +92,4 @@ bool is_solved(const FTO &fto);
 
 void load_move_tables();
 void generate_move_tables();
-void apply(const Move &m, FTO &fto);
+// void apply(const Move &m, FTO &fto);

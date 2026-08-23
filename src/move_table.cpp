@@ -24,15 +24,14 @@ void load_move_tables() {
 }
 
 void generate_move_tables() {
-    cmt.compute<CubieFTO, true>(corner_index, corners_from_index, moves);
+    cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
     cmt.write(corner_mtable_path);
 
-    tmt.compute<CubieFTO, true>(tri1_index, tri1_from_index, moves);
+    tmt.compute<CubieFTO>(tri1_index, tri1_from_index, moves);
     tmt.write(triangle_mtable_path);
 
-    emt.compute<CubieFTO, true>(edge_index, edges_from_index, moves);
+    emt.compute<CubieFTO>(edge_index, edges_from_index, moves);
     emt.write(edge_mtable_path);
-
 }
 
 void apply(const Move &m, FTO &fto){

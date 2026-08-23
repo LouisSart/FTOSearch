@@ -81,8 +81,8 @@ struct PruningTable {
         return ret;
     }
 
-    template <bool verbose = false>
-    void generate(const auto &cube, const auto &apply, const auto &index,
+    template <typename Cube, bool verbose = false>
+    void generate(const auto &apply, const auto &index,
                   const auto &from_index,
                   const auto &moves,
                   const unsigned forward_switch_depth = 3,
@@ -92,6 +92,7 @@ struct PruningTable {
         std::vector<unsigned> distribution;
         unsigned node_counter = 0, nodes;
         unsigned fill_depth = 0;
+        Cube cube;
         while (fill_depth < forward_switch_depth) {
             // IDDFS is only fast on the first few layers of the tree.
             nodes = DFS_fill(cube, 0, fill_depth, apply, index, moves);
@@ -109,7 +110,7 @@ struct PruningTable {
             nodes = 0;
             for (unsigned k = 0; k < N; ++k) {
                 if (table[k] + 1 == fill_depth) {
-                    auto cube = from_index(k);
+                    cube = from_index(k);
                     for (const auto &m : moves) {
                         auto child = cube;
                         apply(m, child);
