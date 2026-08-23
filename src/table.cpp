@@ -6,14 +6,9 @@ fs::path corner_table_path = table_dir / "corners";
 fs::path edge_table_path = table_dir / "edges";
 fs::path triangle_table_path = table_dir / "triangles";
 
-constexpr unsigned CORNER_TABLE_SIZE = Permutation<6, true>::CARD * Orientation<6>::CARD;
-PruningTable<CORNER_TABLE_SIZE> corner_table;
-
-constexpr unsigned EDGE_TABLE_SIZE = Permutation<12, true>::CARD;
-PruningTable<EDGE_TABLE_SIZE> edge_table;
-
-constexpr unsigned TRIANGLE_TABLE_SIZE = Center<12, 4>::CARD;
-PruningTable<TRIANGLE_TABLE_SIZE> triangle_table;
+PruningTable<CORNER_CARD> corner_table;
+PruningTable<EDGE_CARD> edge_table;
+PruningTable<TRIANGLE_CARD> triangle_table;
 
 void generate_corner_table(){    
     corner_table.generate<CubieFTO>(corner_index, corners_from_index, moves, 3, 4);

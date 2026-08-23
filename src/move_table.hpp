@@ -76,12 +76,13 @@ struct MoveTable {
 
 struct FTO {
     // Coordinate level representation of an FTO
-    unsigned cp;   // Corner permutation + orientation
-    unsigned ep;   // Edge permutation
-    unsigned tri1; // Triangles of first tetrad
-    unsigned tri2; // Triangles of second tetrad
+    unsigned cp{0};   // Corner permutation + orientation
+    unsigned ep{0};   // Edge permutation
+    unsigned tri1{0}; // Triangles of first tetrad
+    unsigned tri2{0}; // Triangles of second tetrad
 
     unsigned corner_index() const;
+    void apply(const Move &m);
 };
 
 bool is_solved(const FTO &fto);
@@ -94,4 +95,3 @@ bool is_solved(const FTO &fto);
 
 void load_move_tables();
 void generate_move_tables();
-// void apply(const Move &m, FTO &fto);
