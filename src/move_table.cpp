@@ -34,9 +34,9 @@ void generate_move_tables() {
     emt.write(edge_mtable_path);
 }
 
-void apply(const Move &m, FTO &fto){
-    cmt.apply(m, fto.cp);
-    emt.apply(m, fto.ep);
-    tmt.apply(m, fto.tri1);
-    tmt.apply(zSHIFT[m], fto.tri2);
-};
+// void apply(const Move &m, FTO &fto){
+//     cmt.apply(m, fto.cp);
+//     emt.apply(m, fto.ep);
+//     tmt.apply(m, fto.tri1);
+//     tmt.apply(zSHIFT[m], fto.tri2);
+// };

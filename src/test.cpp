@@ -84,7 +84,7 @@ int main(int argc, const char* argv[]) {
     // Some testing on sequences and moves
     auto node = make_root(CubieFTO(), true);
     for (unsigned k = 0; k < NMOVES; ++k) {
-        node = node->expand(apply, moves)[k];
+        node = node->expand(moves)[k];
     }
     node->get_path<Move>();
     auto root = node->get_root();

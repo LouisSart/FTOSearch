@@ -18,5 +18,5 @@ Solutions<NodePtr> optimal(const CubieFTO &fto){
     
     
     auto root = make_root(fto);
-    return IDAstar(root, apply, estimate, is_solved, standard_directions, 14);
+    return IDAstar(root, estimate, is_solved, standard_directions, 14);
 }

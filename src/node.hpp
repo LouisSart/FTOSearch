@@ -25,13 +25,13 @@ struct Node : public std::enable_shared_from_this<Node<Cube>> {
    public:
     bool is_root() const { return parent == nullptr; }
 
-    std::vector<sptr> expand(const auto &apply, const auto &directions) {
+    std::vector<sptr> expand(const auto &directions) {
         // Generates the children of the current node
         std::vector<sptr> children;
         Cube next;
         for (auto &&move : directions) {
             next = state;
-            apply(move, next);
+            next.apply(move);
             children.emplace_back(new Node(
                 next, depth + 1, this->shared_from_this(), inverse, move));
         }

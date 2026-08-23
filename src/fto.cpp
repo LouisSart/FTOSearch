@@ -82,16 +82,6 @@ static const Permutation<NT> TP[NMOVES] {
     {0,1,2,3,11,9,5,7,4,6,10,8}  // bL'
 };
 
-// struct CubieFTO {
-//     Permutation<NC> cp;   // Corner permutation
-//     Orientation<NC> co;   // Corner orientation
-//     Permutation<NE> ep;   // Edge permutation
-//     Triangles<NT, 3> tri1; // Triangles of first tetrad
-//     Triangles<NT, 3> tri2; // Triangles of second tetrad
-
-    
-// };
-
 void CubieFTO::corner_apply(const Move& m) {
     cp.compose(CP[m]);
     permute<NC>(co, CP[m]);
@@ -169,10 +159,6 @@ unsigned order(const Sequence<Move> &seq) {
         count += 1;
     }
     return count;
-}
-
-void apply(const Move &m, CubieFTO &fto) {
-    fto.apply(m);
 }
 
 bool is_solved(const CubieFTO &fto){

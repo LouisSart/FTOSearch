@@ -24,10 +24,9 @@ struct Solutions : public std::vector<NodePtr> {
     }
 };
 
-template <bool verbose = false, typename NodePtr, typename Mover,
+template <bool verbose = false, typename NodePtr,
           typename Pruner, typename SolveCheck, typename Directions>
 Solutions<NodePtr> depth_first_search(std::deque<NodePtr> queue,
-                                      const Mover &apply,
                                       const Pruner &estimate,
                                       const SolveCheck &is_solved,
                                       const Directions &directions,
@@ -47,7 +46,7 @@ Solutions<NodePtr> depth_first_search(std::deque<NodePtr> queue,
             queue.pop_back();
             hope = node->depth + estimate(node->state);
             if (hope <= max_depth) {
-                auto children = node->expand(apply, directions(node));
+                auto children = node->expand(directions(node));
                 for (auto &&child : children) {
                     queue.push_back(child);
                 }
@@ -62,22 +61,22 @@ Solutions<NodePtr> depth_first_search(std::deque<NodePtr> queue,
     return solutions;
 }
 
-template <bool verbose = false, typename NodePtr, typename Mover,
+template <bool verbose = false, typename NodePtr,
           typename Pruner, typename SolveCheck, typename Directions>
-Solutions<NodePtr> depth_first_search(const NodePtr root, const Mover &apply,
+Solutions<NodePtr> depth_first_search(const NodePtr root,
                                       const Pruner &estimate,
                                       const SolveCheck &is_solved,
                                       const Directions &directions,
                                       const unsigned max_depth = 4) {
     // Overload for solving a single starting position
     std::deque<NodePtr> queue({root});
-    return depth_first_search<verbose>(queue, apply, estimate, is_solved,
+    return depth_first_search<verbose>(queue, estimate, is_solved,
                                        directions, max_depth);
 }
 
-template <bool verbose = false, typename NodePtr, typename Mover,
+template <bool verbose = false, typename NodePtr,
           typename Pruner, typename SolveCheck, typename Directions>
-Solutions<NodePtr> IDAstar(std::deque<NodePtr> roots, const Mover &apply,
+Solutions<NodePtr> IDAstar(std::deque<NodePtr> roots,
                            const Pruner &estimate, const SolveCheck &is_solved,
                            const Directions &directions,
                            const unsigned max_depth = 20,
@@ -95,7 +94,7 @@ Solutions<NodePtr> IDAstar(std::deque<NodePtr> roots, const Mover &apply,
             std::cout << "Searching at depth " << search_depth << std::endl;
         }
         solutions = depth_first_search<verbose>(
-            roots, apply, estimate, is_solved, directions, search_depth);
+            roots, estimate, is_solved, directions, search_depth);
         search_depth = solutions.best_hope;
     }
     if constexpr (verbose) {
@@ -113,7 +112,7 @@ Solutions<NodePtr> IDAstar(std::deque<NodePtr> roots, const Mover &apply,
         if (verbose)
             std::cout << "Searching at depth " << search_depth << std::endl;
         solutions = depth_first_search<verbose>(
-            roots, apply, estimate, is_solved, directions, search_depth);
+            roots, estimate, is_solved, directions, search_depth);
     }
     if constexpr (verbose) {
         if (solutions.size() == 0) {
@@ -123,15 +122,15 @@ Solutions<NodePtr> IDAstar(std::deque<NodePtr> roots, const Mover &apply,
     return solutions;
 }
 
-template <bool verbose = false, typename NodePtr, typename Mover,
+template <bool verbose = false, typename NodePtr,
           typename Pruner, typename SolveCheck, typename Directions>
-Solutions<NodePtr> IDAstar(const NodePtr root, const Mover &apply,
+Solutions<NodePtr> IDAstar(const NodePtr root,
                            const Pruner &estimate, const SolveCheck &is_solved,
                            const Directions &directions,
                            const unsigned max_depth = 20,
                            const unsigned slackness = 0) {
     // Overload for solving a single starting position
     std::deque<NodePtr> queue{root};
-    return IDAstar<verbose>(queue, apply, estimate, is_solved, directions,
+    return IDAstar<verbose>(queue, estimate, is_solved, directions,
                             max_depth, slackness);
 }

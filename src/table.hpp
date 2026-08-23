@@ -61,7 +61,7 @@ struct PruningTable {
     }
 
     unsigned DFS_fill(const auto &cube, const unsigned &depth,
-                      const unsigned &fill_depth, const auto &apply,
+                      const unsigned &fill_depth,
                       const auto &index, const auto &moves) {
         unsigned ret = 0;
         if (depth == fill_depth) {
@@ -73,8 +73,8 @@ struct PruningTable {
         } else {
             for (const auto move : moves) {
                 auto child = cube;
-                apply(move, child);
-                ret += DFS_fill(child, depth + 1, fill_depth, apply, index,
+                child.apply(move);
+                ret += DFS_fill(child, depth + 1, fill_depth, index,
                                 moves);
             }
         }
@@ -82,7 +82,7 @@ struct PruningTable {
     }
 
     template <typename Cube, bool verbose = false>
-    void generate(const auto &apply, const auto &index,
+    void generate(const auto &index,
                   const auto &from_index,
                   const auto &moves,
                   const unsigned forward_switch_depth = 3,
@@ -95,7 +95,7 @@ struct PruningTable {
         Cube cube;
         while (fill_depth < forward_switch_depth) {
             // IDDFS is only fast on the first few layers of the tree.
-            nodes = DFS_fill(cube, 0, fill_depth, apply, index, moves);
+            nodes = DFS_fill(cube, 0, fill_depth, index, moves);
 
             if constexpr (verbose) print(fill_depth, nodes);
             node_counter += nodes;
@@ -113,7 +113,7 @@ struct PruningTable {
                     cube = from_index(k);
                     for (const auto &m : moves) {
                         auto child = cube;
-                        apply(m, child);
+                        child.apply(m);
 
                         unsigned ci = index(child);
                         if (!is_assigned(ci)) {
@@ -137,10 +137,10 @@ struct PruningTable {
             nodes = 0;
             for (unsigned k = 0; k < N; ++k) {
                 if (!is_assigned(k)) {
-                    auto cube = from_index(k);
+                    cube = from_index(k);
                     for (const auto &m : moves) {
                         auto parent = cube;
-                        apply(m, parent);
+                        parent.apply(m);
 
                         unsigned pi = index(parent);
                         if ((unsigned)(table[pi] + 1) == fill_depth) {
@@ -159,47 +159,6 @@ struct PruningTable {
         assert(is_filled());
         assert(N == node_counter);
     }
-
-    // template <bool verbose = false, typename Cube, typename Mover,
-    //           typename Indexer, std::size_t NM = 18>
-    // auto generate_BFS(const Cube &root, const Mover &apply,
-    //                   const Indexer &index,
-    //                   const std::array<Move, NM> &moves = HTM_Moves) {
-    //     std::deque<Cube> queue{root};
-
-    //     table[index(root)] = 0;
-    //     unsigned i = 0, depth = 0, count = 1;
-
-    //     while (!queue.empty()) {
-    //         Cube cc = queue.back();
-    //         i = index(cc);
-
-    //         if constexpr (verbose) {
-    //             if (table[i] > depth) {
-    //                 print(depth, count, (double)count / size() * 100, "%");
-    //             }
-    //         }
-
-    //         depth = table[i];
-    //         assert(i < N);
-
-    //         for (auto move : moves) {
-    //             Cube cc2 = cc;
-    //             apply(move, cc2);
-
-    //             unsigned ii = index(cc2);
-    //             assert(ii < N);
-    //             if (!is_assigned(ii)) {
-    //                 table[ii] = depth + 1;
-    //                 queue.push_front(cc2);
-    //                 ++count;
-    //             }
-    //         }
-    //         queue.pop_back();
-    //     }
-    //     assert(is_filled());
-    //     assert(count == N);
-    // }
 
     std::vector<unsigned> get_distribution() const {
         std::vector<unsigned> ret = {0};

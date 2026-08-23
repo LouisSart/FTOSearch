@@ -32,14 +32,10 @@ struct CubieFTO {
 };
 
 unsigned order(const Sequence<Move> &seq);
-void apply(const Move &m, CubieFTO &fto);
 bool is_solved(const CubieFTO &fto);
 unsigned corner_index(const CubieFTO& fto);
 CubieFTO corners_from_index(const unsigned &c);
-void corner_apply(const Move &m, CubieFTO& fto);
 unsigned edge_index(const CubieFTO& fto);
 CubieFTO edges_from_index(const unsigned &c);
-void edge_apply(const Move &m, CubieFTO& fto);
 unsigned tri1_index(const CubieFTO& fto);
 CubieFTO tri1_from_index(const unsigned &c);
-void triangle_apply(const Move &m, CubieFTO& fto);
