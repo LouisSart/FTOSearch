@@ -1,6 +1,8 @@
 #include "fto.hpp"
 #include "table.hpp"
 #include "node.hpp"
+#include "move_table.hpp"
+
 #include<cassert>
 
 int main(int argc, const char* argv[]) {
@@ -87,6 +89,11 @@ int main(int argc, const char* argv[]) {
     node->get_path<Move>();
     auto root = node->get_root();
     allowed_next(bL);
+
+    // Move table build test
+    MoveTable<TRIANGLE_CARD, NMOVES> tmt;
+    tmt.compute<CubieFTO>(tri1_index, tri1_from_index, moves);
+    tmt.write("triangles");
 
     return 0;
 }
