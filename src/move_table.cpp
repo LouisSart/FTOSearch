@@ -11,10 +11,11 @@ fs::path corner_mtable_path = mtable_dir / "corners";
 fs::path edge_mtable_path = mtable_dir / "edges";
 fs::path triangle_mtable_path = mtable_dir / "triangles";
 
-void load_move_tables() {
-    cmt.load(corner_mtable_path);
-    emt.load(edge_mtable_path);
-    tmt.load(triangle_mtable_path);
+bool load_move_tables() {
+    if (cmt.load(corner_mtable_path)
+        && emt.load(edge_mtable_path)
+        && tmt.load(triangle_mtable_path)) return true;
+    return false;
 }
 
 void generate_move_tables() {

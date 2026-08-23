@@ -93,5 +93,5 @@ bool is_solved(const FTO &fto);
 // unsigned tri1_index(const FTO& fto);
 // FTO tri1_from_index(const unsigned &c);
 
-void load_move_tables();
+bool load_move_tables();
 void generate_move_tables();
