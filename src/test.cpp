@@ -90,10 +90,5 @@ int main(int argc, const char* argv[]) {
     auto root = node->get_root();
     allowed_next(bL);
 
-    // Move table build test
-    MoveTable<TRIANGLE_CARD, NMOVES> tmt;
-    tmt.compute<CubieFTO>(tri1_index, tri1_from_index, moves);
-    tmt.write("triangles");
-
     return 0;
 }
