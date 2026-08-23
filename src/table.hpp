@@ -110,7 +110,7 @@ struct PruningTable {
             nodes = 0;
             for (unsigned k = 0; k < N; ++k) {
                 if (table[k] + 1 == fill_depth) {
-                    cube = from_index(k);
+                    from_index(k, cube);
                     for (const auto &m : moves) {
                         auto child = cube;
                         child.apply(m);
@@ -137,7 +137,7 @@ struct PruningTable {
             nodes = 0;
             for (unsigned k = 0; k < N; ++k) {
                 if (!is_assigned(k)) {
-                    cube = from_index(k);
+                    from_index(k, cube);
                     for (const auto &m : moves) {
                         auto parent = cube;
                         parent.apply(m);

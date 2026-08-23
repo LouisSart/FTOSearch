@@ -34,8 +34,8 @@ struct CubieFTO {
 unsigned order(const Sequence<Move> &seq);
 bool is_solved(const CubieFTO &fto);
 unsigned corner_index(const CubieFTO& fto);
-CubieFTO corners_from_index(const unsigned &c);
+void corners_from_index(const unsigned &c, CubieFTO& fto);
 unsigned edge_index(const CubieFTO& fto);
-CubieFTO edges_from_index(const unsigned &c);
+void edges_from_index(const unsigned &c, CubieFTO& fto);
 unsigned tri1_index(const CubieFTO& fto);
-CubieFTO tri1_from_index(const unsigned &c);
+void tri1_from_index(const unsigned &c, CubieFTO& fto);

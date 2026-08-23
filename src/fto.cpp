@@ -170,10 +170,8 @@ unsigned corner_index(const CubieFTO& fto){
     return fto.corner_index();
 }
 
-CubieFTO corners_from_index(const unsigned &c) {
-    CubieFTO fto;
+void corners_from_index(const unsigned &c, CubieFTO& fto) {
     fto.set_corners_from_index(c);
-    return fto;
 }
 
 void corner_apply(const Move &m, CubieFTO& fto){
@@ -186,10 +184,8 @@ unsigned edge_index(const CubieFTO& fto){
     return fto.ep.index();
 }
 
-CubieFTO edges_from_index(const unsigned &c) {
-    CubieFTO fto;
+void edges_from_index(const unsigned &c, CubieFTO &fto) {
     fto.ep.set_from_index(c);
-    return fto;
 }
 
 void edge_apply(const Move &m, CubieFTO& fto){
@@ -201,10 +197,8 @@ unsigned tri1_index(const CubieFTO& fto){
     return fto.tri1.index();
 }
 
-CubieFTO tri1_from_index(const unsigned &c) {
-    CubieFTO fto;
+void tri1_from_index(const unsigned &c, CubieFTO &fto) {
     fto.tri1.set_from_index(c);
-    return fto;
 }
 
 void triangle_apply(const Move &m, CubieFTO& fto){

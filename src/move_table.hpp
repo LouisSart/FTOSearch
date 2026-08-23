@@ -19,16 +19,18 @@ struct MoveTable {
         // index : a function that takes in a Cube instance and returns
         // some coordinate for it
         // from_index : a function that takes in a
-        // coordinate value and returns a Cube instance for it
+        // coordinate value and  a Cube, and sets the cube object to a corresponding state
 
         if constexpr (verbose) {
             print("Building move table of size", N, "for", NMOVES, "moves");
         }
+
+        Cube cc;
         for (unsigned c = 0; c < N; ++c) {
             if constexpr (verbose) {
                 if (c % (N / 10) == 0) print(c / (N / 10) * 10, "%");
             }
-            Cube cc = from_index(c);
+            from_index(c, cc);
             for (unsigned m = 0; m < NMOVES; ++m) {
                 auto buffer_cc = cc;
                 buffer_cc.apply(moves[m]);
