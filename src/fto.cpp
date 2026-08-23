@@ -82,8 +82,6 @@ static const Permutation<NT> TP[NMOVES] {
     {0,1,2,3,11,9,5,7,4,6,10,8}  // bL'
 };
 
-static const Move zSHIFT[NMOVES] {L, L2, U, U2, R, R2, F, F2, bL, bL2, B, B2, bR, bR2, D, D2};
-
 // struct CubieFTO {
 //     Permutation<NC> cp;   // Corner permutation
 //     Orientation<NC> co;   // Corner orientation

@@ -3,7 +3,7 @@
 #include <filesystem>  // locate table files
 #include <fstream>     // write tables into files
 #include <memory>      // std::shared_ptr
-
+#include <cassert>     // assert
 #include "utils.hpp"
 
 namespace fs = std::filesystem;
@@ -12,18 +12,22 @@ template <unsigned N, unsigned NMOVES>
 struct MoveTable {
     std::shared_ptr<unsigned[]> table{new unsigned[N * NMOVES]};
 
-    fs::path move_table_dir() const { return "move_tables/"; }
-
     MoveTable() { std::fill(table.get(), table.get() + N, N); }
 
-    template <typename Cube>
+    template <typename Cube, bool verbose = false>
     void compute(const auto &index, const auto &from_index, const auto moves) {
         // index : a function that takes in a Cube instance and returns
         // some coordinate for it
         // from_index : a function that takes in a
         // coordinate value and returns a Cube instance for it
 
+        if constexpr (verbose) {
+            print("Building move table of size", N, "for", NMOVES, "moves");
+        }
         for (unsigned c = 0; c < N; ++c) {
+            if constexpr (verbose) {
+                if (c % (N / 10) == 0) print(c / (N / 10) * 10, "%");
+            }
             Cube cc = from_index(c);
             for (unsigned m = 0; m < NMOVES; ++m) {
                 auto buffer_cc = cc;
@@ -42,8 +46,7 @@ struct MoveTable {
     template<typename Move>
     void apply(const Move &m, unsigned &c) { c = table[c * NMOVES + m]; }
 
-    bool load(fs::path filename) {
-        auto table_path = move_table_dir() / filename;
+    bool load(fs::path table_path) {
         if (fs::exists(table_path)) {
             std::ifstream istrm(table_path, std::ios::binary);
             istrm.read(reinterpret_cast<char *>(table.get()),
@@ -57,8 +60,7 @@ struct MoveTable {
         return false;
     }
 
-    void write(fs::path filename) const {
-        auto table_path = move_table_dir() / filename;
+    void write(fs::path table_path) const {
         fs::create_directories(table_path.parent_path());
         std::ofstream file(table_path, std::ios::binary);
         file.write(reinterpret_cast<const char *>(table.get()),
@@ -67,8 +69,27 @@ struct MoveTable {
     }
 };
 
-//SHOULD BE IN A SEPARATE FILE
-#include "permutation.hpp"
-constexpr unsigned CORNER_CARD = Permutation<6, true>::CARD * Orientation<6>::CARD;
-constexpr unsigned EDGE_CARD = Permutation<12, true>::CARD;
-constexpr unsigned TRIANGLE_CARD = Center<12, 4>::CARD;
+#include "fto.hpp"
+#include "move.hpp"
+
+struct FTO {
+    // Coordinate level representation of an FTO
+    unsigned cp;   // Corner permutation + orientation
+    unsigned ep;   // Edge permutation
+    unsigned tri1; // Triangles of first tetrad
+    unsigned tri2; // Triangles of second tetrad
+
+    unsigned corner_index() const;
+};
+
+bool is_solved(const FTO &fto);
+// unsigned corner_index(const FTO& fto);
+// FTO corners_from_index(const unsigned &c);
+// unsigned edge_index(const FTO& fto);
+// FTO edges_from_index(const unsigned &c);
+// unsigned tri1_index(const FTO& fto);
+// FTO tri1_from_index(const unsigned &c);
+
+void load_move_tables();
+void generate_move_tables();
+void apply(const Move &m, FTO &fto);

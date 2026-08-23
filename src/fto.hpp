@@ -8,6 +8,8 @@ constexpr unsigned NE = 12;
 constexpr unsigned NT = 12; // 12 triangles per tetrad
 constexpr unsigned NF = 4; // 4 faces per tetrad
 
+static const Move zSHIFT[NMOVES] {L, L2, U, U2, R, R2, F, F2, bL, bL2, B, B2, bR, bR2, D, D2};
+
 struct CubieFTO {
     Permutation<NC, true> cp;   // Corner permutation
     Orientation<NC> co;   // Corner orientation
