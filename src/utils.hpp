@@ -2,6 +2,9 @@
 #include <array>
 #include <iostream>
 #include <vector>
+#include <chrono>
+
+using namespace std::chrono;
 
 inline void init_array(unsigned *l, unsigned size, unsigned value) {
     for (unsigned i = 0; i < size; ++i) {
@@ -37,4 +40,19 @@ void print(const T &truc, const Ts &...reste) {
         std::cout << truc << " ";
         print(reste...);
     }
+}
+
+void time_fn(const auto f, const unsigned N){
+    //Time exec of a function
+    auto start = high_resolution_clock::now();
+
+    for (unsigned k = 0; k < N; ++k){
+        f();
+    }
+    // Record ending time
+    auto stop = high_resolution_clock::now();
+
+    auto duration = duration_cast<microseconds>( stop - start);
+
+    print("Time taken: ", duration.count(), " microseconds");
 }
