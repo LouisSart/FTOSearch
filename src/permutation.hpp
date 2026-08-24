@@ -2,6 +2,7 @@
 #include <array>
 #include <set>
 #include <cassert>
+#include <algorithm>
 #include "utils.hpp"
 
 constexpr unsigned ipow(unsigned k, unsigned n) {
@@ -197,28 +198,79 @@ struct Permutation : std::array<unsigned, N> {
         }
         return ret;
     }
+
+    template<unsigned M>
+    Permutation<M> get_sub_permutation(const std::array<unsigned, M> pieces) {
+        // returns the sub permutation for values
+        // in pieces
+        static_assert(M < N);
+        Permutation<M> ret;
+        // for (unsigned i = 0; i < M; ++i) {
+        //     (*this)[i] = 
+        // }
+        return ret;
+    }
+};
+
+template <unsigned N, unsigned M>
+struct Layout : std::array<unsigned, N> {
+    // holds the positions of M elements amongst
+    // N positions regardless of order
+    static constexpr unsigned filled = 1;
+    static constexpr unsigned empty = 0;
+
+    Layout() { // Constructeur sans arguments
+        static_assert(M < N);
+        this->fill(empty);
+        for (unsigned k = 0; k < M; ++k){
+            this->operator[](k) = filled;
+        }
+    }
+
+    Layout(const Permutation<N> &p, const std::set<unsigned> pieces) {
+        for (unsigned k = 0; k < N; ++k) {
+            if (pieces.contains(p[k])){
+                this->operator[](k) = 1;
+            }
+        }
+    }
+
+    constexpr unsigned cardinality() const {
+        return binomial(N, M);
+    }
+    static constexpr unsigned CARD = cardinality();
+
+    unsigned index() const {
+        return layout_index(*this, M);
+    }
+
+    void set_from_index(const unsigned &c) {
+        layout_from_index(c, *this, M);
+    }
 };
 
 template <unsigned N, unsigned M>
 struct PartialPermutation {
     // holds the state of a sequence without repetitions
     // of M objects amongst N positions
-    Permutation<M> p;        // permutation of pieces at there positions
-    std::array<N> layout;    // position of pieces
+    Permutation<M> permutation;        // permutation of pieces at there positions
+    Layout<N, M> layout;     // position of pieces
     static constexpr unsigned empty = N;
 
-    PartialPermutation() { // Constructeur sans arguments
-        static_assert(M < N);
-        for (unsigned k = 0; k < M; ++k){
-            this->operator[](k) = k;
-        }
-        for (unsigned k = M; k < N; ++k){
-            this->operator[](k) = empty;
+    PartialPermutation() = default; // Constructeur sans arguments
+    PartialPermutation(const Permutation<N> &p, const std::set<unsigned> pieces) : layout(p, pieces) {
+        std::array<unsigned, M> p_arr;
+        unsigned i = 0;
+        for (auto k : pieces) {p_arr[i] = k; ++i;}
+        i = 0;
+        for (unsigned k : p) {
+            auto it = std::find(p_arr.begin(), p_arr.end(), k);
+            if (it != p_arr.end()) {
+                permutation[i] = it - p_arr.begin();
+                ++i;
+            }
         }
     }
-
-    template<typename... Args>
-    PartialPermutation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
 
     static constexpr unsigned cardinality() {
         return factorial(M) * binomial(N, M);
