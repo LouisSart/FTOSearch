@@ -72,7 +72,11 @@ int main(int argc, const char* argv[]) {
         O.set_from_index(k);
         assert(O.index() == k);
     }
-
+    Layout<10, 3> l;
+    for (unsigned c = 0; c < l.cardinality(); ++c){
+        l.set_from_index(c);
+        assert(l.index() == c);
+    }
     Center<12, 4> center;
     for (unsigned c = 0; c < center.cardinality(); ++c){
         center.set_from_index(c);
