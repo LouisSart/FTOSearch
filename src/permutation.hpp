@@ -52,6 +52,39 @@ constexpr unsigned binomial(unsigned n, unsigned k) {
     return binomial_table[n * 13 + k];
 }
 
+
+template <std::size_t n>
+unsigned layout_index(const std::array<unsigned, n> &layout, unsigned r) {
+    // n: number of positions
+    // r: number of pieces
+    unsigned t = 0;
+    for (unsigned i = n - 1; i > 0; --i) {
+        if (layout[i] == 1) {
+            t += binomial(i, r);
+            r -= 1;
+        }
+    }
+    return t;
+}
+
+template <std::size_t n>
+void layout_from_index(unsigned c, std::array<unsigned, n> &layout,
+                       unsigned r) {
+    // n: number of positions
+    // r: number of pieces
+    assert(r <= n);
+    assert(c < binomial(n, r));
+    for (auto i = n - 1; i < n; --i) {
+        if (c >= binomial(i, r)) {
+            c = c - binomial(i, r);
+            layout[i] = 1;
+            r = r - 1;
+        } else {
+            layout[i] = 0;
+        }
+    }
+}
+
 template<unsigned N, bool even = false>
 struct Permutation : std::array<unsigned, N> {
 
@@ -150,6 +183,8 @@ struct Permutation : std::array<unsigned, N> {
 
     template<unsigned M>
     Permutation<M> get_sub_permutation() {
+        // returns the sub permutation for values
+        // 0 to M - 1
         static_assert(M < N);
         Permutation<M> ret;
         auto it = ret.begin();
@@ -161,6 +196,33 @@ struct Permutation : std::array<unsigned, N> {
         }
         return ret;
     }
+};
+
+template <unsigned N, unsigned M>
+struct PartialPermutation {
+    // holds the state of a sequence without repetitions
+    // of M objects amongst N positions
+    Permutation<M> p;        // permutation of pieces at there positions
+    std::array<N> layout;    // position of pieces
+    static constexpr unsigned empty = N;
+
+    PartialPermutation() { // Constructeur sans arguments
+        static_assert(M < N);
+        for (unsigned k = 0; k < M; ++k){
+            this->operator[](k) = k;
+        }
+        for (unsigned k = M; k < N; ++k){
+            this->operator[](k) = empty;
+        }
+    }
+
+    template<typename... Args>
+    PartialPermutation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
+
+    static constexpr unsigned cardinality() {
+        return factorial(M) * binomial(N, M);
+    }
+    static constexpr unsigned CARD = cardinality();
 };
 
 template<unsigned N, unsigned v = 2, bool even = true>
@@ -232,38 +294,6 @@ struct Orientation : std::array<unsigned, N> {
         return true;
     }
 };
-
-template <std::size_t n>
-unsigned layout_index(const std::array<unsigned, n> &layout, unsigned r) {
-    // n: number of positions
-    // r: number of pieces
-    unsigned t = 0;
-    for (unsigned i = n - 1; i > 0; --i) {
-        if (layout[i] == 1) {
-            t += binomial(i, r);
-            r -= 1;
-        }
-    }
-    return t;
-}
-
-template <std::size_t n>
-void layout_from_index(unsigned c, std::array<unsigned, n> &layout,
-                       unsigned r) {
-    // n: number of positions
-    // r: number of pieces
-    assert(r <= n);
-    assert(c < binomial(n, r));
-    for (auto i = n - 1; i < n; --i) {
-        if (c >= binomial(i, r)) {
-            c = c - binomial(i, r);
-            layout[i] = 1;
-            r = r - 1;
-        } else {
-            layout[i] = 0;
-        }
-    }
-}
 
 template<unsigned N, unsigned M>
 struct Center : std::array<unsigned, N> {

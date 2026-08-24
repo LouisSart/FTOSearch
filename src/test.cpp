@@ -79,6 +79,9 @@ int main(int argc, const char* argv[]) {
         assert(center.index() == c);
     }
 
+    PartialPermutation<12, 4> r;
+    assert(r.cardinality() == 12 * 11 * 10 * 9);
+
     generate_corner_table();
 
     // Some testing on sequences and moves
