@@ -276,6 +276,17 @@ struct PartialPermutation {
         return factorial(M) * binomial(N, M);
     }
     static constexpr unsigned CARD = cardinality();
+
+    unsigned index() const {
+        return layout.index() * permutation.cardinality() + permutation.index();
+    }
+
+    void set_from_index(const unsigned & c) {
+        unsigned cp = c % permutation.cardinality();
+        unsigned cl = c / permutation.cardinality();
+        permutation.set_from_index(cp);
+        layout.set_from_index(cl);
+    }
 };
 
 template<unsigned N, unsigned v = 2, bool even = true>

@@ -77,6 +77,11 @@ int main(int argc, const char* argv[]) {
         l.set_from_index(c);
         assert(l.index() == c);
     }
+    PartialPermutation<10, 3> pp;
+    for (unsigned c = 0; c < pp.cardinality(); ++c){
+        pp.set_from_index(c);
+        assert(pp.index() == c);
+    }
     Center<12, 4> center;
     for (unsigned c = 0; c < center.cardinality(); ++c){
         center.set_from_index(c);
