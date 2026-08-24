@@ -147,6 +147,20 @@ struct Permutation : std::array<unsigned, N> {
         (*this)[i] = (*this)[j];
         (*this)[j] = buf;
     }
+
+    template<unsigned M>
+    Permutation<M> get_sub_permutation() {
+        static_assert(M < N);
+        Permutation<M> ret;
+        auto it = ret.begin();
+        for (unsigned k : *this) {
+            if (k < M) {
+                *it = k;
+                ++it;
+            }
+        }
+        return ret;
+    }
 };
 
 template<unsigned N, unsigned v = 2, bool even = true>
