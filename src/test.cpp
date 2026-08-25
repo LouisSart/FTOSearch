@@ -62,6 +62,12 @@ int main(int argc, const char* argv[]) {
         q.set_from_index(c);
         assert(q.index() == c);
     }
+    unsigned card = Layout<11, 4>::CARD * Permutation<4>::CARD;
+    Permutation<11> r;
+    for(unsigned c = 0; c < card; ++c) { // Any parity
+        r.set_from_partial_index<4>(c, {1,3,5,7});
+        assert(r.partial_index<4>({1,3,5,7}) == c);
+    }
     Orientation<7> o; // even orientations
     for (unsigned k = 0; k < o.cardinality(); ++k) {
         o.set_from_index(k);
@@ -77,19 +83,11 @@ int main(int argc, const char* argv[]) {
         l.set_from_index(c);
         assert(l.index() == c);
     }
-    PartialPermutation<10, 3> pp;
-    for (unsigned c = 0; c < pp.cardinality(); ++c){
-        pp.set_from_index(c);
-        assert(pp.index() == c);
-    }
     Center<12, 4> center;
     for (unsigned c = 0; c < center.cardinality(); ++c){
         center.set_from_index(c);
         assert(center.index() == c);
     }
-
-    PartialPermutation<12, 4> r;
-    assert(r.cardinality() == 12 * 11 * 10 * 9);
 
     generate_corner_table();
 
