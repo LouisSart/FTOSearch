@@ -230,7 +230,7 @@ struct Permutation : std::array<unsigned, N> {
     }
 
     template<unsigned M>
-    Permutation<M> get_sub_permutation() {
+    Permutation<M> get_sub_permutation() const {
         // returns the sub permutation for values
         // 0 to M - 1
         static_assert(M < N);
@@ -246,7 +246,7 @@ struct Permutation : std::array<unsigned, N> {
     }
 
     template<long unsigned M>
-    Permutation<M> get_sub_permutation(const std::array<unsigned, M> &pieces) {
+    Permutation<M> get_sub_permutation(const std::array<unsigned, M> &pieces) const {
         // returns the sub permutation of elements in
         // array pieces
         static_assert(M < N);
@@ -263,7 +263,7 @@ struct Permutation : std::array<unsigned, N> {
     }
 
     template<long unsigned M>
-    unsigned partial_index(const std::array<unsigned, M> &pieces) {
+    unsigned partial_index(const std::array<unsigned, M> &pieces) const {
         static_assert(M < N);
         Layout<N, M> l(*this, pieces);
         Permutation<M> p = get_sub_permutation(pieces);
