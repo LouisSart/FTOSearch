@@ -59,6 +59,8 @@ template <std::size_t n>
 unsigned layout_index(const std::array<unsigned, n> &layout, unsigned r) {
     // n: number of positions
     // r: number of pieces
+    assert(r <= n);
+    assert(0 < n);
     unsigned t = 0;
     for (unsigned i = n - 1; i > 0; --i) {
         if (layout[i] == 1) {
@@ -110,6 +112,8 @@ struct Layout : std::array<unsigned, N> {
         for (unsigned k = 0; k < N; ++k) {
             if (std::find(pieces.begin(), pieces.end(), p[k]) != pieces.end()){
                 this->operator[](k) = 1;
+            } else {
+                this->operator[](k) = 0;
             }
         }
     }

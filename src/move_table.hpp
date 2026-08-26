@@ -34,9 +34,12 @@ struct MoveTable {
             for (unsigned m = 0; m < NMOVES; ++m) {
                 auto buffer_cc = cc;
                 buffer_cc.apply(moves[m]);
-                table[c * NMOVES + m] = index(buffer_cc);
+                auto ii = index(buffer_cc);
+                table[c * NMOVES + m] = ii;
+                assert(ii < N);
             }
         }
+        assert(is_filled());
     }
 
     bool is_filled() const {
@@ -77,7 +80,8 @@ struct MoveTable {
 struct FTO {
     // Coordinate level representation of an FTO
     unsigned cp{0};   // Corner permutation + orientation
-    unsigned ep{0};   // Edge permutation
+    unsigned e1{0};   // 5 edges partial permutation
+    unsigned e2{0};   // 5 other edges partial permutation
     unsigned tri1{0}; // Triangles of first tetrad
     unsigned tri2{0}; // Triangles of second tetrad
 
