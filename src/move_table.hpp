@@ -15,7 +15,7 @@ struct MoveTable {
     MoveTable() { std::fill(table.get(), table.get() + N, N); }
 
     template <typename Cube, bool verbose = false>
-    void compute(const auto &index, const auto &from_index, const auto moves) {
+    void compute(unsigned (*index)(const Cube&), void (*from_index)(const unsigned&, Cube&), const auto moves) {
         // index : a function that takes in a Cube instance and returns
         // some coordinate for it
         // from_index : a function that takes in a
@@ -90,12 +90,12 @@ struct FTO {
 };
 
 bool is_solved(const FTO &fto);
-// unsigned corner_index(const FTO& fto);
-// FTO corners_from_index(const unsigned &c);
-// unsigned edge_index(const FTO& fto);
-// FTO edges_from_index(const unsigned &c);
-// unsigned tri1_index(const FTO& fto);
-// FTO tri1_from_index(const unsigned &c);
+unsigned corner_index(const FTO& fto);
+FTO corners_from_index(const unsigned &c);
+unsigned edge_index(const FTO& fto);
+FTO edges_from_index(const unsigned &c);
+unsigned tri1_index(const FTO& fto);
+FTO tri1_from_index(const unsigned &c);
 
 bool load_move_tables();
 void generate_move_tables();
