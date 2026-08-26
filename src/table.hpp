@@ -82,8 +82,8 @@ struct PruningTable {
     }
 
     template <typename Cube, bool verbose = false>
-    void generate(const auto &index,
-                  const auto &from_index,
+    void generate(unsigned (*index)(const Cube&),
+                  void (*from_index)(const unsigned&, Cube&),
                   const auto &moves,
                   const unsigned forward_switch_depth = 3,
                   const unsigned backwards_switch_depth = 7) {
