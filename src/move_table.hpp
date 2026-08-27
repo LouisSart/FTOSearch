@@ -91,11 +91,11 @@ struct FTO {
 
 bool is_solved(const FTO &fto);
 unsigned corner_index(const FTO& fto);
-FTO corners_from_index(const unsigned &c);
+void corners_from_index(const unsigned &c, FTO&);
 unsigned edge_index(const FTO& fto);
-FTO edges_from_index(const unsigned &c);
+void edges_from_index(const unsigned &c, FTO&);
 unsigned tri1_index(const FTO& fto);
-FTO tri1_from_index(const unsigned &c);
+void tri1_from_index(const unsigned &c, FTO&);
 
 bool load_move_tables();
 void generate_move_tables();

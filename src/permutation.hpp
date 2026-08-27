@@ -249,12 +249,12 @@ struct Permutation : std::array<unsigned, N> {
         return ret;
     }
 
-    template<long unsigned M>
-    Permutation<M> get_sub_permutation(const std::array<unsigned, M> &pieces) const {
+    template<long unsigned M, bool sub_even = false>
+    Permutation<M, sub_even> get_sub_permutation(const std::array<unsigned, M> &pieces) const {
         // returns the sub permutation of elements in
         // array pieces
         static_assert(M < N);
-        Permutation<M> ret;
+        Permutation<M, sub_even> ret;
         unsigned i = 0;
         for (unsigned k : *this) {
             auto it = std::find(pieces.begin(), pieces.end(), k);
@@ -266,18 +266,18 @@ struct Permutation : std::array<unsigned, N> {
         return ret;
     }
 
-    template<long unsigned M>
+    template<long unsigned M, bool sub_even = false>
     unsigned partial_index(const std::array<unsigned, M> &pieces) const {
         static_assert(M < N);
         Layout<N, M> l(*this, pieces);
-        Permutation<M> p = get_sub_permutation(pieces);
+        Permutation<M, sub_even> p = get_sub_permutation<M, sub_even>(pieces);
         
         return l.index() * p.cardinality() + p.index();
     }
     
-    template<long unsigned M>
+    template<long unsigned M, bool sub_even = false>
     void set_from_partial_index(const unsigned &c, const std::array<unsigned, M> &pieces) {
-        Permutation<M> p(c % Permutation<M>::CARD);
+        Permutation<M> p(c % Permutation<M, sub_even>::CARD);
         Layout<N, M> l(c / Permutation<M>::CARD);
 
         unsigned k = 0;

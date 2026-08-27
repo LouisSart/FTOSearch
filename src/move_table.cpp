@@ -2,10 +2,11 @@
 #include "permutation.hpp"
 #include "fto.hpp"
 
-static constexpr unsigned FIVE_EDGE_CARD = Layout<NE, 5>::CARD * Permutation<5>::CARD;
+static constexpr unsigned SIX_EDGE_CARD = Layout<NE, 6>::CARD * Permutation<6>::CARD;
+static constexpr unsigned SIX_EDGE_EVEN_CARD = Layout<NE, 6>::CARD * Permutation<6, true>::CARD;
 static MoveTable<CORNER_CARD, NMOVES> cmt;
-static MoveTable<FIVE_EDGE_CARD, NMOVES> emt1;
-static MoveTable<FIVE_EDGE_CARD, NMOVES> emt2;
+static MoveTable<SIX_EDGE_CARD, NMOVES> emt1;
+static MoveTable<SIX_EDGE_EVEN_CARD, NMOVES> emt2;
 static MoveTable<TRIANGLE_CARD, NMOVES> tmt;
 
 fs::path mtable_dir = "move_tables";
@@ -24,20 +25,25 @@ bool load_move_tables() {
 
 
 // Split edges into two parts otherwise the move table is 15 GB lool
+// First part is a 6 edge partial permutation (any parity)
 unsigned e1_index(const CubieFTO& fto){
-    return fto.ep.partial_index<5>({0, 1, 2, 3, 4});
+    return fto.ep.partial_index<6>({0, 1, 2, 3, 4, 5});
 }
 
 void e1_from_index(const unsigned &c, CubieFTO &fto) {
-    fto.ep.set_from_partial_index<5>(c, {0, 1, 2, 3, 4});
+    fto.ep.set_from_partial_index<6>(c, {0, 1, 2, 3, 4, 5});
 }
 
+// Second part takes care of the last 6 edges partial
+// perm but ignores the actual permutation of the last 2
+// because it is forced by the parity of the first set e1
 unsigned e2_index(const CubieFTO& fto){
-    return fto.ep.partial_index<5>({5, 6, 7, 8, 9});
+    // CHECKME : should be partial_index<6, true>
+    return fto.ep.partial_index<6, true>({6, 7, 8, 9, 10, 11});
 }
 
 void e2_from_index(const unsigned &c, CubieFTO &fto) {
-    fto.ep.set_from_partial_index<5>(c, {5, 6, 7, 8, 9});
+    fto.ep.set_from_partial_index<6, true>(c, {6, 7, 8, 9, 10, 11});
 }
 
 void generate_move_tables() {
@@ -47,10 +53,10 @@ void generate_move_tables() {
     tmt.compute<CubieFTO>(tri1_index, tri1_from_index, moves);
     tmt.write(triangle_mtable_path);
 
-    emt1.compute<CubieFTO>(e1_index, e1_from_index, moves);
+    emt1.compute<CubieFTO, true>(e1_index, e1_from_index, moves);
     emt1.write(edge_mtable_path_1);
 
-    emt2.compute<CubieFTO>(e2_index, e2_from_index, moves);
+    emt2.compute<CubieFTO, true>(e2_index, e2_from_index, moves);
     emt2.write(edge_mtable_path_2);
 }
 
@@ -61,3 +67,11 @@ void FTO::apply(const Move &m) {
     tmt.apply(m, tri1);
     tmt.apply(zSHIFT[m], tri2);
 };
+
+unsigned corner_index(const FTO& fto){return fto.cp;}
+void corners_from_index(const unsigned &c, FTO&);
+unsigned edge_index(const FTO& fto){return fto.e1 * (fto.e2 % Permutation<6>::CARD);};
+void edges_from_index(const unsigned &c, FTO&);
+unsigned tri1_index(const FTO& fto){return fto.tri1;}
+void tri1_from_index(const unsigned &c, FTO&);
+unsigned tri2_index(const FTO& fto){return fto.tri2;}
