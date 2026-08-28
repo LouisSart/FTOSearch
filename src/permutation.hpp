@@ -233,15 +233,31 @@ struct Permutation : std::array<unsigned, N> {
         (*this)[j] = buf;
     }
 
-    template<unsigned M>
-    Permutation<M> get_sub_permutation() const {
+    template<unsigned M, bool sub_even = false>
+    Permutation<M, sub_even> get_sub_permutation() const {
         // returns the sub permutation for values
         // 0 to M - 1
         static_assert(M < N);
-        Permutation<M> ret;
+        Permutation<M, sub_even> ret;
         auto it = ret.begin();
         for (unsigned k : *this) {
             if (k < M) {
+                *it = k;
+                ++it;
+            }
+        }
+        return ret;
+    }
+
+    template<unsigned M, bool sub_even = false>
+    Permutation<M, sub_even> get_sub_permutation_complement() const {
+        // returns the sub permutation for values
+        // M to N - 1
+        static_assert(M < N);
+        Permutation<M, sub_even> ret;
+        auto it = ret.begin();
+        for (unsigned k : *this) {
+            if (k > M) {
                 *it = k;
                 ++it;
             }
@@ -264,6 +280,24 @@ struct Permutation : std::array<unsigned, N> {
             }
         }
         return ret;
+    }
+
+    template<unsigned M = N / 2>
+    std::array<unsigned, 3> split_indices() const {
+        // split the Permutation in two splits
+        // return the layout coordinate for the first set
+        // as well along the local permutation
+        // index for each set
+        static_assert(M < N);
+        Layout<N, M> l;
+        for (unsigned i = 0; i < N; ++i) {
+            if ((*this)[i] < M) l[i] = 1;
+            else l[i] = 0;
+        }
+        Permutation<M> p1 = get_sub_permutation<M>();
+        Permutation<M, even> p2 = get_sub_permutation_complement<M, even>();
+
+        return {l.index(), p1.index(), p2.index()};
     }
 
     template<long unsigned M, bool sub_even = false>

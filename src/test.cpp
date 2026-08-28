@@ -58,9 +58,16 @@ int main(int argc, const char* argv[]) {
         assert(p.index() == c);
     }
     Permutation<6, true> q;
+    unsigned psize1 = factorial(3);
+    unsigned psize2 = factorial(3) / 2;
     for(unsigned c = 0; c < q.cardinality(); ++c) { // Even parity only
         q.set_from_index(c);
         assert(q.index() == c);
+
+        auto [cl, p1, p2] = q.split_indices();
+        unsigned e = (cl * psize1 + p1) * psize2 + p2;
+        // assert(e < q.cardinality() - 1); // this fails (good !)
+        assert(e < q.cardinality()); // this doesn't (perfect !)
     }
     unsigned card = Layout<11, 4>::CARD * Permutation<4>::CARD;
     Permutation<11> r;
@@ -101,7 +108,7 @@ int main(int argc, const char* argv[]) {
     allowed_next(bL);
 
     MoveTable<CORNER_CARD, NMOVES> cmt;
-    cmt.compute<CubieFTO, true>(corner_index, corners_from_index, moves);
+    cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
     FTO cube;
     for (auto m : seq) {
         cmt.apply(m, cube.cp);
