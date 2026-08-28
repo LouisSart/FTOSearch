@@ -161,6 +161,24 @@ struct Permutation : std::array<unsigned, N> {
     }
     static constexpr unsigned CARD = cardinality();
 
+    unsigned parity() const {
+        std::set<unsigned> visited;
+        unsigned i = 0, swaps = 0;
+        while (visited.size() < N) {
+            if (!visited.contains(i)){
+                visited.insert(i);
+                unsigned buf = (*this)[i];
+                while (buf != i) {
+                    visited.insert(buf);
+                    buf = (*this)[buf];
+                    ++swaps;
+                }
+            }
+            ++i;
+        }
+        return swaps % 2;
+    }
+
     void reset() {
         for (unsigned k = 0; k < N; ++k){
             this->operator[](k) = k;
@@ -304,7 +322,7 @@ struct Permutation : std::array<unsigned, N> {
     void set_from_split_indices(unsigned cl, unsigned c1, unsigned c2) {
         Layout<N, M> l(cl);
         Permutation<M> p1(c1);
-        Permutation<M, even> p2(c2);
+        Permutation<N - M, even> p2(c2);
 
         unsigned k1 = 0, k2 = 0;
         for (unsigned i = 0; i < N; ++i) {
@@ -315,8 +333,19 @@ struct Permutation : std::array<unsigned, N> {
                 (*this)[i] = p2[k2] + M;
                 ++k2;
             }
-
         }
+
+        if constexpr (even){
+            // swap back the elements that were set from c2
+            // to force p2 even parity
+            // if this->parity() == 1
+            if (this->parity() == 1){
+                auto it1 = std::find(this->begin(), this->end(), p2[N - M - 1] + M);
+                auto it2 = std::find(this->begin(), this->end(), p2[N - M - 2] + M);
+                swap(it1 - this->begin(), it2 - this->begin());
+            };
+        }
+
     }
 
     template<long unsigned M, bool sub_even = false>

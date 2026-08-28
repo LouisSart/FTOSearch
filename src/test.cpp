@@ -80,11 +80,8 @@ int main(int argc, const char* argv[]) {
 
         q.set_from_split_indices(cl, p1, p2);
         auto [_cl, _p1, _p2] = q.split_indices();
-        // We don't have p.index() == c here because
-        // the second sub permutation assumes even parity
-        // to make sure the combination of the split coordinates
-        // has the same cardinality as c.
         assert(_cl == cl && _p1 == p1 && _p2 == p2);
+        assert(q.index() == c);
     }
     unsigned card = Layout<11, 4>::CARD * Permutation<4>::CARD;
     Permutation<11> r;
@@ -113,8 +110,6 @@ int main(int argc, const char* argv[]) {
         assert(center.index() == c);
     }
 
-    generate_corner_table();
-
     // Some testing on sequences and moves
     auto node = make_root(CubieFTO(), true);
     for (unsigned k = 0; k < NMOVES; ++k) {
@@ -127,7 +122,10 @@ int main(int argc, const char* argv[]) {
     MoveTable<CORNER_CARD, NMOVES> cmt;
     cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
 
-    load_move_tables();
+    if (!load_move_tables()) {
+        generate_move_tables();
+    }
+    generate_corner_table();
 
     FTO cube;
     for (auto m : seq) {
