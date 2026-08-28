@@ -126,13 +126,18 @@ int main(int argc, const char* argv[]) {
 
     MoveTable<CORNER_CARD, NMOVES> cmt;
     cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
-    FTO cube;
-    for (auto m : seq) {
-        cmt.apply(m, cube.cp);
-    }
-    assert(cube.cp == 0);
 
     load_move_tables();
+
+    FTO cube;
+    for (auto m : seq) {
+        cube.apply(m);
+    }
+    assert(cube.cp == 0);
+    assert(cube.e1 == 0);
+    assert(cube.e2 == 0);
+    assert(cube.tri1 == 0);
+    assert(cube.tri2 == 0);
 
     return 0;
 }
