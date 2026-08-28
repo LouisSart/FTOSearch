@@ -257,7 +257,7 @@ struct Permutation : std::array<unsigned, N> {
         Permutation<M, sub_even> ret;
         auto it = ret.begin();
         for (unsigned k : *this) {
-            if (k > M) {
+            if (k >= M) {
                 *it = k;
                 ++it;
             }
@@ -298,6 +298,25 @@ struct Permutation : std::array<unsigned, N> {
         Permutation<M, even> p2 = get_sub_permutation_complement<M, even>();
 
         return {l.index(), p1.index(), p2.index()};
+    }
+
+    template<unsigned M = N / 2>
+    void set_from_split_indices(unsigned cl, unsigned c1, unsigned c2) {
+        Layout<N, M> l(cl);
+        Permutation<M> p1(c1);
+        Permutation<M, even> p2(c2);
+
+        unsigned k1 = 0, k2 = 0;
+        for (unsigned i = 0; i < N; ++i) {
+            if (l[i] == 1) {
+                (*this)[i] = p1[k1];
+                ++k1;
+            } else {
+                (*this)[i] = p2[k2] + M;
+                ++k2;
+            }
+
+        }
     }
 
     template<long unsigned M, bool sub_even = false>

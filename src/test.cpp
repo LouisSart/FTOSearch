@@ -53,8 +53,17 @@ int main(int argc, const char* argv[]) {
 
     // Test if indexing is correct
     Permutation<6> p;
+    unsigned psize = factorial(3);
     for(unsigned c = 0; c < p.cardinality(); ++c) { // Any parity
         p.set_from_index(c);
+        assert(p.index() == c);
+
+        auto [cl, p1, p2] = p.split_indices();
+        unsigned e = (cl * psize + p1) * psize + p2;
+        // assert(e < p.cardinality() - 1); // this fails (good !)
+        assert(e < p.cardinality()); // this doesn't (perfect !)
+
+        p.set_from_split_indices(cl, p1, p2);
         assert(p.index() == c);
     }
     Permutation<6, true> q;
@@ -68,6 +77,14 @@ int main(int argc, const char* argv[]) {
         unsigned e = (cl * psize1 + p1) * psize2 + p2;
         // assert(e < q.cardinality() - 1); // this fails (good !)
         assert(e < q.cardinality()); // this doesn't (perfect !)
+
+        q.set_from_split_indices(cl, p1, p2);
+        auto [_cl, _p1, _p2] = q.split_indices();
+        // We don't have p.index() == c here because
+        // the second sub permutation assumes even parity
+        // to make sure the combination of the split coordinates
+        // has the same cardinality as c.
+        assert(_cl == cl && _p1 == p1 && _p2 == p2);
     }
     unsigned card = Layout<11, 4>::CARD * Permutation<4>::CARD;
     Permutation<11> r;
