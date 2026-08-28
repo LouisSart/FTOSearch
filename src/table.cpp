@@ -26,7 +26,7 @@ void generate_edge_table(){
 }
 
 void generate_triangle_table(){
-    print("Generating triangle pruning table");  
+    print("Generating triangle pruning table");
     triangle_table.generate<FTO, true>(tri1_index, tri1_from_index, moves, 3, 7);
     triangle_table.write(triangle_table_path);
     // triangle_table.show_distribution();
