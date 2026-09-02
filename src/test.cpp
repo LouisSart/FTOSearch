@@ -68,14 +68,13 @@ int main(int argc, const char* argv[]) {
         assert(p.index() == c);
     }
     Permutation<6, true> q;
-    unsigned psize1 = factorial(3);
-    unsigned psize2 = factorial(3) / 2;
     for(unsigned c = 0; c < q.cardinality(); ++c) { // Even parity only
         q.set_from_index(c);
         assert(q.index() == c);
 
         auto [cl, p1, p2] = q.split_indices();
         q.set_from_split_indices(cl, p1, p2);
+        assert(q.parity() == 0);
         assert(q.index() == c);
     }
     unsigned card = Layout<11, 4>::CARD * Permutation<4>::CARD;
