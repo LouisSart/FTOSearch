@@ -213,7 +213,7 @@ struct Permutation : std::array<unsigned, N> {
     void set_from_index(unsigned c) {
         // Reconstruct the permutation having index c
         static_assert(N > 0); // empty permutations are a problem
-        assert(c < N);
+        assert(c < CARD);
 
         if constexpr (even) {
             assert(N > 2); // trivial case do not implement
