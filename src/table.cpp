@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "table.hpp"
-#include "move_table.hpp"
+#include "coordinate_fto.hpp"
 
 fs::path table_dir = "pruning_tables";
 fs::path corner_table_path = table_dir / "corners";
