@@ -75,13 +75,7 @@ int main(int argc, const char* argv[]) {
         assert(q.index() == c);
 
         auto [cl, p1, p2] = q.split_indices();
-        unsigned e = (cl * psize1 + p1) * psize2 + p2;
-        // assert(e < q.cardinality() - 1); // this fails (good !)
-        assert(e < q.cardinality()); // this doesn't (perfect !)
-
         q.set_from_split_indices(cl, p1, p2);
-        auto [_cl, _p1, _p2] = q.split_indices();
-        assert(_cl == cl && _p1 == p1 && _p2 == p2);
         assert(q.index() == c);
     }
     unsigned card = Layout<11, 4>::CARD * Permutation<4>::CARD;

@@ -213,6 +213,7 @@ struct Permutation : std::array<unsigned, N> {
     void set_from_index(unsigned c) {
         // Reconstruct the permutation having index c
         static_assert(N > 0); // empty permutations are a problem
+        assert(c < N);
 
         if constexpr (even) {
             assert(N > 2); // trivial case do not implement
@@ -313,7 +314,7 @@ struct Permutation : std::array<unsigned, N> {
             else l[i] = 0;
         }
         Permutation<M> p1 = get_sub_permutation<M>();
-        Permutation<M, even> p2 = get_sub_permutation_complement<M, even>();
+        Permutation<M> p2 = get_sub_permutation_complement<M>();
 
         return {l.index(), p1.index(), p2.index()};
     }
@@ -322,7 +323,7 @@ struct Permutation : std::array<unsigned, N> {
     void set_from_split_indices(unsigned cl, unsigned c1, unsigned c2) {
         Layout<N, M> l(cl);
         Permutation<M> p1(c1);
-        Permutation<N - M, even> p2(c2);
+        Permutation<N - M> p2(c2);
 
         unsigned k1 = 0, k2 = 0;
         for (unsigned i = 0; i < N; ++i) {
@@ -334,18 +335,6 @@ struct Permutation : std::array<unsigned, N> {
                 ++k2;
             }
         }
-
-        if constexpr (even){
-            // swap back the elements that were set from c2
-            // to force p2 even parity
-            // if this->parity() == 1
-            if (this->parity() == 1){
-                auto it1 = std::find(this->begin(), this->end(), p2[N - M - 1] + M);
-                auto it2 = std::find(this->begin(), this->end(), p2[N - M - 2] + M);
-                swap(it1 - this->begin(), it2 - this->begin());
-            };
-        }
-
     }
 
     template<long unsigned M, bool sub_even = false>

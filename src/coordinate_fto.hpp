@@ -11,6 +11,7 @@ struct FTO {
 
     unsigned corner_index() const;
     void apply(const Move &m);
+    void show() const;
 };
 
 bool is_solved(const FTO &fto);

@@ -4,12 +4,10 @@
 #include "coordinate_fto.hpp"
 
 static constexpr unsigned SIX_EDGE_PERM_CARD = Permutation<6>::CARD;
-static constexpr unsigned SIX_EDGE_EVEN_PERM_CARD = Permutation<6>::CARD / 2;
 static constexpr unsigned SIX_EDGE_CARD = Layout<NE, 6>::CARD * SIX_EDGE_PERM_CARD;
-static constexpr unsigned SIX_EDGE_EVEN_CARD = Layout<NE, 6>::CARD * SIX_EDGE_EVEN_PERM_CARD;
 static MoveTable<CORNER_CARD, NMOVES> cmt;
 static MoveTable<SIX_EDGE_CARD, NMOVES> emt1;
-static MoveTable<SIX_EDGE_EVEN_CARD, NMOVES> emt2;
+static MoveTable<SIX_EDGE_CARD, NMOVES> emt2;
 static MoveTable<TRIANGLE_CARD, NMOVES> tmt;
 
 fs::path mtable_dir = "move_tables";
@@ -44,11 +42,11 @@ void e1_from_index(const unsigned &c, CubieFTO &fto) {
 // because it is forced by the parity of the first set e1
 unsigned e2_index(const CubieFTO& fto){
     auto [cl, c1, c2] = fto.ep.split_indices();
-    return cl * SIX_EDGE_EVEN_PERM_CARD + c2;
+    return cl * SIX_EDGE_PERM_CARD + c2;
 }
 
 void e2_from_index(const unsigned &c, CubieFTO &fto) {
-    fto.ep.set_from_split_indices(c / SIX_EDGE_EVEN_PERM_CARD, 0, c % SIX_EDGE_EVEN_PERM_CARD);
+    fto.ep.set_from_split_indices(c / SIX_EDGE_PERM_CARD, 0, c % SIX_EDGE_PERM_CARD);
 }
 
 void generate_move_tables() {
@@ -73,23 +71,33 @@ void FTO::apply(const Move &m) {
     tmt.apply(zSHIFT[m], tri2);
 };
 
+void FTO::show() const {
+    print("Coordinate-level FTO object:");
+    print("  cp =", cp);
+    print("  e1 =", e1);
+    print("  e2 =", e2);
+    print("  tri1 =", tri1);
+    print("  tri2 =", tri2);
+}
+
+
 unsigned corner_index(const FTO& fto){return fto.cp;}
 void corners_from_index(const unsigned &c, FTO& fto){
     fto.cp = c;
 };
 
 unsigned edge_index(const FTO& fto){
-    return fto.e1 * SIX_EDGE_EVEN_PERM_CARD + (fto.e2 % SIX_EDGE_EVEN_PERM_CARD);
+    return fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD);
 }
 
 void edges_from_index(const unsigned &c, FTO& fto){
-    unsigned e1 = c / SIX_EDGE_EVEN_PERM_CARD;
+    unsigned e1 = c / SIX_EDGE_PERM_CARD;
     unsigned cl = e1 / SIX_EDGE_PERM_CARD;
     unsigned c1 = e1 % SIX_EDGE_PERM_CARD;
-    unsigned c2 = c % SIX_EDGE_EVEN_PERM_CARD;
+    unsigned c2 = c % SIX_EDGE_PERM_CARD;
 
     fto.e1 = cl * SIX_EDGE_PERM_CARD + c1;
-    fto.e2 = cl * SIX_EDGE_EVEN_PERM_CARD + c2;
+    fto.e2 = cl * SIX_EDGE_PERM_CARD + c2;
 }
 unsigned tri1_index(const FTO& fto){return fto.tri1;}
 void tri1_from_index(const unsigned &c, FTO& fto){
