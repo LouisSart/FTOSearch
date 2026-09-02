@@ -3,7 +3,7 @@
 #include <cassert>
 #include <deque>
 
-#include "node.hpp"
+#include "../lib/node.hpp"
 
 template <typename NodePtr>
 struct Solutions : public std::vector<NodePtr> {

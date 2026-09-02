@@ -1,7 +1,7 @@
 #include "fto.hpp"
 #include "coordinate_fto.hpp"
 #include "table.hpp"
-#include "node.hpp"
+#include "../lib/node.hpp"
 #include "move_table.hpp"
 
 #include<cassert>

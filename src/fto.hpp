@@ -1,7 +1,17 @@
 #pragma once
-#include "permutation.hpp"
-#include "utils.hpp"
-#include "move.hpp"
+#include "../lib/permutation.hpp"
+#include "../lib/utils.hpp"
+#include "../lib/move.hpp"
+
+enum Move : unsigned {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+std::ostream& operator<< (std::ostream& out, const Move& m);
+constexpr unsigned NMOVES = 16;
+constexpr Move moves[NMOVES] = {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+
+// Reduce branching by preventing turning twice the same layer / 
+// chaining opposite moves
+const std::vector<Move> &allowed_next(const Move m);
+
 
 constexpr unsigned NC = 6;
 constexpr unsigned NE = 12;

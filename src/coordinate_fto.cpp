@@ -1,5 +1,5 @@
 #include "move_table.hpp"
-#include "permutation.hpp"
+#include "../lib/permutation.hpp"
 #include "fto.hpp"
 #include "coordinate_fto.hpp"
 
