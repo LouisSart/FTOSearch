@@ -21,9 +21,10 @@ void generate_corner_table(){
 
 void generate_edge_table(){    
     print("Generating edge pruning table");  
+    // edge_table.generate<FTO, true>(edge_index, edges_from_index, moves, 13, 14);
     edge_table.generate<FTO, true>(edge_index, edges_from_index, moves, 5, 11);
     edge_table.write(edge_table_path);
-    // edge_table.show_distribution();
+    edge_table.show_distribution();
 }
 
 void generate_triangle_table(){
@@ -73,15 +74,13 @@ unsigned estimate(const CubieFTO &fto){
         );
 };
 
-
-std::vector<Move> standard_directions(const Node<CubieFTO>::sptr node) {
-    static std::vector<Move> all {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
-
-    if (node->parent == nullptr) {
-        return all;
-    } else {
-        return allowed_next(static_cast<Move>(node->last_move));
-    }
+unsigned estimate(const FTO& fto) {
+    return std::max({
+        corner_table.estimate(corner_index(fto)),
+        edge_table.estimate(edge_index(fto)),
+        triangle_table.estimate(tri1_index(fto)),
+        triangle_table.estimate(tri2_index(fto))
+    });
 }
 
 Solutions<CubieFTO> optimal(const CubieFTO &fto){
@@ -91,5 +90,5 @@ Solutions<CubieFTO> optimal(const CubieFTO &fto){
     
     
     auto root = make_root(fto);
-    return IDAstar(root, estimate, is_solved, standard_directions, 14);
+    return IDAstar<false, CubieFTO>(root, estimate, is_solved, standard_directions<CubieFTO>, 14);
 }

@@ -1,7 +1,18 @@
 #include "../lib/search.hpp"
 #include "fto.hpp"
+#include "coordinate_fto.hpp"
 
-std::vector<Move> standard_directions(const Node<CubieFTO>::sptr node);
+template<typename Cube>
+std::vector<Move> standard_directions(const typename Node<Cube>::sptr node) {
+    static std::vector<Move> all {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+
+    if (node->parent == nullptr) {
+        return all;
+    } else {
+        return allowed_next(static_cast<Move>(node->last_move));
+    }
+}
+
 Solutions<CubieFTO> optimal(const CubieFTO &fto);
 
 
@@ -16,3 +27,4 @@ void generate_pruning_tables();
 bool load_pruning_tables();
 
 unsigned estimate(const CubieFTO& fto);
+unsigned estimate(const FTO& fto);

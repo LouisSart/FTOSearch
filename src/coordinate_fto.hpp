@@ -1,3 +1,4 @@
+#pragma once
 #include "fto.hpp"
 #include "move.hpp"
 
@@ -12,15 +13,17 @@ struct FTO {
     unsigned corner_index() const;
     void apply(const Move &m);
     void show() const;
+    void random_moves(const unsigned n);
 };
 
-bool is_solved(const FTO &fto);
-unsigned corner_index(const FTO& fto);
-void corners_from_index(const unsigned &c, FTO&);
-unsigned edge_index(const FTO& fto);
-void edges_from_index(const unsigned &c, FTO&);
-unsigned tri1_index(const FTO& fto);
-void tri1_from_index(const unsigned &c, FTO&);
-
+bool is_solved(const FTO &);
+unsigned corner_index(const FTO&);
+void corners_from_index(const unsigned &, FTO&);
+unsigned edge_index(const FTO&);
+void edges_from_index(const unsigned &, FTO&);
+unsigned tri1_index(const FTO&);
+void tri1_from_index(const unsigned &, FTO&);
+unsigned tri2_index(const FTO&);
+void tri2_from_index(const unsigned &, FTO&);
 bool load_move_tables();
 void generate_move_tables();

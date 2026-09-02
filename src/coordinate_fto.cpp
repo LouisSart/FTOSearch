@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <ctime>
 #include "move_table.hpp"
 #include "../lib/permutation.hpp"
 #include "fto.hpp"
@@ -71,6 +73,16 @@ void FTO::apply(const Move &m) {
     tmt.apply(zSHIFT[m], tri2);
 };
 
+void FTO::random_moves(const unsigned n) {
+    srand(time(0));
+    for (unsigned k = 0; k < n; ++k) {
+        unsigned r = rand() % NMOVES;
+        apply(moves[r]);
+        std::cout << moves[r] << " ";
+    }
+    std::cout << std::endl;
+}
+
 void FTO::show() const {
     print("Coordinate-level FTO object:");
     print("  cp =", cp);
@@ -87,14 +99,14 @@ void corners_from_index(const unsigned &c, FTO& fto){
 };
 
 unsigned edge_index(const FTO& fto){
-    return fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD);
+    return (fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD)) / 2;
 }
 
 void edges_from_index(const unsigned &c, FTO& fto){
-    unsigned e1 = c / SIX_EDGE_PERM_CARD;
+    unsigned e1 = (2 * c) / SIX_EDGE_PERM_CARD;
     unsigned cl = e1 / SIX_EDGE_PERM_CARD;
     unsigned c1 = e1 % SIX_EDGE_PERM_CARD;
-    unsigned c2 = c % SIX_EDGE_PERM_CARD;
+    unsigned c2 = (2 * c) % SIX_EDGE_PERM_CARD;
 
     fto.e1 = cl * SIX_EDGE_PERM_CARD + c1;
     fto.e2 = cl * SIX_EDGE_PERM_CARD + c2;
@@ -103,3 +115,16 @@ unsigned tri1_index(const FTO& fto){return fto.tri1;}
 void tri1_from_index(const unsigned &c, FTO& fto){
     fto.tri1 = c;
 };
+
+unsigned tri2_index(const FTO& fto){return fto.tri2;}
+void tri2_from_index(const unsigned &c, FTO& fto){
+    fto.tri2 = c;
+};
+
+bool is_solved(const FTO &fto) {
+    return fto.cp == 0 &&
+        fto.e1 == 0 &&
+        fto.e2 == 0 &&
+        fto.tri1 == 0 &&
+        fto.tri2 == 0;
+}
