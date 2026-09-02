@@ -24,15 +24,14 @@ struct Solutions : public std::vector<typename Node<Cube>::sptr> {
     }
 };
 
-template <bool verbose = false, typename Cube,
-          typename Pruner, typename SolveCheck, typename Directions>
-Solutions<typename Node<Cube>::sptr> depth_first_search(std::deque<typename Node<Cube>::sptr> queue,
-                                      const Pruner &estimate,
-                                      const SolveCheck &is_solved,
-                                      const Directions &directions,
+template <bool verbose = false, typename Cube>
+Solutions<Cube> depth_first_search(std::deque<typename Node<Cube>::sptr> queue,
+                                      unsigned (*estimate)(const Cube&),
+                                      bool (*is_solved)(const Cube&),
+                                      const auto &directions,
                                       const unsigned max_depth = 4) {
     // Main implementation starting from any number of root states
-    Solutions<typename Node<Cube>::sptr> solutions;
+    Solutions<Cube> solutions;
     solutions.best_hope = 100;
     unsigned node_counter = 0, hope;
 
@@ -61,12 +60,11 @@ Solutions<typename Node<Cube>::sptr> depth_first_search(std::deque<typename Node
     return solutions;
 }
 
-template <bool verbose = false, typename Cube,
-          typename Pruner, typename SolveCheck, typename Directions>
-Solutions<typename Node<Cube>::sptr> depth_first_search(const typename Node<Cube>::sptr root,
-                                      const Pruner &estimate,
-                                      const SolveCheck &is_solved,
-                                      const Directions &directions,
+template <bool verbose = false, typename Cube>
+Solutions<Cube> depth_first_search(const typename Node<Cube>::sptr root,
+                                      unsigned (*estimate)(const Cube&),
+                                      bool (*is_solved)(const Cube&),
+                                      const auto &directions,
                                       const unsigned max_depth = 4) {
     // Overload for solving a single starting position
     std::deque<typename Node<Cube>::sptr> queue({root});
@@ -74,11 +72,10 @@ Solutions<typename Node<Cube>::sptr> depth_first_search(const typename Node<Cube
                                        directions, max_depth);
 }
 
-template <bool verbose = false, typename Cube,
-          typename Pruner, typename SolveCheck, typename Directions>
-Solutions<typename Node<Cube>::sptr> IDAstar(std::deque<typename Node<Cube>::sptr> roots,
-                           const Pruner &estimate, const SolveCheck &is_solved,
-                           const Directions &directions,
+template <bool verbose = false, typename Cube>
+Solutions<Cube> IDAstar(std::deque<typename Node<Cube>::sptr> roots,
+                           unsigned (*estimate)(const Cube&), bool (*is_solved)(const Cube&),
+                           const auto &directions,
                            const unsigned max_depth = 20,
                            const unsigned slackness = 0) {
     // Main implementation, starting from any number of root nodes
@@ -88,7 +85,7 @@ Solutions<typename Node<Cube>::sptr> IDAstar(std::deque<typename Node<Cube>::spt
             std::min(estimate(root->state) + root->depth, search_depth);
     }
 
-    Solutions<typename Node<Cube>::sptr> solutions;
+    Solutions<Cube> solutions;
     while (solutions.size() == 0 && search_depth <= max_depth) {
         if constexpr (verbose) {
             std::cout << "Searching at depth " << search_depth << std::endl;
@@ -122,11 +119,10 @@ Solutions<typename Node<Cube>::sptr> IDAstar(std::deque<typename Node<Cube>::spt
     return solutions;
 }
 
-template <bool verbose = false, typename Cube,
-          typename Pruner, typename SolveCheck, typename Directions>
-Solutions<typename Node<Cube>::sptr> IDAstar(const typename Node<Cube>::sptr root,
-                           const Pruner &estimate, const SolveCheck &is_solved,
-                           const Directions &directions,
+template <bool verbose = false, typename Cube>
+Solutions<Cube> IDAstar(const typename Node<Cube>::sptr root,
+                           unsigned (*estimate)(const Cube&), bool (*is_solved)(const Cube&),
+                           const auto &directions,
                            const unsigned max_depth = 20,
                            const unsigned slackness = 0) {
     // Overload for solving a single starting position
