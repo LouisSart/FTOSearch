@@ -1,9 +1,10 @@
 # Définition des variables
 # CC = g++
-CFLAGS = -Wall -I/src
+CFLAGS = -Wall
 STD = -std=c++20
 SRC_DIR = src
-OPT = -O1 -I$(SRC_DIR)/
+LIB_DIR = lib
+OPT = -O1 -I$(SRC_DIR)/ -I$(LIB_DIR)
 OBJ_DIR = obj
 EXE = $(OBJ_DIR)/fto
 TEST = $(OBJ_DIR)/test
