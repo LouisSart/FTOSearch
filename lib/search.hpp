@@ -95,7 +95,7 @@ Solutions<Cube> IDAstar(std::deque<typename Node<Cube>::sptr> roots,
         search_depth = solutions.best_hope;
     }
     if constexpr (verbose) {
-        std::cout << "Solutions found" << std::endl;
+        if (solutions.size() > 0) std::cout << "Solutions found" << std::endl;
     }
     if (slackness > 0) {
         // Find suboptimal with up to `slackness` extra moves
