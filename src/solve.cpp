@@ -84,7 +84,7 @@ std::vector<Move> standard_directions(const Node<CubieFTO>::sptr node) {
     }
 }
 
-Solutions<NodePtr> optimal(const CubieFTO &fto){
+Solutions<CubieFTO> optimal(const CubieFTO &fto){
     load_corner_table();
     load_triangle_table();
     load_edge_table();

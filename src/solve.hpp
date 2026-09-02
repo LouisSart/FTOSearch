@@ -1,9 +1,8 @@
 #include "../lib/search.hpp"
 #include "fto.hpp"
 
-using NodePtr = Node<CubieFTO>::sptr;
-std::vector<Move> standard_directions(const NodePtr node);
-Solutions<NodePtr> optimal(const CubieFTO &fto);
+std::vector<Move> standard_directions(const Node<CubieFTO>::sptr node);
+Solutions<CubieFTO> optimal(const CubieFTO &fto);
 
 
 void generate_corner_table();
