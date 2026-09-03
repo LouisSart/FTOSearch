@@ -73,11 +73,10 @@ void generate_edge_table(){
     print("Generating edge index conversion table");
     generate_edge_convert_table();
     write_edge_convert_table();
-    print("Generating edge pruning table");  
-    // edge_table.generate<FTO, true>(edge_index, edges_from_index, moves, 13, 14);
+    print("Generating edge pruning table");
     edge_table.generate<FTO, true>(dense_edge_index, edges_from_dense_index, moves, 5, 11);
     edge_table.write(edge_table_path);
-    edge_table.show_distribution();
+    // edge_table.show_distribution();
 }
 
 void generate_triangle_table(){
