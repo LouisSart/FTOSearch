@@ -101,7 +101,52 @@ epicier@ACAB:~/Documents/FTOSearch$ make fto && ./obj/fto
 Mean value: 9.55184
 Time taken:  62506042  microseconds
 ```
+3 septembre 2026:
 
 Résultat : la table prend 60 sec à être générée, plus la génération de la table de conversion (45s). En gros en temps de calcul je n'ai rien gagné à la génération de table, l'accélération ne se verra qu'en solve. Tout ça pour ça.
 
 Autre idée : Résoudre les arêtes revient à placer les arêtes de chaque tétrade sur leur face (en ignorant la parité). Eh oui car placer l'arête jaune-orange simultanément sur la face jaune et sur la face orange revient à la résoudre entièrement. Ça revient bêtement à construire deux pruning tables de taille 369000, dont l'une est symétrique de l'autre par rotation z. Bon par contre la pruning value associée doit pas être fofolle.
+
+## Comparaison Cubie-level vs Coordinate-level
+
+```shell
+eepicier@ACAB:~/Documents/FTOSearch$ make fto && ./obj/fto 
+g++ -std=c++20 -O1 -Isrc/ -Ilib obj/main.o obj/coordinate_fto.o obj/fto.o obj/solve.o  -o obj/fto
+D' L bR B D B' D' D' R U bL bR' F' bR // Scramble random moves
+
+// Coordinate-level solve
+Searching at depth 8
+Nodes generated: 111
+Searching at depth 9
+Nodes generated: 961
+Searching at depth 10
+Nodes generated: 9915
+Searching at depth 11
+Nodes generated: 94425
+Searching at depth 12
+Nodes generated: 1088675
+Searching at depth 13
+Nodes generated: 11816273
+Solutions found
+Time taken:  1173692  microseconds
+bR' F bR bL' U' R' D' B D' B' L' bR' D (13)
+
+// Cubie-level solve
+Searching at depth 8
+Nodes generated: 111
+Searching at depth 9
+Nodes generated: 961
+Searching at depth 10
+Nodes generated: 9915
+Searching at depth 11
+Nodes generated: 94425
+Searching at depth 12
+Nodes generated: 1088675
+Searching at depth 13
+Nodes generated: 11816273
+Solutions found
+Time taken:  5235784  microseconds
+bR' F bR bL' U' R' D' B D' B' L' bR' D (13)
+```
+
+On gagne un facteur 4 sur un solve à la profondeur 13 à utiliser les coordonnées. C'est bien mais c'est pas aussi fort que d'améliorer la pruning value...
