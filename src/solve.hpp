@@ -13,8 +13,6 @@ std::vector<Move> standard_directions(const typename Node<Cube>::sptr node) {
     }
 }
 
-Solutions<CubieFTO> optimal(const CubieFTO &fto);
-
 
 void generate_corner_table();
 void generate_edge_table();
@@ -28,3 +26,6 @@ void write_edge_convert_table();
 
 unsigned estimate(const CubieFTO& fto);
 unsigned estimate(const FTO& fto);
+
+Solutions<FTO> optimal(const FTO &, const unsigned m = 23);
+Solutions<CubieFTO> optimal(const CubieFTO &, const unsigned m = 23);

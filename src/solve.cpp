@@ -112,16 +112,24 @@ unsigned estimate(const CubieFTO &fto){
 unsigned estimate(const FTO& fto) {
     return std::max({
         corner_table.estimate(corner_index(fto)),
-        edge_table.estimate(edge_index(fto)),
+        edge_table.estimate(edge_conversion[edge_index(fto)]),
         triangle_table.estimate(tri1_index(fto)),
         triangle_table.estimate(tri2_index(fto))
     });
 }
 
-Solutions<CubieFTO> optimal(const CubieFTO &fto){
+Solutions<CubieFTO> optimal(const CubieFTO &fto, const unsigned max_depth){
     load_pruning_tables();
     
     
     auto root = make_root(fto);
-    return IDAstar<false, CubieFTO>(root, estimate, is_solved, standard_directions<CubieFTO>, 14);
+    return IDAstar<false, CubieFTO>(root, estimate, is_solved, standard_directions<CubieFTO>, max_depth);
+}
+
+Solutions<FTO> optimal(const FTO &fto, const unsigned max_depth){
+    // if (!load_move_tables()) generate_move_tables(); // CHECKME : pourquoi on ne peut pas loader ici ?
+    load_pruning_tables();
+
+    auto root = make_root(fto);
+    return IDAstar<true, FTO>(root, estimate, is_solved, standard_directions<FTO>, max_depth);
 }
