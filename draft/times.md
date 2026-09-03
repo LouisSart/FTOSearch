@@ -77,3 +77,31 @@ L'idée de génie qui va me permettre de conserver la permutation exacte après 
 
 Je pense m'en satisfaire pour l'instant vu que j'obtiens une mean value assez ok (9.13679 au lieu de 9.55184)
 et que j'ai sacrément accéléré la génération de la table.
+
+# Edge index conversion
+
+Bon en fait l'heuristique précédente n'était pas admissible, donc il arrivait que IDA* ne trouve pas de solution à la profondeur de l'optimal. J'ai fini par tabler sur une solution intermédiaire qui ne m'enchante pas : j'ai construit une table de conversion qui transforme la coordonnée de mon split 6/6 (donc sparse car elle autorise toutes les parités) en coordonnée creuse, e.g. la coordonnée équivalente de la permutation complète avec parité paire. Du coup je retombe sur la pruning table optimale, avec comme compromis la construction d'une table de conversion de taille 12! * sizeof(unsigned) (raté pour les économies de RAM) + la fonction set_from_index(c_dense) qui repasse par le cubie level, nécessaire au forward et backward scan. (Trop long avec IDDFS seul).
+
+```shell
+epicier@ACAB:~/Documents/FTOSearch$ make fto && ./obj/fto 
+ 0 1
+ 1 16
+ 2 160
+ 3 1408
+ 4 11712
+ 5 90912
+ 6 644756
+ 7 4070826
+ 8 21433009
+ 9 76410122
+10 109897795
+11 26611502
+12 328215
+13 366
+Mean value: 9.55184
+Time taken:  62506042  microseconds
+```
+
+Résultat : la table prend 60 sec à être générée, plus la génération de la table de conversion (45s). En gros en temps de calcul je n'ai rien gagné à la génération de table, l'accélération ne se verra qu'en solve. Tout ça pour ça.
+
+Autre idée : Résoudre les arêtes revient à placer les arêtes de chaque tétrade sur leur face (en ignorant la parité). Eh oui car placer l'arête jaune-orange simultanément sur la face jaune et sur la face orange revient à la résoudre entièrement. Ça revient bêtement à construire deux pruning tables de taille 369000, dont l'une est symétrique de l'autre par rotation z. Bon par contre la pruning value associée doit pas être fofolle.
