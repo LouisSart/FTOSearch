@@ -182,7 +182,9 @@ void CubieFTO::random_moves(const unsigned &n){
     for (unsigned k = 0; k < n; ++k) {
         unsigned r = rand() % NMOVES;
         apply(moves[r]);
+        std::cout << moves[r] << " ";
     }
+    std::cout << std::endl;
 }
 
 void CubieFTO::set_corners_from_index(const unsigned &c) {
@@ -241,6 +243,14 @@ unsigned tri1_index(const CubieFTO& fto){
 
 void tri1_from_index(const unsigned &c, CubieFTO &fto) {
     fto.tri1.set_from_index(c);
+}
+
+unsigned tri2_index(const CubieFTO& fto){
+    return fto.tri2.index();
+}
+
+void tri2_from_index(const unsigned &c, CubieFTO &fto) {
+    fto.tri2.set_from_index(c);
 }
 
 void triangle_apply(const Move &m, CubieFTO& fto){

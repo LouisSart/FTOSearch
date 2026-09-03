@@ -55,3 +55,6 @@ unsigned edge_index(const CubieFTO& fto);
 void edges_from_index(const unsigned &c, CubieFTO& fto);
 unsigned tri1_index(const CubieFTO& fto);
 void tri1_from_index(const unsigned &c, CubieFTO& fto);
+unsigned tri2_index(const CubieFTO&);
+void tri2_from_index(const unsigned &c, CubieFTO &);
+

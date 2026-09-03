@@ -13,7 +13,8 @@ struct FTO {
     unsigned tri1{0}; // Triangles of first tetrad
     unsigned tri2{0}; // Triangles of second tetrad
 
-    unsigned corner_index() const;
+    FTO() = default;
+    FTO(const CubieFTO&);
     void apply(const Move &m);
     void show() const;
     void random_moves(const unsigned n);

@@ -63,6 +63,15 @@ void generate_move_tables() {
     emt2.write(edge_mtable_path_2);
 }
 
+FTO::FTO(const CubieFTO& cfto){
+    cp = corner_index(cfto);
+    e1 = e1_index(cfto);
+    e2 = e2_index(cfto);
+    tri1 = tri1_index(cfto);
+    tri2 = tri2_index(cfto);
+}
+
+
 void FTO::apply(const Move &m) {
     cmt.apply(m, cp);
     emt1.apply(m, e1);
