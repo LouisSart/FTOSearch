@@ -5,8 +5,6 @@
 #include "fto.hpp"
 #include "coordinate_fto.hpp"
 
-static constexpr unsigned SIX_EDGE_PERM_CARD = Permutation<6>::CARD;
-static constexpr unsigned SIX_EDGE_CARD = Layout<NE, 6>::CARD * SIX_EDGE_PERM_CARD;
 static MoveTable<CORNER_CARD, NMOVES> cmt;
 static MoveTable<SIX_EDGE_CARD, NMOVES> emt1;
 static MoveTable<SIX_EDGE_CARD, NMOVES> emt2;
@@ -99,14 +97,14 @@ void corners_from_index(const unsigned &c, FTO& fto){
 };
 
 unsigned edge_index(const FTO& fto){
-    return (fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD)) / 2;
+    return fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD);
 }
 
 void edges_from_index(const unsigned &c, FTO& fto){
-    unsigned e1 = (2 * c) / SIX_EDGE_PERM_CARD;
+    unsigned e1 = c / SIX_EDGE_PERM_CARD;
     unsigned cl = e1 / SIX_EDGE_PERM_CARD;
     unsigned c1 = e1 % SIX_EDGE_PERM_CARD;
-    unsigned c2 = (2 * c) % SIX_EDGE_PERM_CARD;
+    unsigned c2 = c % SIX_EDGE_PERM_CARD;
 
     fto.e1 = cl * SIX_EDGE_PERM_CARD + c1;
     fto.e2 = cl * SIX_EDGE_PERM_CARD + c2;
