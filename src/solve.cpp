@@ -102,24 +102,6 @@ bool load_pruning_tables() {
     return false;
 }
 
-// Checkme : remove those since we have a loader for all of thme at once ?
-void load_corner_table(){
-    assert(fs::exists(corner_table_path));
-    corner_table.load(corner_table_path);
-}
-
-void load_edge_table(){
-    assert(fs::exists(edge_table_path));
-    edge_table.load(edge_table_path);
-}
-
-void load_triangle_table(){
-    assert(fs::exists(triangle_table_path));
-    triangle_table.load(triangle_table_path);
-}
-
-// CHECKME : we should now use the coordinate version
-// of FTO for solving
 unsigned estimate(const CubieFTO &fto){
     return std::max({corner_table.estimate(fto.corner_index()),
                     edge_table.estimate(fto.ep.index()),
@@ -138,9 +120,7 @@ unsigned estimate(const FTO& fto) {
 }
 
 Solutions<CubieFTO> optimal(const CubieFTO &fto){
-    load_corner_table();
-    load_triangle_table();
-    load_edge_table();
+    load_pruning_tables();
     
     
     auto root = make_root(fto);

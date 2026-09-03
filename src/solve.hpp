@@ -19,9 +19,6 @@ Solutions<CubieFTO> optimal(const CubieFTO &fto);
 void generate_corner_table();
 void generate_edge_table();
 void generate_triangle_table();
-void load_corner_table();
-void load_edge_table();
-void load_triangle_table();
 void generate_edge_convert_table();
 
 void generate_pruning_tables();
