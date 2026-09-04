@@ -150,3 +150,15 @@ bR' F bR bL' U' R' D' B D' B' L' bR' D (13)
 ```
 
 On gagne un facteur 4 sur un solve à la profondeur 13 à utiliser les coordonnées. C'est bien mais c'est pas aussi fort que d'améliorer la pruning value...
+
+# RLBD Coset size
+
+vendredi 4 septembre 2026 : je m'assure que les tailles du subset RLBD sont bien celles que je pense.
+
+```shell
+epicier@ACAB:~/Documents/FTOSearch$ make fto && ./obj/fto 
+g++ -std=c++20 -O1 -Isrc/ -Ilib -c src/main.cpp -o obj/main.o
+g++ -std=c++20 -O1 -Isrc/ -Ilib obj/main.o obj/coordinate_fto.o obj/fto.o obj/solve.o  -o obj/fto
+Triplet space size 11520 ==> OK
+Edge space size 81 ==> OK
+```
