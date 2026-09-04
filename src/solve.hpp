@@ -13,6 +13,8 @@ std::vector<Move> standard_directions(const typename Node<Cube>::sptr node) {
     }
 }
 
+unsigned dense_edge_index(const FTO&);
+void edges_from_dense_index(const unsigned &, FTO&);
 
 void generate_corner_table();
 void generate_edge_table();
