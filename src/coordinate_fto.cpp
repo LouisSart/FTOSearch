@@ -80,6 +80,12 @@ void FTO::apply(const Move &m) {
     tmt.apply(zSHIFT[m], tri2);
 };
 
+void FTO::apply(const Sequence<Move> &seq) {
+    for (auto m : seq) {
+        apply(m);
+    }
+};
+
 void FTO::random_moves(const unsigned n) {
     srand(time(0));
     for (unsigned k = 0; k < n; ++k) {

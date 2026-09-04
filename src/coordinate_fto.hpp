@@ -16,6 +16,7 @@ struct FTO {
     FTO() = default;
     FTO(const CubieFTO&);
     void apply(const Move &m);
+    void apply(const Sequence<Move> &);
     void show() const;
     void random_moves(const unsigned n);
 };
