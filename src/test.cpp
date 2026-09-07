@@ -30,6 +30,7 @@ int main(int argc, const char* argv[]) {
     fto.corner_apply({U, B, U, B, U, B, U, B, U, B, U, B});
     fto.corner_apply({bL, B, bL, B, bL, B, bL, B, bL, B, bL, B});
     fto.corner_apply({bL, L, bL, L, bL, L, bL, L, bL, L, bL, L});
+    fto.corner_apply({R,U,bR,L2,bL2,bR,bL,L,bR2,U2,bR2,R2});
     assert(fto.cp.is_solved());
     assert(fto.co.is_solved());
 
