@@ -45,6 +45,7 @@ struct CubieFTO {
     unsigned corner_index() const;
     void set_corners_from_index(const unsigned &c);
     void random_moves(const unsigned &n);
+    void show() const;
 };
 
 unsigned order(const Sequence<Move> &seq);

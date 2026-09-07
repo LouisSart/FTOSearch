@@ -124,6 +124,20 @@ static const Permutation<NT> TP[NMOVES] {
     {0,1,2,3,11,9,5,7,4,6,10,8}  // bL'
 };
 
+void CubieFTO::show() const {
+    print("Cubie-level FTO Object :");
+    std::cout << "     cp: ";
+    print_array(cp);
+    std::cout << "     co: ";
+    print_array(co);
+    std::cout << "     ep: ";
+    print_array(ep);
+    std::cout << "   tri1: ";
+    print_array(tri1);
+    std::cout << "   tri2: ";
+    print_array(tri2);
+};
+
 void CubieFTO::corner_apply(const Move& m) {
     cp.compose(CP[m]);
     permute<NC>(co, CP[m]);
