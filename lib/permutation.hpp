@@ -431,6 +431,14 @@ struct Orientation : std::array<unsigned, N> {
         }
         return true;
     }
+
+    template<bool perm_even>
+    void compose(const Permutation<N, perm_even> &perm, const Orientation<N, v, even> &ori) {
+        std::array<unsigned, N> buf = *this;
+        for (unsigned k = 0; k < N; ++k){
+            (*this)[k] = (buf[perm[k]] + ori[k]) % v;
+        }
+    }
 };
 
 template<unsigned N, unsigned M>
@@ -508,6 +516,7 @@ struct Center : std::array<unsigned, N> {
     }
 };
 
+// CHECKME : this has template deduction issues
 template<unsigned N>
 void permute(std::array<unsigned, N> &items, const Permutation<N> &perm) {
     std::array<unsigned, N> buf = items;
