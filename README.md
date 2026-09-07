@@ -22,14 +22,14 @@ Full pruning distances for corners and edges are shown below:
 
 Corners (permutation + orientation)
 Table size = 11520
-0 1
-1 16
-2 204
-3 1893
-4 7228
-5 2174
-6 4
-Mean value: 3.98516
+ 0 1
+ 1 16
+ 2 208
+ 3 1764
+ 4 6439
+ 5 2957
+ 6 135
+Mean value: 4.08637
 
 Edges (only one possible orientation)
 Table size = 239500800
