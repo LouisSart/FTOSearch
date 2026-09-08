@@ -89,6 +89,25 @@ void layout_from_index(unsigned c, std::array<unsigned, n> &layout,
     }
 }
 
+template<std::size_t N>
+void swap(const unsigned &i, const unsigned &j, std::array<unsigned, N> &a){
+    assert(i < N);
+    assert(j < N);
+    unsigned buf = a[i];
+    a[i] = a[j];
+    a[j] = buf;
+}
+
+template<std::size_t N>
+void random_shuffle(std::array<unsigned, N> &a) {
+    // Fisher-Yates shuffle
+    srand(time(0));
+    for (unsigned i = 0; i < N - 1; ++i) {
+        unsigned j = i + rand() % (N - i);
+        swap(i, j, a);
+    }
+}
+
 template <unsigned N, unsigned M>
 struct Layout : std::array<unsigned, N> {
     // holds the positions of M elements amongst
@@ -98,10 +117,7 @@ struct Layout : std::array<unsigned, N> {
 
     Layout() { // Constructeur sans arguments
         static_assert(M < N);
-        this->fill(empty);
-        for (unsigned k = 0; k < M; ++k){
-            this->operator[](k) = filled;
-        }
+        reset();
     }
 
     Layout(const unsigned &c) { // Constructeur from index
@@ -118,9 +134,21 @@ struct Layout : std::array<unsigned, N> {
         }
     }
 
+    void reset() {
+        this->fill(empty);
+        for (unsigned k = 0; k < M; ++k){
+            this->operator[](k) = filled;
+        }
+    }
+
+    void random_state() {
+        random_shuffle(*this);
+    }
+
     constexpr unsigned cardinality() const {
         return CARD;
     }
+
     static constexpr unsigned CARD = binomial(N, M);
 
     unsigned index() const {
@@ -147,6 +175,13 @@ struct Permutation : std::array<unsigned, N> {
 
     template<typename... Args>
     Permutation(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
+
+    void random_state() {
+        random_shuffle(*this);
+        if (even && parity() != 0) {
+            swap(N - 1, N - 2, *this);
+        }
+    }
 
     bool is_solved() const {
         for (unsigned k = 0; k < N; ++k){
@@ -210,6 +245,7 @@ struct Permutation : std::array<unsigned, N> {
         }
         return t;
     }
+
     void set_from_index(unsigned c) {
         // Reconstruct the permutation having index c
         static_assert(N > 0); // empty permutations are a problem
@@ -230,7 +266,7 @@ struct Permutation : std::array<unsigned, N> {
                     }
                 }
             }
-            if (s % 2 == 1) swap(N - 1, N - 2);
+            if (s % 2 == 1) swap(N - 1, N - 2, *this);
         } else {
             (*this)[N - 1] = 0;
             for (unsigned i = N - 2; i < N; --i) {
@@ -243,13 +279,6 @@ struct Permutation : std::array<unsigned, N> {
                 }
             }
         }
-    }
-    void swap(const unsigned &i, const unsigned &j) {
-        assert(i < N);
-        assert(j < N);
-        unsigned buf = (*this)[i];
-        (*this)[i] = (*this)[j];
-        (*this)[j] = buf;
     }
 
     template<unsigned M, bool sub_even = false>
@@ -383,6 +412,10 @@ struct Orientation : std::array<unsigned, N> {
     }
     static constexpr unsigned CARD = cardinality();
 
+    void reset() {
+        std::array<unsigned, N>::fill(0);
+    }
+
     unsigned index() const {
         static_assert(N > 0); // 0 size orientations are a no go
 
@@ -439,6 +472,20 @@ struct Orientation : std::array<unsigned, N> {
             (*this)[k] = (buf[perm[k]] + ori[k]) % v;
         }
     }
+
+    void random_state() {
+        srand(time(0));
+        unsigned p = 0;
+        for (unsigned i = 0; i < N - 1; ++i) {
+            (*this)[i] = rand() % v;
+            p += (*this)[i];
+        }
+        if constexpr (even) {
+            (*this)[N - 1] = (v - p % v) % v;
+        } else {
+            (*this)[N - 1] = rand() % v;
+        }
+    }
 };
 
 template<unsigned N, unsigned M>
@@ -454,12 +501,15 @@ struct Center : std::array<unsigned, N> {
 
     static constexpr unsigned NP = N / M; // number of equivalent pieces on each face
     Center() {
-        for (unsigned k = 0; k < N; ++k) {
-            this->operator[](k) = k / NP;
-        }
+        static_assert(M < N);
+        static_assert(N % M == 0);
+        reset();
     }
     template<typename... Args>
-    Center(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} {} // Constructeur par brace-enclosed
+    Center(Args... args) : std::array<unsigned, N>{{ static_cast<unsigned>(args)... }} { // Constructeur par brace-enclosed
+        static_assert(M < N);
+        static_assert(N % M == 0);
+    }
 
     template<unsigned K = 0>
     static constexpr unsigned cardinality() {
@@ -469,6 +519,17 @@ struct Center : std::array<unsigned, N> {
         }
     }
     static constexpr unsigned CARD = cardinality();
+
+    void random_state() {
+        random_shuffle(*this);
+    }
+
+    void reset() {
+        for (unsigned k = 0; k < N; ++k) {
+            this->operator[](k) = k / NP;
+        }
+    }
+
 
     bool is_solved() const {
         for (unsigned k = 0; k < N; ++k) {
