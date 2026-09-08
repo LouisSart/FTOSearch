@@ -4,7 +4,8 @@ CFLAGS = -Wall
 STD = -std=c++20
 SRC_DIR = src
 LIB_DIR = lib
-OPT = -O1 -I$(SRC_DIR)/ -I$(LIB_DIR)
+INC = -I$(SRC_DIR)/ -I$(LIB_DIR)
+OPT = -O1 
 OBJ_DIR = obj
 EXE = $(OBJ_DIR)/fto
 TEST = $(OBJ_DIR)/test
@@ -19,22 +20,22 @@ all : fto test
 
 # linking
 fto: $(OBJ) $(OBJ_DIR)/main.o
-	$(CXX) $(STD) $(OPT) $(OBJ_DIR)/main.o $(OBJ) -o $(EXE)
+	$(CXX) $(STD) $(OPT) $(INC) $(OBJ_DIR)/main.o $(OBJ) -o $(EXE)
 
 test: $(OBJ) $(OBJ_DIR)/test.o
-	$(CXX) $(STD) $(OPT) $(OBJ_DIR)/test.o $(OBJ) -o $(TEST)
+	$(CXX) $(STD) $(OPT) $(INC) $(OBJ_DIR)/test.o $(OBJ) -o $(TEST)
 
 
 # Compilation
 $(OBJ_DIR)/main.o: $(MAIN_SRC) $(HDR)
-	$(CXX) $(STD) $(OPT) -c $(MAIN_SRC) -o $(OBJ_DIR)/main.o
+	$(CXX) $(STD) $(OPT) $(INC) -c $(MAIN_SRC) -o $(OBJ_DIR)/main.o
 
 $(OBJ_DIR)/test.o: $(TEST_SRC) $(HDR)
-	$(CXX) $(STD) $(OPT) -c $(TEST_SRC) -o $(OBJ_DIR)/test.o
+	$(CXX) $(STD) $(OPT) $(INC) -c $(TEST_SRC) -o $(OBJ_DIR)/test.o
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/%.hpp | $(OBJ_DIR)
-	$(CXX) $(STD) $(OPT) -c $< -o $@
+	$(CXX) $(STD) $(OPT) $(INC) -c $< -o $@
 
 .PHONY: all clean
 
