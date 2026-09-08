@@ -130,3 +130,56 @@ Solutions<Cube> IDAstar(const typename Node<Cube>::sptr root,
     return IDAstar<verbose>(queue, estimate, is_solved, directions,
                             max_depth, slackness);
 }
+
+template<typename Cube, typename Move>
+std::vector<Sequence<Move>> make_generators(unsigned (*index)(const Cube&), const auto moves) {
+    // Build the list of all generators for a move subgroup (HTR for 3x3, RLBD for FTO...)
+    auto root = make_root(Cube());
+    std::deque queue{root};
+    std::set<unsigned> visited;
+    std::vector<Sequence<Move>> generators;
+    
+    while(queue.size()) {
+        auto node = queue.back();
+        unsigned c = index(node->state);
+        if (!visited.contains(c)) {
+            visited.insert(c);
+            generators.push_back(node->template get_path<Move>());
+            for (auto child : node->expand(moves)) {
+                queue.push_front((child));
+            }
+        }
+        queue.pop_back();
+    }
+    return generators;
+}
+
+template<typename Cube, typename Move, unsigned N>
+void generate_right_coset_table(unsigned (*index)(const Cube&), const std::vector<Sequence<Move>> generators, const auto &moves, std::array<unsigned, N> &table) {
+    // Coset index table builder
+    Cube cube;
+    std::deque queue{make_root(Cube())};
+    unsigned coset_index = 0;
+    table.fill(N);
+    unsigned counter = 0;
+
+    while (queue.size()) {
+        auto node = queue.back();
+        if (table[index(node->state)] == N) {
+            for (const auto &g : generators) {
+                cube = Cube();
+                cube.apply(g);
+                cube.apply(node->template get_path<Move>());
+                table[index(cube)] = coset_index;
+                ++counter;
+            }
+            ++coset_index;
+        }
+        if (counter < N){
+            for (auto child : node->expand(moves)) {
+                queue.push_front((child));
+            }
+        }
+        queue.pop_back();
+    }
+}
