@@ -7,12 +7,14 @@ fs::path table_dir = "pruning_tables";
 fs::path corner_table_path = table_dir / "corners";
 fs::path edge_table_path = table_dir / "edges";
 fs::path triangle_table_path = table_dir / "triangles";
+fs::path triplet_table_path = table_dir / "triplets";
 fs::path edge_convert_table_path = table_dir / "edge_convert";
 
 PruningTable<CORNER_CARD> corner_table;
 PruningTable<EDGE_CARD> edge_table;
 PruningTable<TRIANGLE_CARD> triangle_table;
 std::array<unsigned, EDGE_CARD * 2> edge_conversion;
+PruningTable<CORNER_CARD * TRIANGLE_CARD> triplet_table;
 
 void generate_edge_convert_table() {
     // Build a conversion table to retrieve the global 
@@ -86,10 +88,18 @@ void generate_triangle_table(){
     // triangle_table.show_distribution();
 }
 
+void generate_triplet_table(){
+    print("Generating triplet pruning table");
+    triplet_table.generate<FTO, true>(triplet_index, from_triplet_index, moves, 7, 10);
+    triplet_table.write(triangle_table_path);
+    // triangle_table.show_distribution();
+}
+
 void generate_pruning_tables() {
     generate_corner_table();
     generate_edge_table();
     generate_triangle_table();
+    generate_triplet_table();
 };
 
 bool load_pruning_tables() {
