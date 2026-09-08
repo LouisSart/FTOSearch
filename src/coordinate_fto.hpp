@@ -18,7 +18,6 @@ struct FTO {
     void apply(const Move &m);
     void apply(const Sequence<Move> &);
     void show() const;
-    void random_moves(const unsigned n);
 };
 
 bool is_solved(const FTO &);

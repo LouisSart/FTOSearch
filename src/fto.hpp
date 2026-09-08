@@ -11,7 +11,7 @@ constexpr std::array<Move, NMOVES> moves {U, U2, R, R2, F, F2, L, L2, B, B2, bR,
 // Reduce branching by preventing turning twice the same layer / 
 // chaining opposite moves
 const std::vector<Move> &allowed_next(const Move m);
-
+Sequence<Move> random_moves(const unsigned &);
 
 constexpr unsigned NC = 6;
 constexpr unsigned NE = 12;
@@ -44,7 +44,6 @@ struct CubieFTO {
     bool is_solved() const;
     unsigned corner_index() const;
     void set_corners_from_index(const unsigned &c);
-    void random_moves(const unsigned &n);
     void random_state();
     void show() const;
 };

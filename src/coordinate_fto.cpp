@@ -86,16 +86,6 @@ void FTO::apply(const Sequence<Move> &seq) {
     }
 };
 
-void FTO::random_moves(const unsigned n) {
-    srand(time(0));
-    for (unsigned k = 0; k < n; ++k) {
-        unsigned r = rand() % NMOVES;
-        apply(moves[r]);
-        std::cout << moves[r] << " ";
-    }
-    std::cout << std::endl;
-}
-
 void FTO::show() const {
     print("Coordinate-level FTO object:");
     print("  cp =", cp);

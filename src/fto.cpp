@@ -45,6 +45,18 @@ const std::vector<Move> &allowed_next(const Move m) {
     }
 }
 
+Sequence<Move> random_moves(const unsigned &n){
+    assert(n > 0);
+    srand(time(0));
+    Sequence<Move> ret;
+    ret.push_back(moves[rand() % NMOVES]);
+    for (unsigned k = 0; k < n - 1; ++k) {
+        auto next = allowed_next(ret.back());
+        ret.push_back(next[rand() % next.size()]);
+    }
+    return ret;
+}
+
 // Corner permutations
 static const Permutation<NC> CP[NMOVES] {
     {3,1,2,4,0,5}, // U
@@ -189,16 +201,6 @@ bool CubieFTO::is_solved() const {
 unsigned CubieFTO::corner_index() const {
     // Return the index for cp + co
     return co.index() * cp.cardinality() + cp.index();
-}
-
-void CubieFTO::random_moves(const unsigned &n){
-    srand(time(0));
-    for (unsigned k = 0; k < n; ++k) {
-        unsigned r = rand() % NMOVES;
-        apply(moves[r]);
-        std::cout << moves[r] << " ";
-    }
-    std::cout << std::endl;
 }
 
 void CubieFTO::random_state(){
