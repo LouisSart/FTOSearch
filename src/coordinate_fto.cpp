@@ -49,6 +49,57 @@ void e2_from_index(const unsigned &c, CubieFTO &fto) {
     fto.ep.set_from_split_indices(c / SIX_EDGE_PERM_CARD, 0, c % SIX_EDGE_PERM_CARD);
 }
 
+// Mapping between sparse index disregarding parity 
+// and dense index for edge even permutation
+static std::array<unsigned, EDGE_CARD * 2> edge_conversion;
+void generate_edge_convert_table() {
+    // Build a conversion table to retrieve the global 
+    // permutation index from the split indices e1 and e2.
+    Permutation<12, true> edges;
+    edge_conversion.fill(EDGE_CARD);
+    for (unsigned c = 0; c < EDGE_CARD; ++c){
+        edges.set_from_index(c);
+        auto [cl, c1, c2] = edges.split_indices();
+
+        unsigned e1 = cl * SIX_EDGE_PERM_CARD + c1;
+        unsigned sparse_idx = e1 * SIX_EDGE_PERM_CARD + c2;
+        assert(sparse_idx < EDGE_CARD * 2);
+        edge_conversion[sparse_idx] = c;
+    }
+}
+
+void write_edge_convert_table(const fs::path& path) {
+    fs::create_directories(path.parent_path());
+    std::ofstream file(path, std::ios::binary);
+    file.write(reinterpret_cast<const char *>(edge_conversion.data()),
+                sizeof(unsigned) * EDGE_CARD * 2);
+    file.close();
+}
+
+bool load_edge_convert_table(const fs::path& path) {
+    if (fs::exists(path)) {
+        std::ifstream istrm(path, std::ios::binary);
+        istrm.read(reinterpret_cast<char *>(edge_conversion.data()),
+                    sizeof(unsigned) * EDGE_CARD * 2);
+        istrm.close();
+        return true;
+    } else {
+        print("Edge convert table not found at: ", path);
+    }
+    return false;
+}
+
+unsigned dense_edge_index(const FTO& fto){
+    return edge_conversion[edge_index(fto)];
+}
+
+void edges_from_dense_index(const unsigned &c, FTO& fto) {
+    static CubieFTO cfto;
+    cfto.ep.set_from_index(c);
+    fto.e1 = e1_index(cfto);
+    fto.e2 = e2_index(cfto);
+}
+
 void generate_move_tables() {
     cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
     cmt.write(corner_mtable_path);

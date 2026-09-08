@@ -12,16 +12,16 @@ std::ostream& operator<< (std::ostream& out, const Move& m){
     return out;
 }
 
-const std::vector<Move> &allowed_next(const Move m) {
-    static std::vector<Move> afterU {R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
-    static std::vector<Move> afterD {R, R2, F, F2, L, L2, B, B2, bR, bR2, bL, bL2};
-    static std::vector<Move> afterF {U, U2, R, R2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
-    static std::vector<Move> afterB {U, U2, R, R2, L, L2, bR, bR2, D, D2, bL, bL2};
-    static std::vector<Move> afterR {U, U2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
-    static std::vector<Move> afterbL {U, U2, F, F2, L, L2, B, B2, bR, bR2, D, D2};
-    static std::vector<Move> afterL {U, U2, R, R2, F, F2, B, B2, bR, bR2, D, D2, bL, bL2};
-    static std::vector<Move> afterbR {U, U2, R, R2, F, F2, B, B2, D, D2, bL, bL2};
-    static std::vector<Move> dflt;
+const std::vector<Move> &allowed_next(const Move &m) {
+    static const std::vector<Move> afterU {R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+    static const std::vector<Move> afterD {R, R2, F, F2, L, L2, B, B2, bR, bR2, bL, bL2};
+    static const std::vector<Move> afterF {U, U2, R, R2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+    static const std::vector<Move> afterB {U, U2, R, R2, L, L2, bR, bR2, D, D2, bL, bL2};
+    static const std::vector<Move> afterR {U, U2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
+    static const std::vector<Move> afterbL {U, U2, F, F2, L, L2, B, B2, bR, bR2, D, D2};
+    static const std::vector<Move> afterL {U, U2, R, R2, F, F2, B, B2, bR, bR2, D, D2, bL, bL2};
+    static const std::vector<Move> afterbR {U, U2, R, R2, F, F2, B, B2, D, D2, bL, bL2};
+    static const std::vector<Move> dflt;
 
     switch (m) {
         case U ... U2:
