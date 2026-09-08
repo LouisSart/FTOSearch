@@ -190,3 +190,35 @@ switch to backwards scan
 12 136
 Time taken:  129237009  microseconds
 ```
+
+OK so this ran for about 5-8 hours (I didn't time it) but it found a solution up to depth 18. 
+
+```shell
+epicier@ACAB:~/Documents/FTOSearch$ make fto && ./obj/fto 
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/coordinate_fto.cpp -o obj/coordinate_fto.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/fto.cpp -o obj/fto.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/solve.cpp -o obj/solve.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/main.cpp -o obj/main.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib obj/main.o obj/coordinate_fto.o obj/fto.o obj/solve.o  -o obj/fto
+bR' bL F R D bL F' L F bL' D F bL bR' U D' B' bL' (18) // random move scramble
+Searching at depth 10
+Nodes generated: 43
+Searching at depth 11
+Nodes generated: 871
+Searching at depth 12
+Nodes generated: 14487
+Searching at depth 13
+Nodes generated: 213979
+Searching at depth 14
+Nodes generated: 2893583
+Searching at depth 15
+Nodes generated: 38918947
+Searching at depth 16
+Nodes generated: 516419817
+Searching at depth 17
+Nodes generated: 2516961769
+Searching at depth 18
+Nodes generated: 3528804185
+Solutions found
+bL B U' D bR bL' F' D' bL F' L' F bL' D' R' F' bL' bR (18)
+```
