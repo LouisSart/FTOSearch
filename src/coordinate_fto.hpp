@@ -32,5 +32,7 @@ unsigned tri1_index(const FTO&);
 void tri1_from_index(const unsigned &, FTO&);
 unsigned tri2_index(const FTO&);
 void tri2_from_index(const unsigned &, FTO&);
+unsigned triplet_index(const FTO&);
+void from_triplet_index(const unsigned &, FTO&);
 bool load_move_tables();
 void generate_move_tables();

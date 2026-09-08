@@ -127,12 +127,24 @@ void edges_from_index(const unsigned &c, FTO& fto){
 unsigned tri1_index(const FTO& fto){return fto.tri1;}
 void tri1_from_index(const unsigned &c, FTO& fto){
     fto.tri1 = c;
-};
+}
 
 unsigned tri2_index(const FTO& fto){return fto.tri2;}
 void tri2_from_index(const unsigned &c, FTO& fto){
     fto.tri2 = c;
-};
+}
+
+unsigned triplet_index(const FTO& fto) {
+    // RLBD triplet index
+    // Corners X triangles of second tetrad
+    return fto.tri2 * CORNER_CARD + fto.cp;
+}
+
+void from_triplet_index(const unsigned &index, FTO& fto) {
+    fto.tri2 = index / CORNER_CARD;
+    fto.cp = index % CORNER_CARD;
+}
+
 
 bool is_solved(const FTO &fto) {
     return fto.cp == 0 &&

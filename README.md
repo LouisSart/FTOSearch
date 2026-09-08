@@ -61,3 +61,20 @@ Table size = 369600
  7 33374
  8 6
 Mean value: 5.79818
+
+Triplets table (corners X triangles of one tetrad)
+Table size = 4257792000
+ 0 1
+ 1 16
+ 2 208
+ 3 2688
+ 4 34308
+ 5 423596
+ 6 5050478
+ 7 55900941
+ 8 502136400
+ 9 2212175901
+10 1467208642
+11 14858685
+12 136
+Mean value: 9.20338
