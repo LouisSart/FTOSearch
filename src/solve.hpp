@@ -3,7 +3,7 @@
 #include "coordinate_fto.hpp"
 
 template<typename Cube>
-std::vector<Move> standard_directions(const typename Node<Cube>::sptr node) {
+const std::vector<Move>& standard_directions(const typename Node<Cube>::sptr node) {
     static std::vector<Move> all {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
 
     if (node->parent == nullptr) {
