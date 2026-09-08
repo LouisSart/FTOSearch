@@ -162,3 +162,31 @@ g++ -std=c++20 -O1 -Isrc/ -Ilib obj/main.o obj/coordinate_fto.o obj/fto.o obj/so
 Triplet space size 11520 ==> OK
 Edge space size 81 ==> OK
 ```
+
+# Triplet size
+
+8 septembre 2026 : Génération de la table des triplets RLBD, c'est-à-dire coins x triangles de la deuxième orbite.  Ça prend 2 minutes pour une table de 4 Go, c'est raisonnable.
+
+```shell
+epicier@ACAB:~/Documents/FTOSearch$ make fto && ./obj/fto 
+g++ -std=c++20 -O1 -Isrc/ -Ilib -c src/solve.cpp -o obj/solve.o
+g++ -std=c++20 -O1 -Isrc/ -Ilib -c src/main.cpp -o obj/main.o
+g++ -std=c++20 -O1 -Isrc/ -Ilib obj/main.o obj/coordinate_fto.o obj/fto.o obj/solve.o  -o obj/fto
+Generating triplet pruning table
+0 1
+1 16
+2 208
+3 2688
+4 34308
+5 423596
+6 5050478
+switch to forwards scan
+7 55900941
+8 502136400
+9 2212175901
+switch to backwards scan
+10 1467208642
+11 14858685
+12 136
+Time taken:  129237009  microseconds
+```
