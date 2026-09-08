@@ -106,7 +106,8 @@ bool load_pruning_tables() {
     if (corner_table.load(corner_table_path)
         && edge_table.load(edge_table_path)
         && load_edge_convert_table()
-        && triangle_table.load(triangle_table_path)) return true;
+        && triangle_table.load(triangle_table_path)
+        && triplet_table.load(triplet_table_path)) return true;
     print("Pruning tables missing, generate first");
     return false;
 }
@@ -124,7 +125,8 @@ unsigned estimate(const FTO& fto) {
         corner_table.estimate(corner_index(fto)),
         edge_table.estimate(edge_conversion[edge_index(fto)]),
         triangle_table.estimate(tri1_index(fto)),
-        triangle_table.estimate(tri2_index(fto))
+        triangle_table.estimate(tri2_index(fto)),
+        triplet_table.estimate(triplet_index(fto))
     });
 }
 
