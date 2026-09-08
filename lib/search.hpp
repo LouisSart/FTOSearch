@@ -2,8 +2,9 @@
 #include <algorithm>
 #include <cassert>
 #include <deque>
+#include <set>
 
-#include "../lib/node.hpp"
+#include "node.hpp"
 
 template <typename Cube>
 struct Solutions : public std::vector<typename Node<Cube>::sptr> {

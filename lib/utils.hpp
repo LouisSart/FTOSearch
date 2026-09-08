@@ -42,7 +42,7 @@ void print(const T &truc, const Ts &...reste) {
     }
 }
 
-void time_fn(const auto f, const unsigned N){
+void time_fn(const auto f, const unsigned N = 1){
     //Time exec of a function
     auto start = high_resolution_clock::now();
 
