@@ -69,6 +69,9 @@ int main(int argc, const char* argv[]) {
         assert(p.index() == c);
     }
     Permutation<6, true> q;
+    q.random_state();
+    assert(q.parity() == 0);
+    q.reset();
     for(unsigned c = 0; c < q.cardinality(); ++c) { // Even parity only
         q.set_from_index(c);
         assert(q.index() == c);
@@ -85,6 +88,8 @@ int main(int argc, const char* argv[]) {
         assert(r.partial_index<4>({1,3,5,7}) == c);
     }
     Orientation<7> o; // even orientations
+    o.random_state();
+    o.reset();
     for (unsigned k = 0; k < o.cardinality(); ++k) {
         o.set_from_index(k);
         assert(o.index() == k);
@@ -95,11 +100,15 @@ int main(int argc, const char* argv[]) {
         assert(O.index() == k);
     }
     Layout<10, 3> l;
+    l.random_state();
+    l.reset();
     for (unsigned c = 0; c < l.cardinality(); ++c){
         l.set_from_index(c);
         assert(l.index() == c);
     }
     Center<12, 4> center;
+    center.random_state();
+    center.reset();
     for (unsigned c = 0; c < center.cardinality(); ++c){
         center.set_from_index(c);
         assert(center.index() == c);

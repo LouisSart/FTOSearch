@@ -201,6 +201,14 @@ void CubieFTO::random_moves(const unsigned &n){
     std::cout << std::endl;
 }
 
+void CubieFTO::random_state(){
+    cp.random_state();
+    co.random_state();
+    ep.random_state();
+    tri1.random_state();
+    tri2.random_state();
+}
+
 void CubieFTO::set_corners_from_index(const unsigned &c) {
     unsigned coc = c / cp.cardinality();
     unsigned cpc = c % cp.cardinality();
