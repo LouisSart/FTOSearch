@@ -10,6 +10,7 @@ static MoveTable<CORNER_CARD, NMOVES> cmt;
 static MoveTable<SIX_EDGE_CARD, NMOVES> emt1;
 static MoveTable<SIX_EDGE_CARD, NMOVES> emt2;
 static MoveTable<TRIANGLE_CARD, NMOVES> tmt;
+std::array<unsigned, CORNER_CARD> corner_z_shift_table; // 1 to 1 mapping between a corner state index and its conjugation through a z move
 
 fs::path mtable_dir = "move_tables";
 fs::path corner_mtable_path = mtable_dir / "corners";
@@ -17,16 +18,17 @@ fs::path edge_mtable_path_1 = mtable_dir / "edges1";
 fs::path edge_mtable_path_2 = mtable_dir / "edges2";
 fs::path triangle_mtable_path = mtable_dir / "triangles";
 fs::path edge_conversion_table_path = mtable_dir / "edge_conversion";
+fs::path corner_z_shift_table_path = mtable_dir / "corner_z_shift";
 
 bool load_move_tables() {
     if (cmt.load(corner_mtable_path)
         && emt1.load(edge_mtable_path_1)
         && emt2.load(edge_mtable_path_2)
-        && tmt.load(triangle_mtable_path)) return true;
+        && tmt.load(triangle_mtable_path)
+        && load_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path)) return true;
     print("Move tables missing, generate first");
     return false;
 }
-
 
 // Split edges into two parts otherwise the move table is 15 GB lool
 // First part is a 6 edge partial permutation (any parity)
@@ -89,8 +91,6 @@ void edges_from_dense_index(const unsigned &c, FTO& fto) {
     fto.e2 = e2_index(cfto);
 }
 
-// 1 to 1 mapping between a corner state index and its conjugation through a z move
-std::array<unsigned, CORNER_CARD> corner_z_shift_table;
 void generate_corner_z_shift_table() {
     auto check_z_shift = [](const auto node) {
         FTO cube;
@@ -105,6 +105,7 @@ void generate_corner_z_shift_table() {
     };
 
     BFS_traversal<FTO>(check_z_shift, is_treated, moves);
+    write_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path);
 }
 
 void generate_move_tables() {
@@ -119,6 +120,8 @@ void generate_move_tables() {
 
     emt2.compute<CubieFTO>(e2_index, e2_from_index, moves);
     emt2.write(edge_mtable_path_2);
+
+    generate_corner_z_shift_table();
 }
 
 FTO::FTO(const CubieFTO& cfto){
