@@ -37,8 +37,8 @@ void edges_from_index(const unsigned &, FTO&);
 unsigned dense_edge_index(const FTO&);
 void edges_from_dense_index(const unsigned &, FTO&);
 void generate_edge_convert_table();
-bool load_edge_convert_table(const fs::path&);
-void write_edge_convert_table(const fs::path&);
+bool load_edge_convert_table();
+void write_edge_convert_table();
 
 // Conversion for corner z rotation conjugation
 void generate_corner_z_shift_table();

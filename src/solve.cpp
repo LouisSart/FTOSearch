@@ -6,7 +6,6 @@
 fs::path table_dir = "pruning_tables";
 fs::path corner_table_path = table_dir / "corners";
 fs::path edge_table_path = table_dir / "edges";
-fs::path edge_convert_table_path = table_dir / "edge_convert";
 fs::path triangle_table_path = table_dir / "triangles";
 fs::path triplet_table_path = table_dir / "triplets";
 
@@ -25,7 +24,7 @@ void generate_corner_table(){
 void generate_edge_table(){  
     print("Generating edge index conversion table");
     generate_edge_convert_table();
-    write_edge_convert_table(edge_convert_table_path);
+    write_edge_convert_table();
     print("Generating edge pruning table");
     edge_table.generate<FTO, true>(dense_edge_index, edges_from_dense_index, moves, 5, 11);
     edge_table.write(edge_table_path);
@@ -56,7 +55,7 @@ void generate_pruning_tables() {
 bool load_pruning_tables() {
     if (corner_table.load(corner_table_path)
         && edge_table.load(edge_table_path)
-        && load_edge_convert_table(edge_convert_table_path)
+        && load_edge_convert_table()
         && triangle_table.load(triangle_table_path)
         && triplet_table.load(triplet_table_path)) return true;
     print("Pruning tables missing, generate first");

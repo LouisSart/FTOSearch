@@ -16,6 +16,7 @@ fs::path corner_mtable_path = mtable_dir / "corners";
 fs::path edge_mtable_path_1 = mtable_dir / "edges1";
 fs::path edge_mtable_path_2 = mtable_dir / "edges2";
 fs::path triangle_mtable_path = mtable_dir / "triangles";
+fs::path edge_conversion_table_path = mtable_dir / "edge_conversion";
 
 bool load_move_tables() {
     if (cmt.load(corner_mtable_path)
@@ -69,25 +70,12 @@ void generate_edge_convert_table() {
     }
 }
 
-void write_edge_convert_table(const fs::path& path) {
-    fs::create_directories(path.parent_path());
-    std::ofstream file(path, std::ios::binary);
-    file.write(reinterpret_cast<const char *>(edge_conversion.data()),
-                sizeof(unsigned) * EDGE_CARD * 2);
-    file.close();
+void write_edge_convert_table() {
+    write_table<EDGE_CARD * 2>(edge_conversion.data(), edge_conversion_table_path);
 }
 
-bool load_edge_convert_table(const fs::path& path) {
-    if (fs::exists(path)) {
-        std::ifstream istrm(path, std::ios::binary);
-        istrm.read(reinterpret_cast<char *>(edge_conversion.data()),
-                    sizeof(unsigned) * EDGE_CARD * 2);
-        istrm.close();
-        return true;
-    } else {
-        print("Edge convert table not found at: ", path);
-    }
-    return false;
+bool load_edge_convert_table() {
+    return load_table<EDGE_CARD * 2>(edge_conversion.data(), edge_conversion_table_path);
 }
 
 unsigned dense_edge_index(const FTO& fto){
