@@ -41,7 +41,7 @@ void generate_triangle_table(){
 void generate_triplet_table(){
     print("Generating triplet pruning table");
     triplet_table.generate<FTO, true>(triplet_index, from_triplet_index, moves, 7, 10);
-    triplet_table.write(triangle_table_path);
+    triplet_table.write(triplet_table_path);
     // triangle_table.show_distribution();
 }
 
@@ -76,7 +76,8 @@ unsigned estimate(const FTO& fto) {
         edge_table.estimate(dense_edge_index(fto)),
         triangle_table.estimate(tri1_index(fto)),
         triangle_table.estimate(tri2_index(fto)),
-        triplet_table.estimate(triplet_index(fto))
+        triplet_table.estimate(triplet_index(fto)),
+        triplet_table.estimate(triplet2_index(fto))
     });
 }
 
