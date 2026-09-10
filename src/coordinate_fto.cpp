@@ -2,6 +2,7 @@
 #include <ctime>
 #include "move_table.hpp"
 #include "../lib/permutation.hpp"
+#include "../lib/search.hpp" // BFS traversal
 #include "fto.hpp"
 #include "coordinate_fto.hpp"
 
@@ -98,6 +99,24 @@ void edges_from_dense_index(const unsigned &c, FTO& fto) {
     cfto.ep.set_from_index(c);
     fto.e1 = e1_index(cfto);
     fto.e2 = e2_index(cfto);
+}
+
+// 1 to 1 mapping between a corner state index and its conjugation through a z move
+std::array<unsigned, CORNER_CARD> corner_z_shift_table;
+void generate_corner_z_shift_table() {
+    auto check_z_shift = [](const auto node) {
+        FTO cube;
+        for (auto m : node->template get_path<Move>()) {
+            cube.apply(zSHIFT[m]);
+        }
+        corner_z_shift_table[corner_index(node->state)] = corner_index(cube);
+    };
+
+    auto is_treated = [](const auto node) -> bool {
+        return (corner_z_shift_table[corner_index(node->state)] < CORNER_CARD);
+    };
+
+    BFS_traversal<FTO>(check_z_shift, is_treated, moves);
 }
 
 void generate_move_tables() {

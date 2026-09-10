@@ -40,6 +40,11 @@ void generate_edge_convert_table();
 bool load_edge_convert_table(const fs::path&);
 void write_edge_convert_table(const fs::path&);
 
+// Conversion for corner z rotation conjugation
+void generate_corner_z_shift_table();
+void write_corner_z_shift_table();
+void load_corner_z_shift_table();
+
 unsigned tri1_index(const FTO&);
 void tri1_from_index(const unsigned &, FTO&);
 unsigned tri2_index(const FTO&);

@@ -130,6 +130,7 @@ int main(int argc, const char* argv[]) {
         generate_move_tables();
     }
     generate_corner_table();
+    generate_corner_z_shift_table();
 
     FTO cube;
     for (auto m : seq) {
