@@ -251,6 +251,7 @@ Nodes generated: 24835791
 Searching at depth 16
 Nodes generated: 316494387
 Searching at depth 17
-^C```
+^C
+```
 
 EDIT : Je viens de tester un mélange à la profondeur 13 comme dans la section "Comparaison Cubie-level vs Coordinate-level". Avec la nouvelle heuristique on a accéléré la recherche d'un facteur ~22. Y a de quoi se féliciter :)
