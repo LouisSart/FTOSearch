@@ -142,5 +142,12 @@ int main(int argc, const char* argv[]) {
     assert(cube.tri1 == 0);
     assert(cube.tri2 == 0);
 
+    auto scramble = random_moves(15);
+    FTO cube1, cube2;
+    cube1.apply(scramble);
+    for (auto m : scramble) cube2.apply(zSHIFT[m]);
+    assert(cube1.tri2 == cube2.tri1);
+    assert(triplet2_index(cube1) == triplet_index(cube2));
+
     return 0;
 }
