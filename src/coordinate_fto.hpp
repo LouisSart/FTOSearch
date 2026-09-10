@@ -52,6 +52,7 @@ void tri2_from_index(const unsigned &, FTO&);
 
 unsigned triplet_index(const FTO&);
 void from_triplet_index(const unsigned &, FTO&);
+unsigned triplet2_index(const FTO&);
 
 bool load_move_tables();
 void generate_move_tables();

@@ -92,6 +92,7 @@ void edges_from_dense_index(const unsigned &c, FTO& fto) {
 }
 
 void generate_corner_z_shift_table() {
+    corner_z_shift_table.fill(CORNER_CARD);
     auto check_z_shift = [](const auto node) {
         FTO cube;
         for (auto m : node->template get_path<Move>()) {
@@ -186,16 +187,19 @@ void tri2_from_index(const unsigned &c, FTO& fto){
 }
 
 unsigned triplet_index(const FTO& fto) {
-    // RLBD triplet index
-    // Corners X triangles of second tetrad
-    return fto.tri2 * CORNER_CARD + fto.cp;
+    // Corners X triangles of first tetrad
+    return fto.tri1 * CORNER_CARD + fto.cp;
 }
 
 void from_triplet_index(const unsigned &index, FTO& fto) {
-    fto.tri2 = index / CORNER_CARD;
+    fto.tri1 = index / CORNER_CARD;
     fto.cp = index % CORNER_CARD;
 }
 
+unsigned triplet2_index(const FTO& fto) {
+    // Corners X triangles of second tetrad
+    return fto.tri2 * CORNER_CARD + corner_z_shift_table[fto.cp];
+}
 
 bool is_solved(const FTO &fto) {
     return fto.cp == 0 &&
