@@ -1,9 +1,12 @@
 #pragma once
 #include <array>
+#include <fstream>
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <filesystem>
 
+namespace fs = std::filesystem;
 using namespace std::chrono;
 
 inline void init_array(unsigned *l, unsigned size, unsigned value) {
@@ -55,4 +58,27 @@ void time_fn(const auto f, const unsigned N = 1){
     auto duration = duration_cast<microseconds>( stop - start);
 
     print("Time taken: ", duration.count(), " microseconds");
+}
+
+template<std::size_t N, typename entry_t>
+void write_table(const entry_t *data, const fs::path& path) {
+    fs::create_directories(path.parent_path());
+    std::ofstream file(path, std::ios::binary);
+    file.write(reinterpret_cast<const char *>(data),
+    sizeof(entry_t) * N);
+    file.close();
+}
+
+template<std::size_t N, typename entry_t>
+bool load_table(entry_t *data, const fs::path& path) {
+    if (fs::exists(path)) {
+        std::ifstream istrm(path, std::ios::binary);
+        istrm.read(reinterpret_cast<char *>(data),
+                    sizeof(entry_t) * N);
+        istrm.close();
+        return true;
+    } else {
+        print("Table not found at:", path);
+        return false;
+    }
 }
