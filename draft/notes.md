@@ -224,6 +224,7 @@ bL B U' D bR bL' F' D' bL F' L' F bL' D' R' F' bL' bR (18)
 ```
 
 # Pruning improvements
+(10 septembre 2026)
 
 J'ai amélioré le pruning et ça me permet de générer environ 35-40% moins de noeuds aux profondeurs 15/16 sur le mélange de la section précédente. L'idée c'est que la triplet value (corners X triangles) est valables pour la première tétrade comme pour la deuxième, à une conjugaison par un z move près. Je transforme l'index de coins par une conjugaison z, que je combine pour calculer l'index des triplets de la deuxième tétrade. J'ai plus qu'à lookup dans la table des triplets pour avoir une nouvelle estimate à ajouter à la fonction générale d'estimation.
 
@@ -251,3 +252,5 @@ Searching at depth 16
 Nodes generated: 316494387
 Searching at depth 17
 ^C```
+
+EDIT : Je viens de tester un mélange à la profondeur 13 comme dans la section "Comparaison Cubie-level vs Coordinate-level". Avec la nouvelle heuristique on a accéléré la recherche d'un facteur ~22. Y a de quoi se féliciter :)
