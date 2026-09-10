@@ -222,3 +222,32 @@ Nodes generated: 3528804185
 Solutions found
 bL B U' D bR bL' F' D' bL F' L' F bL' D' R' F' bL' bR (18)
 ```
+
+# Pruning improvements
+
+J'ai amélioré le pruning et ça me permet de générer environ 35-40% moins de noeuds aux profondeurs 15/16 sur le mélange de la section précédente. L'idée c'est que la triplet value (corners X triangles) est valables pour la première tétrade comme pour la deuxième, à une conjugaison par un z move près. Je transforme l'index de coins par une conjugaison z, que je combine pour calculer l'index des triplets de la deuxième tétrade. J'ai plus qu'à lookup dans la table des triplets pour avoir une nouvelle estimate à ajouter à la fonction générale d'estimation.
+
+```shell
+epicier@ACAB:~/Documents/FTOSearch$ make OPT="-O3" fto && ./obj/fto 
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/coordinate_fto.cpp -o obj/coordinate_fto.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/fto.cpp -o obj/fto.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/solve.cpp -o obj/solve.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib -c src/main.cpp -o obj/main.o
+g++ -std=c++20 -O3 -Isrc/ -Ilib obj/main.o obj/coordinate_fto.o obj/fto.o obj/solve.o  -o obj/fto
+bR' bL F R D bL F' L F bL' D F bL bR' U D' B' bL' (18) // même mélange que dans la section précédente
+Searching at depth 10
+Nodes generated: 43
+Searching at depth 11
+Nodes generated: 745
+Searching at depth 12
+Nodes generated: 11169
+Searching at depth 13
+Nodes generated: 151401
+Searching at depth 14
+Nodes generated: 1935473
+Searching at depth 15
+Nodes generated: 24835791
+Searching at depth 16
+Nodes generated: 316494387
+Searching at depth 17
+^C```
