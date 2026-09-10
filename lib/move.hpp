@@ -7,7 +7,7 @@
 // Define in lib header
 template<typename Move>
 struct Sequence : std::vector<Move> {
-    bool inv_flag;
+    bool inv_flag = 0;
 
     Sequence() {};
     template<typename... Args>
