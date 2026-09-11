@@ -39,6 +39,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/%.hpp | $(OBJ_DIR)
 
 .PHONY: all clean
 
+# Ojects directory
+obj:
+	mkdir -p $(OBJ_DIR)
+
 # Règle de nettoyage
 clean:
 	rm -f $(OBJ_DIR)/*.o $(OBJ_DIR)/fto $(OBJ_DIR)/test
