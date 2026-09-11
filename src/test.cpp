@@ -126,9 +126,7 @@ int main(int argc, const char* argv[]) {
     MoveTable<CORNER_CARD, NMOVES> cmt;
     cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
 
-    if (!load_move_tables()) {
-        generate_move_tables();
-    }
+    generate_move_tables();
     generate_corner_table();
     generate_corner_z_shift_table();
 

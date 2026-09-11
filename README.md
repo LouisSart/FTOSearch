@@ -16,6 +16,8 @@ This should do the trick if you have a c++ compiler and make installed
 
 `/obj/fto`
 
+Note that move tables and pruning tables will be generated on the first run. This might take a few minutes to an hour and use about 6 GB of RAM
+
 ## Pruning tables
 
 Full pruning distances for corners and edges are shown below:

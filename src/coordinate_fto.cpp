@@ -20,16 +20,6 @@ fs::path triangle_mtable_path = mtable_dir / "triangles";
 fs::path edge_conversion_table_path = mtable_dir / "edge_conversion";
 fs::path corner_z_shift_table_path = mtable_dir / "corner_z_shift";
 
-bool load_move_tables() {
-    if (cmt.load(corner_mtable_path)
-        && emt1.load(edge_mtable_path_1)
-        && emt2.load(edge_mtable_path_2)
-        && tmt.load(triangle_mtable_path)
-        && load_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path)) return true;
-    print("Move tables missing, generate first");
-    return false;
-}
-
 // Split edges into two parts otherwise the move table is 15 GB lool
 // First part is a 6 edge partial permutation (any parity)
 unsigned e1_index(const CubieFTO& fto){
@@ -110,19 +100,29 @@ void generate_corner_z_shift_table() {
 }
 
 void generate_move_tables() {
-    cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
-    cmt.write(corner_mtable_path);
+    if (!cmt.load(corner_mtable_path)) {
+        cmt.compute<CubieFTO>(corner_index, corners_from_index, moves);
+        cmt.write(corner_mtable_path);
+    }
 
-    tmt.compute<CubieFTO>(tri1_index, tri1_from_index, moves);
-    tmt.write(triangle_mtable_path);
+    if (!tmt.load(triangle_mtable_path)) {
+        tmt.compute<CubieFTO>(tri1_index, tri1_from_index, moves);    
+        tmt.write(triangle_mtable_path);
+    }
+    
+    if (!emt1.load(edge_mtable_path_1)) {
+        emt1.compute<CubieFTO>(e1_index, e1_from_index, moves);
+        emt1.write(edge_mtable_path_1);
+    }
 
-    emt1.compute<CubieFTO>(e1_index, e1_from_index, moves);
-    emt1.write(edge_mtable_path_1);
+    if (!emt2.load(edge_mtable_path_2)) {
+        emt2.compute<CubieFTO>(e2_index, e2_from_index, moves);
+        emt2.write(edge_mtable_path_2);
+    }
 
-    emt2.compute<CubieFTO>(e2_index, e2_from_index, moves);
-    emt2.write(edge_mtable_path_2);
-
-    generate_corner_z_shift_table();
+    if(!load_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path)) {
+        generate_corner_z_shift_table();
+    }
 }
 
 FTO::FTO(const CubieFTO& cfto){

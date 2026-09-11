@@ -26,7 +26,7 @@ void generate_edge_table(){
     generate_edge_convert_table();
     write_edge_convert_table();
     print("Generating edge pruning table");
-    edge_table.generate<FTO, true>(dense_edge_index, edges_from_dense_index, moves, 5, 11);
+    edge_table.generate<FTO, true>(dense_edge_index, edges_from_dense_index, moves, 7, 11);
     edge_table.write(edge_table_path);
     // edge_table.show_distribution();
 }
@@ -46,21 +46,11 @@ void generate_triplet_table(){
 }
 
 void generate_pruning_tables() {
-    generate_corner_table();
-    generate_edge_table();
-    generate_triangle_table();
-    generate_triplet_table();
+    if (!corner_table.load(corner_table_path)) generate_corner_table();
+    if (!edge_table.load(edge_table_path) || !load_edge_convert_table()) generate_edge_table();
+    if (!triangle_table.load(triangle_table_path)) generate_triangle_table();
+    if (!triplet_table.load(triplet_table_path)) generate_triplet_table();
 };
-
-bool load_pruning_tables() {
-    if (corner_table.load(corner_table_path)
-        && edge_table.load(edge_table_path)
-        && load_edge_convert_table()
-        && triangle_table.load(triangle_table_path)
-        && triplet_table.load(triplet_table_path)) return true;
-    print("Pruning tables missing, generate first");
-    return false;
-}
 
 unsigned estimate(const CubieFTO &fto){
     return std::max({corner_table.estimate(fto.corner_index()),

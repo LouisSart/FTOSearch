@@ -18,7 +18,6 @@ void generate_edge_table();
 void generate_triangle_table();
 
 void generate_pruning_tables();
-bool load_pruning_tables();
 void generate_triplet_table();
 
 unsigned estimate(const CubieFTO& fto);

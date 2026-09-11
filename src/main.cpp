@@ -9,10 +9,8 @@
 
 
 int main(int argc, const char* argv[]) {
-    load_move_tables();
-    // generate_pruning_tables();
-    load_pruning_tables();
-
+    generate_move_tables();
+    generate_pruning_tables();
 
     auto scramble = random_moves(13);
     scramble.show();
