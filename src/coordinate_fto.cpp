@@ -20,6 +20,17 @@ fs::path triangle_mtable_path = mtable_dir / "triangles";
 fs::path edge_conversion_table_path = mtable_dir / "edge_conversion";
 fs::path corner_z_shift_table_path = mtable_dir / "corner_z_shift";
 
+bool load_move_tables() {
+    if (cmt.load(corner_mtable_path)
+        && emt1.load(edge_mtable_path_1)
+        && emt2.load(edge_mtable_path_2)
+        && tmt.load(triangle_mtable_path)
+        && load_edge_convert_table()
+        && load_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path)) return true;
+    print("Move tables missing, generate first");
+    return false;
+}
+
 // Split edges into two parts otherwise the move table is 15 GB lool
 // First part is a 6 edge partial permutation (any parity)
 unsigned e1_index(const CubieFTO& fto){
