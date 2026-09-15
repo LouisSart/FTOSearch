@@ -199,6 +199,7 @@ void BFS_traversal(void (*process)(const typename Node<Cube>::sptr), bool (*is_v
                 queue.push_front(child);
             }
         }
+        assert(queue.size() < 1000000);
         queue.pop_back();
     }
 }
