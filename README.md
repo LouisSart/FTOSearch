@@ -91,3 +91,25 @@ Since the corner and triangle space for one tetrad (orbit) are small enough, we 
 ```
 
 One big advantage of using the triplet coordinate is that it can be reused for the second tetrad after applying a z conjugation to the corners. This gives two pruning values for a given position from the same table.
+
+## The RLBD subgroup
+
+When you scramble the FTO using only moves from the subset <R,R',L,L',B,B',D,D'> you get a position that belongs to a subgroup of the full space that I call the RLBD subgroup. Here is the distribution of positions in this subgroup.
+
+```
+- RLBD table
+       Table size = 933120
+       0 1
+       1 8
+       2 48
+       3 288
+       4 1728
+       5 9896
+       6 51808
+       7 220111
+       8 480467
+       9 166276
+       10 2457
+       11 32
+       Mean value: 7.79549
+```
