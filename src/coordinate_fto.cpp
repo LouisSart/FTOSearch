@@ -134,6 +134,11 @@ void generate_move_tables() {
     if(!load_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path)) {
         generate_corner_z_shift_table();
     }
+
+    assert(cmt.is_filled());
+    assert(emt1.is_filled());
+    assert(emt2.is_filled());
+    assert(tmt.is_filled());
 }
 
 FTO::FTO(const CubieFTO& cfto){
