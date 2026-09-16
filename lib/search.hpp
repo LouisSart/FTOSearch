@@ -155,7 +155,7 @@ std::vector<Sequence<Move>> make_generators(unsigned (*index)(const Cube&), cons
     return generators;
 }
 
-template<typename Cube, typename Move, unsigned N>
+template<typename Cube, typename Move, std::size_t N>
 void generate_right_coset_table(unsigned (*index)(const Cube&), const std::vector<Sequence<Move>> generators, const auto &moves, std::array<unsigned, N> &table) {
     // Coset index table builder
     Cube cube;

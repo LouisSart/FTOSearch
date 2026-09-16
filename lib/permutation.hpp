@@ -219,7 +219,7 @@ struct Permutation : std::array<unsigned, N> {
             this->operator[](k) = k;
         }
     }
-    void compose(const Permutation<N> & other) {
+    void compose(const Permutation<N, even> & other) {
         auto ret = *this;
         for (unsigned k = 0; k < N; ++k){
             this->operator[](k) = ret[other[k]];
