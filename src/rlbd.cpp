@@ -17,7 +17,7 @@ PruningTable<CARD> pruning_table;
 fs::path pruning_table_path = "pruning_tables/rlbd";
 
 unsigned index(const FTO &fto){
-    unsigned ret = corner_index(fto) * EDGE_CARD + edge_reduction_map[dense_edge_index(fto)];
+    unsigned ret = corner_index(fto) * EDGE_CARD + edge_reduction_map[edge_index(fto)];
     assert(ret < CARD);
     return ret;
 };
@@ -26,17 +26,17 @@ void from_index(const unsigned &idx, FTO &fto) {
     unsigned c = idx / EDGE_CARD;
     unsigned e = idx % EDGE_CARD;
     corners_from_index(c, fto);
-    edges_from_dense_index(edge_expansion_table[e], fto);
+    edges_from_index(edge_expansion_table[e], fto);
 }
 
 void generate_edge_map(){
     auto is_visited = [](const typename Node<FTO>::sptr node) {
-        return edge_reduction_map.contains(dense_edge_index(node->state));
+        return edge_reduction_map.contains(edge_index(node->state));
     };
     
     auto process = [](const typename Node<FTO>::sptr node) {
         static unsigned reduced = 0;
-        unsigned e = dense_edge_index(node->state);
+        unsigned e = edge_index(node->state);
         edge_expansion_table[reduced] = e;
         edge_reduction_map[e] = reduced++;
     };
@@ -68,7 +68,7 @@ std::array<Move, 8> directions(const typename Node<FTO>::sptr node) {
 
 Solutions<FTO> optimal(const FTO &fto, const unsigned max_depth){
     // check me : should we make sure the triplets are solved ?
-    assert(edge_reduction_map.contains(dense_edge_index(fto)));
+    assert(edge_reduction_map.contains(edge_index(fto)));
     assert(fto.tri1 == 0);
 
     auto root = make_root(fto);
