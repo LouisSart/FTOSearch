@@ -1,7 +1,9 @@
 #include "coordinate_fto.hpp"
+#include "../lib/search.hpp"
 
 namespace fs = std::filesystem;
 
 namespace RLBD {
     void generate_pruning_table();
+    Solutions<FTO> optimal(const FTO &, const unsigned m = 23);
 };
