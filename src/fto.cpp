@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 #include "fto.hpp"
 
 std::ostream& operator<< (std::ostream& out, const Move& m){
@@ -10,6 +11,26 @@ std::ostream& operator<< (std::ostream& out, const Move& m){
     out << notation[m];
 
     return out;
+}
+
+Sequence<Move> str_to_seq(std::string s_seq) {
+    static const std::map<std::string, Move> str_to_move_map {
+        {"U",U},{"U'",U2},{"R",R},{"R'",R2},{"F",F},
+        {"F'",F2},{"L",L},{"L'",L2},{"B",B},{"B'",B2},
+        {"bR",bR},{"bR'",bR2},{"D",D},{"D'",D2},{"bL",bL},{"bL'",bL2}};
+
+    std::istringstream iss(s_seq);
+    std::string s;
+    Sequence<Move> ret;
+    while(std::getline(iss, s, ' ')){
+        if(str_to_move_map.contains(s)) {
+            ret.push_back(str_to_move_map.at(s));
+        } else {
+            print("Error while parsing:", s_seq);
+            abort();
+        }
+    }
+    return ret;
 }
 
 const std::vector<Move> &allowed_next(const Move &m) {

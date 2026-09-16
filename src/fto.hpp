@@ -2,9 +2,11 @@
 #include "../lib/permutation.hpp"
 #include "../lib/utils.hpp"
 #include "../lib/move.hpp"
+#include <map>
 
 enum Move : unsigned {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
-std::ostream& operator<< (std::ostream& out, const Move& m);
+std::ostream& operator<< (std::ostream&, const Move&);
+Sequence<Move> str_to_seq(std::string);
 constexpr unsigned NMOVES = 16;
 constexpr std::array<Move, NMOVES> moves {U, U2, R, R2, F, F2, L, L2, B, B2, bR, bR2, D, D2, bL, bL2};
 
