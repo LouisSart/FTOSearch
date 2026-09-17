@@ -79,7 +79,7 @@ Sequence<Move> random_moves(const unsigned &n){
 }
 
 // Corner permutations
-static const Permutation<NC> CP[NMOVES] {
+static const Permutation<NC, true> CP[NMOVES] {
     {3,1,2,4,0,5}, // U
     {4,1,2,0,3,5}, // U'
     {2,1,3,0,4,5}, // R
@@ -118,7 +118,7 @@ static const Orientation<NC> CO[NMOVES] {
 };
 
 // Edge permutations
-static const Permutation<NE> EP[NMOVES] {
+static const Permutation<NE, true> EP[NMOVES] {
     {1,6,2,3,4,5,0,7,8,9,10,11}, // U
     {6,0,2,3,4,5,1,7,8,9,10,11}, // U'
     {0,2,5,3,4,1,6,7,8,9,10,11}, // R
@@ -138,7 +138,7 @@ static const Permutation<NE> EP[NMOVES] {
 };
 
 // Triangles permutation
-static const Permutation<NT> TP[NMOVES] {
+static const Permutation<NT, true> TP[NMOVES] {
     {7,8,2,1,4,0,6,5,3,9,10,11}, // U
     {5,3,2,8,4,7,6,0,1,9,10,11}, // U'
     {2,0,1,3,4,5,6,7,8,9,10,11}, // R

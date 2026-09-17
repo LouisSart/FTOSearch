@@ -577,9 +577,8 @@ struct Center : std::array<unsigned, N> {
     }
 };
 
-// CHECKME : this has template deduction issues
-template<unsigned N>
-void permute(std::array<unsigned, N> &items, const Permutation<N> &perm) {
+template<unsigned N, bool even>
+void permute(std::array<unsigned, N> &items, const Permutation<N, even> &perm) {
     std::array<unsigned, N> buf = items;
     for (unsigned k = 0; k < N; ++k){
         items[k] = buf[perm[k]];

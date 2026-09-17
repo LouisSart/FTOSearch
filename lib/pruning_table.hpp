@@ -86,7 +86,7 @@ struct PruningTable {
     void generate(unsigned (*index)(const Cube&),
                   void (*from_index)(const unsigned&, Cube&),
                   const auto &moves,
-                  const unsigned forward_switch_depth = 3,
+                  unsigned forward_switch_depth = 3,
                   const unsigned backwards_switch_depth = 7,
                   unsigned depth_zero_nodes = 0) { // In some cases we want to initialize multiple depth zero nodes beforehand
         assert(forward_switch_depth < backwards_switch_depth);
@@ -94,9 +94,11 @@ struct PruningTable {
         distribution = {};
         unsigned node_counter{0}, nodes, fill_depth{0};
         if (depth_zero_nodes > 0) {
+            print(fill_depth, depth_zero_nodes);
             distribution.push_back(depth_zero_nodes);
             node_counter = depth_zero_nodes;
             fill_depth = 1;
+            forward_switch_depth = 0; // No DFS when depth zero is prefilled
         }
         Cube cube;
         while (fill_depth < forward_switch_depth) {
