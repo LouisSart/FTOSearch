@@ -7,3 +7,7 @@ namespace RLBD {
     void generate_pruning_table();
     Solutions<FTO> optimal(const FTO &, const unsigned m = 23);
 };
+
+namespace reduction {
+void generate_edge_ptable();
+};

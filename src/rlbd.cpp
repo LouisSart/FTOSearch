@@ -76,3 +76,30 @@ Solutions<FTO> optimal(const FTO &fto, const unsigned max_depth){
 }
 
 };
+
+namespace reduction {
+
+constexpr unsigned EDGE_COSET_CARD = EDGE_CARD / RLBD::EDGE_CARD;
+PruningTable<EDGE_CARD> edge_ptable;
+fs::path edge_table_path = "pruning_tables/edge_reduction";
+
+
+void generate_edge_ptable() {
+    if (!edge_ptable.load(edge_table_path)) {
+        print("Generating edge RLBD reduction pruning table...");
+
+        auto generators = make_generators<FTO, Move>(edge_index, RLBD::moves);
+        unsigned depth = 0;
+        edge_ptable.reset();
+        for (auto g : generators) {
+            CubieFTO fto;
+            fto.edge_apply(g);
+            edge_ptable[fto.ep.index()] = depth;
+        }
+
+        edge_ptable.generate<CubieFTO, true>(edge_index, edges_from_index, moves, 6, 9, RLBD::EDGE_CARD);
+        edge_ptable.write(edge_table_path);
+        edge_ptable.show_distribution();
+    }
+}
+};
