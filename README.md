@@ -1,4 +1,4 @@
-# FTOSearch
+#      FTOSearch
 
 Some code for the FTO. Ideally I'd like to have an optimal solver that takes a reasonable amount of time. This is also going to be for computing subgroup distance distributions and probably looking at multi phase solver ideas as well.
 
@@ -6,19 +6,19 @@ Below is the numbering of pieces that I use for defining permutations of pieces.
 
 ![numbering](./draft/numbering.jpg)
 
-## Compiling
+##     Compiling
 
 This should do the trick if you have a c++ compiler and make installed
 
 `make fto`
 
-## Running
+##     Running
 
 `/obj/fto`
 
 Note that move tables and pruning tables will be generated on the first run. This might take a few minutes to an hour and use about 6 GB of RAM
 
-## Pruning tables
+##     Pruning tables
 
 Full pruning distances for corners and edges are shown below:
 
@@ -67,7 +67,7 @@ Full pruning distances for corners and edges are shown below:
         Mean value: 5.79818
 ```
 
-### Triplets
+###    Triplets
 
 Since the corner and triangle space for one tetrad (orbit) are small enough, we can combine them to get a bigger table and better value :
 
@@ -92,7 +92,7 @@ Since the corner and triangle space for one tetrad (orbit) are small enough, we 
 
 One big advantage of using the triplet coordinate is that it can be reused for the second tetrad after applying a z conjugation to the corners. This gives two pruning values for a given position from the same table.
 
-## The RLBD subgroup
+##     The RLBD subgroup
 
 When you scramble the FTO using only moves from the subset <R,R',L,L',B,B',D,D'> you get a position that belongs to a subgroup of the full space that I call the RLBD subgroup. Here is the distribution of positions in this subgroup.
 
@@ -112,4 +112,32 @@ When you scramble the FTO using only moves from the subset <R,R',L,L',B,B',D,D'>
        10 2457
        11 32
        Mean value: 7.79549
+```
+
+##     RLBD reduction
+
+One idea for a two phase solver of the FTO is to bring the scrambled state into the RLBD subgroup, because then the optimal finish will be very fast to compute. RLBD reduction comes down to:
+
+ - Solving the triangles of the RLBD tetrad (orbit)
+ - Bringing back the edges to their respective RLBD face (in a way that they can be solved with only one move)
+ - Forming the triplets of the second tetrad (connecting the corners with their respective triangles)
+
+Here are the distributions of distance to the RLBD subgroup for some groups of pieces :
+
+```
+ - Edge table (size 239500800)
+       0 81
+       1 648
+       2 5832
+       3 49248
+       4 360612
+       5 2375406
+       6 13472244
+       7 56072493
+       8 114094818
+       9 51533010
+       10 1534788
+       11 1539
+       12 81
+       Mean value: 7.84441
 ```
