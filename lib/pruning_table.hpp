@@ -21,7 +21,8 @@ struct PruningTable {
     static constexpr unsigned unassigned =
         std::numeric_limits<entry_type>::max();
 
-    std::shared_ptr<entry_type[]> table{new entry_type[N]};
+    std::shared_ptr<entry_type[]> table{new entry_type[N]}; // pointer to pruning values
+    std::vector<unsigned> distribution; // distribution of positions at each depth
 
     PruningTable() { std::fill(table.get(), table.get() + N, unassigned); }
 
@@ -86,12 +87,17 @@ struct PruningTable {
                   void (*from_index)(const unsigned&, Cube&),
                   const auto &moves,
                   const unsigned forward_switch_depth = 3,
-                  const unsigned backwards_switch_depth = 7) {
+                  const unsigned backwards_switch_depth = 7,
+                  unsigned depth_zero_nodes = 0) { // In some cases we want to initialize multiple depth zero nodes beforehand
         assert(forward_switch_depth < backwards_switch_depth);
 
-        std::vector<unsigned> distribution;
-        unsigned node_counter = 0, nodes;
-        unsigned fill_depth = 0;
+        distribution = {};
+        unsigned node_counter{0}, nodes, fill_depth{0};
+        if (depth_zero_nodes > 0) {
+            distribution.push_back(depth_zero_nodes);
+            node_counter = depth_zero_nodes;
+            fill_depth = 1;
+        }
         Cube cube;
         while (fill_depth < forward_switch_depth) {
             // IDDFS is only fast on the first few layers of the tree.
@@ -160,26 +166,28 @@ struct PruningTable {
         assert(N == node_counter);
     }
 
-    std::vector<unsigned> get_distribution() const {
-        std::vector<unsigned> ret = {0};
+    std::vector<unsigned> compute_distribution() {
+        distribution = {0};
         unsigned h;
         for (auto it = table.get(); it < table.get() + N; ++it) {
             h = (unsigned)(*it);
-            if (h + 1 > ret.size()) {
-                ret.resize(h + 1);
+            if (h + 1 > distribution.size()) {
+                distribution.resize(h + 1);
             }
-            ++ret[h];
+            ++distribution[h];
         }
-        return ret;
+        return distribution;
     }
 
     void show_distribution() {
-        auto distr = get_distribution();
+        if (distribution.size() < 2) {
+            compute_distribution();
+        }
         double mean = 0.0;
 
-        for (unsigned k = 0; k < distr.size(); ++k) {
-            mean += k * (double)distr[k];
-            std::cout << std::setw(2) << k << " " << distr[k] << std::endl;
+        for (unsigned k = 0; k < distribution.size(); ++k) {
+            mean += k * (double)distribution[k];
+            std::cout << std::setw(2) << k << " " << distribution[k] << std::endl;
         }
         std::cout << "Mean value: " << mean / N << std::endl;
     }
