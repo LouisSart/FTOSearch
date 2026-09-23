@@ -219,12 +219,31 @@ struct Permutation : std::array<unsigned, N> {
             this->operator[](k) = k;
         }
     }
+
     void compose(const Permutation<N, even> & other) {
         auto ret = *this;
         for (unsigned k = 0; k < N; ++k){
             this->operator[](k) = ret[other[k]];
         }
     }
+
+    template<bool other_even>
+    auto get_conjugate(const Permutation<N, other_even> &p) const {
+        // return p^-1 o (*this) o p
+        auto ret = p.get_inverse();
+        ret.compose(*this);
+        ret.compose(p);
+        return ret;
+    }
+
+    Permutation<N, even> get_inverse() const {
+        Permutation<N, even> ret;
+        for (unsigned k = 0; k < N; ++k) {
+            ret[(*this)[k]] = k;
+        };
+        return ret;
+    }
+
     unsigned index() const {
         // Compute the lexicographic index of the permutation
         static_assert(N > 0); // empty permutations are a problem

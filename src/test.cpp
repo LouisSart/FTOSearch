@@ -114,6 +114,15 @@ int main(int argc, const char* argv[]) {
         assert(center.index() == c);
     }
 
+    // Tests on inverse and conjugation
+    Permutation<12> aa, conj;
+    aa.random_state();
+    conj.random_state();
+    auto i = aa.get_inverse();
+    auto bb = aa.get_conjugate(conj);
+    bb.compose(i.get_conjugate(conj));
+    assert(bb.is_solved());
+
     // Some testing on sequences and moves
     auto node = make_root(CubieFTO(), true);
     for (unsigned k = 0; k < NMOVES; ++k) {
