@@ -255,3 +255,52 @@ Searching at depth 17
 ```
 
 EDIT : Je viens de tester un mélange à la profondeur 13 comme dans la section "Comparaison Cubie-level vs Coordinate-level". Avec la nouvelle heuristique on a accéléré la recherche d'un facteur ~22. Y a de quoi se féliciter :)
+
+# Encore des algos
+
+Swap les triangles de deux faces
+bL' U' D' bR U' bR' R F' U' F U R' D bL U' (15)
+bL F B bR' F bR R' U F U' F' R B' bL' F (15)
+bR' F' B' bL F' bL' L U' F' U F L' B bR F' (15)
+bR U D bL' U bL L' F U F' U' L D' bR' U (15)
+F' bL B R' F U F' U' R bR' F' bR F' B' bL' (15)
+F bR' B' L F' U' F U L' bL F bL' F B bR (15)
+U' bR D L' U F U' F' L bL' U' bL U' D' bR' (15)
+U bL' D' R U' F' U F R' bR U bR' U D bL (15)
+
+Faire un U move mais qu'avec les triangles
+R' L R F' U F U' R' L' R U' F' U F (14)
+
+Le sune permet de faire une U perm
+D' R D R D' R D R (8)
+D R D' R D R D' R (8)
+B' R B R B' R B R (8)
+B R B' R B R B' R (8)
+L' R L R L' R L R (8)
+L R L' R L R L' R (8)
+R D' R D R D' R D (8)
+R D R D' R D R D' (8)
+R B' R B R B' R B (8)
+R B R B' R B R B' (8)
+R L' R L R L' R L (8)
+R L R L' R L R L' (8)
+
+Un autre "3-cycle d'arêtes" (awkward):
+B U F L F' U' B' D bR R' bR' D' (12)
+
+Un sledge de coins pur en 12 (je crois que les triangles ne bougent pas)
+R' L F L' R U' R' L F L' R U' (12) // marrant de regarder ce qui arrive à l'arête FD
+
+Cette espèce de commutateur permet de faire deux cycles d'edges
+sur deux faces de la même orbite
+D R D' L D' B' D L' (8)
+B' D L' D R D' L D' (8)
+B' L' D L' R L D' L (8)
+L' D L' R L D' L B' (8)
+L' D R D' L D' B' D (8)
+L' R L D' L B' L' D (8)
+L D' B' D L' D R D' (8)
+L D' L B' L' D L' R (8)
+L B' L' D L' R L D' (8)
+R D' L D' B' D L' D (8)
+R L D' L B' L' D L' (8)
