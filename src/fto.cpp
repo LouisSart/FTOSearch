@@ -304,3 +304,17 @@ void tri2_from_index(const unsigned &c, CubieFTO &fto) {
 void triangle_apply(const Move &m, CubieFTO& fto){
     fto.triangle_apply(m);
 }
+
+EdgeComb::EdgeComb(const Permutation<NE, true>& p){
+    for (unsigned k = 0; k < NE;  ++k) {
+        pieces.operator[](k) = p[k] / 3;
+    }
+}
+
+void EdgeComb::apply(const Move &m) {
+    permute<NE>(pieces, EP[m]);
+}
+
+unsigned edge_comb_index(const EdgeComb& ec){
+    return ec.pieces.index();
+}

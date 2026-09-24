@@ -25,25 +25,12 @@ struct FTO {
 
 bool is_solved(const FTO &);
 
+// Indices
 unsigned corner_index(const FTO&);
 void corners_from_index(const unsigned &, FTO&);
 
-unsigned e1_index(const CubieFTO&);
-unsigned e2_index(const CubieFTO&);
-unsigned edge_index(const FTO&);
-void edges_from_index(const unsigned &, FTO&);
-
-// Conversion sparse to dense
-unsigned dense_edge_index(const FTO&);
-void edges_from_dense_index(const unsigned &, FTO&);
-void generate_edge_convert_table();
-bool load_edge_convert_table();
-void write_edge_convert_table();
-
-// Conversion for corner z rotation conjugation
-void generate_corner_z_shift_table();
-void write_corner_z_shift_table();
-void load_corner_z_shift_table();
+unsigned edge_index(const EdgeComb&);
+void edges_from_index(const unsigned &, EdgeComb &);
 
 unsigned tri1_index(const FTO&);
 void tri1_from_index(const unsigned &, FTO&);
@@ -54,4 +41,8 @@ unsigned triplet_index(const FTO&);
 void from_triplet_index(const unsigned &, FTO&);
 unsigned triplet2_index(const FTO&);
 
+// Move tables
+void generate_corner_z_shift_table();
+void write_corner_z_shift_table();
+void load_corner_z_shift_table();
 void generate_move_tables();

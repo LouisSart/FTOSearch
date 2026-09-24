@@ -123,6 +123,16 @@ int main(int argc, const char* argv[]) {
     bb.compose(i.get_conjugate(conj));
     assert(bb.is_solved());
 
+    // Test on edge coordinate symmetry
+    CubieFTO c1, c2;
+    auto scramble = random_moves(13);
+    for (auto m : scramble) {
+        c1.apply(m);
+        c2.apply(zSHIFT[m]);
+        EdgeComb ec1(c1.ep.get_conjugate(Permutation<NE, true>{4,0,9,1,3,6,2,8,10,5,11,7})), ec2(c2.ep);
+        assert(edge_comb_index(ec2) == edge_comb_index(ec1));
+    }
+
     // Some testing on sequences and moves
     auto node = make_root(CubieFTO(), true);
     for (unsigned k = 0; k < NMOVES; ++k) {
@@ -149,7 +159,6 @@ int main(int argc, const char* argv[]) {
     assert(cube.tri1 == 0);
     assert(cube.tri2 == 0);
 
-    auto scramble = random_moves(15);
     FTO cube1, cube2;
     cube1.apply(scramble);
     for (auto m : scramble) cube2.apply(zSHIFT[m]);

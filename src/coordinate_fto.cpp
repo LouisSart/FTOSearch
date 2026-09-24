@@ -7,89 +7,34 @@
 #include "coordinate_fto.hpp"
 
 static MoveTable<CORNER_CARD, NMOVES> cmt;
-static MoveTable<SIX_EDGE_CARD, NMOVES> emt1;
-static MoveTable<SIX_EDGE_CARD, NMOVES> emt2;
+static MoveTable<SIX_EDGE_CARD, NMOVES> emt;
 static MoveTable<TRIANGLE_CARD, NMOVES> tmt;
 std::array<unsigned, CORNER_CARD> corner_z_shift_table; // 1 to 1 mapping between a corner state index and its conjugation through a z move
 
 fs::path mtable_dir = "move_tables";
 fs::path corner_mtable_path = mtable_dir / "corners";
-fs::path edge_mtable_path_1 = mtable_dir / "edges1";
-fs::path edge_mtable_path_2 = mtable_dir / "edges2";
+fs::path edge_mtable_path = mtable_dir / "edges";
 fs::path triangle_mtable_path = mtable_dir / "triangles";
 fs::path edge_conversion_table_path = mtable_dir / "edge_conversion";
 fs::path corner_z_shift_table_path = mtable_dir / "corner_z_shift";
 
 bool load_move_tables() {
     if (cmt.load(corner_mtable_path)
-        && emt1.load(edge_mtable_path_1)
-        && emt2.load(edge_mtable_path_2)
+        && emt.load(edge_mtable_path)
         && tmt.load(triangle_mtable_path)
-        && load_edge_convert_table()
         && load_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path)) return true;
     print("Move tables missing, generate first");
     return false;
 }
 
-// Split edges into two parts otherwise the move table is 15 GB lool
-// First part is a 6 edge partial permutation (any parity)
-unsigned e1_index(const CubieFTO& fto){
-    auto [cl, c1, c2] = fto.ep.split_indices();
-    return cl * SIX_EDGE_PERM_CARD + c1;
+// Only consider the combination positions
+// of edges relative to their home RLBD face
+unsigned edge_index(const EdgeComb& ecomb){
+    return ecomb.pieces.index();
 }
 
-void e1_from_index(const unsigned &c, CubieFTO &fto) {
-    fto.ep.set_from_split_indices(c / SIX_EDGE_PERM_CARD, c % SIX_EDGE_PERM_CARD, 0);
-}
-
-// Second part takes care of the last 6 edges partial
-// perm but ignores the actual permutation of the last 2
-// because it is forced by the parity of the first set e1
-unsigned e2_index(const CubieFTO& fto){
-    auto [cl, c1, c2] = fto.ep.split_indices();
-    return cl * SIX_EDGE_PERM_CARD + c2;
-}
-
-void e2_from_index(const unsigned &c, CubieFTO &fto) {
-    fto.ep.set_from_split_indices(c / SIX_EDGE_PERM_CARD, 0, c % SIX_EDGE_PERM_CARD);
-}
-
-// Mapping between sparse index disregarding parity 
-// and dense index for edge even permutation
-static std::array<unsigned, EDGE_CARD * 2> edge_conversion;
-void generate_edge_convert_table() {
-    // Build a conversion table to retrieve the global 
-    // permutation index from the split indices e1 and e2.
-    Permutation<12, true> edges;
-    edge_conversion.fill(EDGE_CARD);
-    for (unsigned c = 0; c < EDGE_CARD; ++c){
-        edges.set_from_index(c);
-        auto [cl, c1, c2] = edges.split_indices();
-
-        unsigned e1 = cl * SIX_EDGE_PERM_CARD + c1;
-        unsigned sparse_idx = e1 * SIX_EDGE_PERM_CARD + c2;
-        assert(sparse_idx < EDGE_CARD * 2);
-        edge_conversion[sparse_idx] = c;
-    }
-}
-
-void write_edge_convert_table() {
-    write_table<EDGE_CARD * 2>(edge_conversion.data(), edge_conversion_table_path);
-}
-
-bool load_edge_convert_table() {
-    return load_table<EDGE_CARD * 2>(edge_conversion.data(), edge_conversion_table_path);
-}
-
-unsigned dense_edge_index(const FTO& fto){
-    return edge_conversion[edge_index(fto)];
-}
-
-void edges_from_dense_index(const unsigned &c, FTO& fto) {
-    static CubieFTO cfto;
-    cfto.ep.set_from_index(c);
-    fto.e1 = e1_index(cfto);
-    fto.e2 = e2_index(cfto);
+void edges_from_index(const unsigned &c, EdgeComb &ecomb) {
+    ecomb.pieces.set_from_index(c);
 }
 
 void generate_corner_z_shift_table() {
@@ -121,14 +66,9 @@ void generate_move_tables() {
         tmt.write(triangle_mtable_path);
     }
     
-    if (!emt1.load(edge_mtable_path_1)) {
-        emt1.compute<CubieFTO>(e1_index, e1_from_index, moves);
-        emt1.write(edge_mtable_path_1);
-    }
-
-    if (!emt2.load(edge_mtable_path_2)) {
-        emt2.compute<CubieFTO>(e2_index, e2_from_index, moves);
-        emt2.write(edge_mtable_path_2);
+    if (!emt.load(edge_mtable_path)) {
+        emt.compute<EdgeComb>(edge_index, edges_from_index, moves);
+        emt.write(edge_mtable_path);
     }
 
     if(!load_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path)) {
@@ -136,15 +76,16 @@ void generate_move_tables() {
     }
 
     assert(cmt.is_filled());
-    assert(emt1.is_filled());
-    assert(emt2.is_filled());
+    assert(emt.is_filled());
     assert(tmt.is_filled());
 }
 
+
 FTO::FTO(const CubieFTO& cfto){
+    static const Permutation<NE, true> z_edge{4,0,9,1,3,6,2,8,10,5,11,7}; // z'
     cp = corner_index(cfto);
-    e1 = e1_index(cfto);
-    e2 = e2_index(cfto);
+    e1 = edge_comb_index(cfto.ep);
+    e2 = edge_comb_index(cfto.ep.get_conjugate(z_edge));
     tri1 = tri1_index(cfto);
     tri2 = tri2_index(cfto);
 }
@@ -152,8 +93,8 @@ FTO::FTO(const CubieFTO& cfto){
 
 void FTO::apply(const Move &m) {
     cmt.apply(m, cp);
-    emt1.apply(m, e1);
-    emt2.apply(m, e2);
+    emt.apply(m, e1);
+    emt.apply(zSHIFT[m], e2);
     tmt.apply(m, tri1);
     tmt.apply(zSHIFT[m], tri2);
 };

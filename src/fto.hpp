@@ -61,3 +61,13 @@ void tri1_from_index(const unsigned &c, CubieFTO& fto);
 unsigned tri2_index(const CubieFTO&);
 void tri2_from_index(const unsigned &c, CubieFTO &);
 
+struct EdgeComb {
+    // Edge RLBD combination is not directly
+    // encoded in the Cubie FTO object
+    Center<NE, NF> pieces;
+    EdgeComb() = default;
+    EdgeComb(const Permutation<NE, true>&);
+    void apply(const Move &);
+};
+
+unsigned edge_comb_index(const EdgeComb&);
