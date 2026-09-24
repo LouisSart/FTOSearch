@@ -304,3 +304,24 @@ L D' L B' L' D L' R (8)
 L B' L' D L' R L D' (8)
 R D' L D' B' D L' D (8)
 R L D' L B' L' D L' (8)
+
+# Nouvelle coordonnée d'arête
+
+24 septembre 2026 : On reprend l'idée du 3 septembre. On définit une nouvelle coordonnée EComb qui représente la position des arêtes modulo leur appartenance à chacune des faces R, L, B et D. Ça nous donne donc un objet Center<12, 4> qui a un cardinal de 369600 (comme les triangles), qu'on pourra composer avec les coins pour faire une pruning value relativement bonne.
+
+```
+Generating edge comb pruning table
+0 1
+1 8
+2 72
+switch to forwards scan
+3 560
+4 3642
+5 19470
+6 74184
+switch to backwards scan
+7 153339
+8 106923
+9 11337
+10 64
+```

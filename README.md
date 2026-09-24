@@ -52,6 +52,20 @@ Full pruning distances for corners and edges are shown below:
         13 366
         Mean value: 9.55184
 
+ - Edge combination for the RLBD orbit
+       0 1
+       1 8
+       2 72
+       3 560
+       4 3642
+       5 19470
+       6 74184
+       7 153339
+       8 106923
+       9 11337
+       10 64
+       Mean value: 7.00834
+
 
  - Triangles of one tetrad
         Table size = 369600
