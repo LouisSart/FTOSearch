@@ -5,14 +5,13 @@
 
 namespace fs = std::filesystem;
 
-static constexpr unsigned SIX_EDGE_PERM_CARD = Permutation<6>::CARD;
-static constexpr unsigned SIX_EDGE_CARD = Layout<NE, 6>::CARD * SIX_EDGE_PERM_CARD;
+static constexpr unsigned EDGE_COMB_CARD = Center<NE, NF>::CARD;
 
 struct FTO {
     // Coordinate level representation of an FTO
     unsigned cp{0};   // Corner permutation + orientation
-    unsigned e1{0};   // 6 edges partial permutation
-    unsigned e2{0};   // 6 other edges partial permutation
+    unsigned e1{0};   // Edge comb coordinate of RLBD orbit
+    unsigned e2{0};   // Edge comb coordinate of second orbit
     unsigned tri1{0}; // Triangles of first tetrad
     unsigned tri2{0}; // Triangles of second tetrad
 

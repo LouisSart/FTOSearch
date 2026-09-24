@@ -7,7 +7,7 @@
 #include "coordinate_fto.hpp"
 
 static MoveTable<CORNER_CARD, NMOVES> cmt;
-static MoveTable<SIX_EDGE_CARD, NMOVES> emt;
+static MoveTable<EDGE_COMB_CARD, NMOVES> emt;
 static MoveTable<TRIANGLE_CARD, NMOVES> tmt;
 std::array<unsigned, CORNER_CARD> corner_z_shift_table; // 1 to 1 mapping between a corner state index and its conjugation through a z move
 
@@ -27,16 +27,6 @@ bool load_move_tables() {
     return false;
 }
 
-// Only consider the combination positions
-// of edges relative to their home RLBD face
-unsigned edge_index(const EdgeComb& ecomb){
-    return ecomb.pieces.index();
-}
-
-void edges_from_index(const unsigned &c, EdgeComb &ecomb) {
-    ecomb.pieces.set_from_index(c);
-}
-
 void generate_corner_z_shift_table() {
     corner_z_shift_table.fill(CORNER_CARD);
     auto check_z_shift = [](const auto node) {
@@ -53,6 +43,16 @@ void generate_corner_z_shift_table() {
 
     BFS_traversal<FTO>(check_z_shift, is_treated, moves);
     write_table<CORNER_CARD>(corner_z_shift_table.data(), corner_z_shift_table_path);
+}
+
+// Only consider the combination positions
+// of edges relative to their home RLBD face
+unsigned edge_index(const EdgeComb& ecomb){
+    return ecomb.pieces.index();
+}
+
+void edges_from_index(const unsigned &c, EdgeComb &ecomb) {
+    ecomb.pieces.set_from_index(c);
 }
 
 void generate_move_tables() {
@@ -120,19 +120,20 @@ void corners_from_index(const unsigned &c, FTO& fto){
     fto.cp = c;
 };
 
-unsigned edge_index(const FTO& fto){
-    return fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD);
-}
+// unsigned edge_index(const FTO& fto){
+//     return fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD);
+// }
 
-void edges_from_index(const unsigned &c, FTO& fto){
-    unsigned e1 = c / SIX_EDGE_PERM_CARD;
-    unsigned cl = e1 / SIX_EDGE_PERM_CARD;
-    unsigned c1 = e1 % SIX_EDGE_PERM_CARD;
-    unsigned c2 = c % SIX_EDGE_PERM_CARD;
+// void edges_from_index(const unsigned &c, FTO& fto){
+//     unsigned e1 = c / SIX_EDGE_PERM_CARD;
+//     unsigned cl = e1 / SIX_EDGE_PERM_CARD;
+//     unsigned c1 = e1 % SIX_EDGE_PERM_CARD;
+//     unsigned c2 = c % SIX_EDGE_PERM_CARD;
 
-    fto.e1 = cl * SIX_EDGE_PERM_CARD + c1;
-    fto.e2 = cl * SIX_EDGE_PERM_CARD + c2;
-}
+//     fto.e1 = cl * SIX_EDGE_PERM_CARD + c1;
+//     fto.e2 = cl * SIX_EDGE_PERM_CARD + c2;
+// }
+
 unsigned tri1_index(const FTO& fto){return fto.tri1;}
 void tri1_from_index(const unsigned &c, FTO& fto){
     fto.tri1 = c;
