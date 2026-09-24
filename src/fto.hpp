@@ -20,11 +20,11 @@ constexpr unsigned NE = 12;
 constexpr unsigned NT = 12; // 12 triangles per tetrad
 constexpr unsigned NF = 4; // 4 faces per tetrad
 
-constexpr unsigned CP_CARD = Permutation<6, true>::CARD;
-constexpr unsigned CO_CARD = Orientation<6>::CARD;
+constexpr unsigned CP_CARD = Permutation<NC, true>::CARD;
+constexpr unsigned CO_CARD = Orientation<NC>::CARD;
 constexpr unsigned CORNER_CARD = CP_CARD * CO_CARD;
-constexpr unsigned EDGE_CARD = Permutation<12, true>::CARD;
-constexpr unsigned TRIANGLE_CARD = Center<12, 4>::CARD;
+constexpr unsigned EDGE_CARD = Permutation<NE, true>::CARD;
+constexpr unsigned TRIANGLE_CARD = Center<NE, NF>::CARD;
 
 static const Move zSHIFT[NMOVES] {L, L2, U, U2, R, R2, F, F2, bL, bL2, B, B2, bR, bR2, D, D2};
 
