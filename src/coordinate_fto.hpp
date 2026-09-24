@@ -28,6 +28,9 @@ bool is_solved(const FTO &);
 unsigned corner_index(const FTO&);
 void corners_from_index(const unsigned &, FTO&);
 
+unsigned e1_index(const FTO&);
+void e1_from_index(const unsigned &, FTO&);
+unsigned e2_index(const FTO&);
 unsigned edge_index(const EdgeComb&);
 void edges_from_index(const unsigned &, EdgeComb &);
 

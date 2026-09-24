@@ -120,19 +120,12 @@ void corners_from_index(const unsigned &c, FTO& fto){
     fto.cp = c;
 };
 
-// unsigned edge_index(const FTO& fto){
-//     return fto.e1 * SIX_EDGE_PERM_CARD + (fto.e2 % SIX_EDGE_PERM_CARD);
-// }
+unsigned e1_index(const FTO& fto){return fto.e1;}
+void e1_from_index(const unsigned &c, FTO& fto){
+    fto.e1 = c;
+}
+unsigned e2_index(const FTO& fto){return fto.e2;}
 
-// void edges_from_index(const unsigned &c, FTO& fto){
-//     unsigned e1 = c / SIX_EDGE_PERM_CARD;
-//     unsigned cl = e1 / SIX_EDGE_PERM_CARD;
-//     unsigned c1 = e1 % SIX_EDGE_PERM_CARD;
-//     unsigned c2 = c % SIX_EDGE_PERM_CARD;
-
-//     fto.e1 = cl * SIX_EDGE_PERM_CARD + c1;
-//     fto.e2 = cl * SIX_EDGE_PERM_CARD + c2;
-// }
 
 unsigned tri1_index(const FTO& fto){return fto.tri1;}
 void tri1_from_index(const unsigned &c, FTO& fto){

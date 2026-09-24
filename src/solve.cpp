@@ -10,7 +10,7 @@ fs::path triangle_table_path = table_dir / "triangles";
 fs::path triplet_table_path = table_dir / "triplets";
 
 PruningTable<CORNER_CARD> corner_table;
-PruningTable<EDGE_CARD> edge_table;
+PruningTable<EDGE_COMB_CARD> edge_table;
 PruningTable<TRIANGLE_CARD> triangle_table;
 PruningTable<CORNER_CARD * TRIANGLE_CARD> triplet_table;
 
@@ -21,12 +21,9 @@ void generate_corner_table(){
     // corner_table.show_distribution();
 }
 
-void generate_edge_table(){  
-    print("Generating edge index conversion table");
-    generate_edge_convert_table();
-    write_edge_convert_table();
-    print("Generating edge pruning table");
-    edge_table.generate<FTO, true>(dense_edge_index, edges_from_dense_index, moves, 7, 11);
+void generate_edge_table(){
+    print("Generating edge comb pruning table");
+    edge_table.generate<FTO, true>(e1_index, e1_from_index, moves, 3, 7);
     edge_table.write(edge_table_path);
     // edge_table.show_distribution();
 }
@@ -47,14 +44,14 @@ void generate_triplet_table(){
 
 void generate_pruning_tables() {
     if (!corner_table.load(corner_table_path)) generate_corner_table();
-    if (!edge_table.load(edge_table_path) || !load_edge_convert_table()) generate_edge_table();
+    if (!edge_table.load(edge_table_path)) generate_edge_table();
     if (!triangle_table.load(triangle_table_path)) generate_triangle_table();
     if (!triplet_table.load(triplet_table_path)) generate_triplet_table();
 };
 
 unsigned estimate(const CubieFTO &fto){
     return std::max({corner_table.estimate(fto.corner_index()),
-                    edge_table.estimate(fto.ep.index()),
+                    // edge_table.estimate(fto.ep.index()),
                     triangle_table.estimate(fto.tri1.index()),
                     triangle_table.estimate(fto.tri2.index())}
         );
@@ -63,7 +60,8 @@ unsigned estimate(const CubieFTO &fto){
 unsigned estimate(const FTO& fto) {
     return std::max({
         corner_table.estimate(corner_index(fto)),
-        edge_table.estimate(dense_edge_index(fto)),
+        edge_table.estimate(e1_index(fto)),
+        edge_table.estimate(e2_index(fto)),
         triangle_table.estimate(tri1_index(fto)),
         triangle_table.estimate(tri2_index(fto)),
         triplet_table.estimate(triplet_index(fto)),
