@@ -8,11 +8,13 @@ fs::path corner_table_path = table_dir / "corners";
 fs::path edge_table_path = table_dir / "edges";
 fs::path triangle_table_path = table_dir / "triangles";
 fs::path triplet_table_path = table_dir / "triplets";
+fs::path checker_table_path = table_dir / "checker";
 
 PruningTable<CORNER_CARD> corner_table;
 PruningTable<EDGE_COMB_CARD> edge_table;
 PruningTable<TRIANGLE_CARD> triangle_table;
 PruningTable<CORNER_CARD * TRIANGLE_CARD> triplet_table;
+PruningTable<CORNER_CARD * EDGE_COMB_CARD> checker_table;
 
 void generate_corner_table(){  
     print("Generating corner pruning table");  
@@ -42,11 +44,20 @@ void generate_triplet_table(){
     // triangle_table.show_distribution();
 }
 
+void generate_checker_table(){
+    // Corners X Edge comb to form checkerboard on the RLBD faces
+    print("Generating checker pruning table");
+    checker_table.generate<FTO, true>(checker_index, from_checker_index, moves, 7, 10);
+    checker_table.write(checker_table_path);
+    checker_table.show_distribution();
+}
+
 void generate_pruning_tables() {
     if (!corner_table.load(corner_table_path)) generate_corner_table();
     if (!edge_table.load(edge_table_path)) generate_edge_table();
     if (!triangle_table.load(triangle_table_path)) generate_triangle_table();
     if (!triplet_table.load(triplet_table_path)) generate_triplet_table();
+    if (!checker_table.load(checker_table_path)) generate_checker_table();
 };
 
 unsigned estimate(const CubieFTO &fto){
@@ -59,13 +70,13 @@ unsigned estimate(const CubieFTO &fto){
 
 unsigned estimate(const FTO& fto) {
     return std::max({
-        corner_table.estimate(corner_index(fto)),
-        edge_table.estimate(e1_index(fto)),
-        edge_table.estimate(e2_index(fto)),
-        triangle_table.estimate(tri1_index(fto)),
-        triangle_table.estimate(tri2_index(fto)),
+        // corner_table.estimate(corner_index(fto)), // those are smaller than
+        // triangle_table.estimate(tri1_index(fto)), // the checker and
+        // triangle_table.estimate(tri2_index(fto)), // triplet values
         triplet_table.estimate(triplet_index(fto)),
-        triplet_table.estimate(triplet2_index(fto))
+        triplet_table.estimate(triplet2_index(fto)),
+        checker_table.estimate(checker_index(fto)),
+        checker_table.estimate(checker2_index(fto))
     });
 }
 

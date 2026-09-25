@@ -43,6 +43,10 @@ unsigned triplet_index(const FTO&);
 void from_triplet_index(const unsigned &, FTO&);
 unsigned triplet2_index(const FTO&);
 
+unsigned checker_index(const FTO&);
+void from_checker_index(const unsigned &, FTO&);
+unsigned checker2_index(const FTO&);
+
 // Move tables
 void generate_corner_z_shift_table();
 void write_corner_z_shift_table();

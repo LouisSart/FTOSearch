@@ -152,6 +152,23 @@ unsigned triplet2_index(const FTO& fto) {
     return fto.tri2 * CORNER_CARD + corner_z_shift_table[fto.cp];
 }
 
+unsigned checker_index(const FTO& fto) {
+    // Corners X edge comb of first tetrad
+    // this forms checker patterns on the RLBD faces
+    return fto.e1 * CORNER_CARD + fto.cp;
+}
+
+void from_checker_index(const unsigned &index, FTO& fto) {
+    fto.e1 = index / CORNER_CARD;
+    fto.cp = index % CORNER_CARD;
+}
+
+unsigned checker2_index(const FTO& fto) {
+    // Corners X edge comb of second tetrad
+    // using a z shift of the corners
+    return fto.e2 * CORNER_CARD + corner_z_shift_table[fto.cp];
+}
+
 bool is_solved(const FTO &fto) {
     return fto.cp == 0 &&
         fto.e1 == 0 &&
