@@ -83,7 +83,7 @@ Full pruning distances for corners and edges are shown below:
 
 ###    Triplets
 
-Since the corner and triangle space for one tetrad (orbit) are small enough, we can combine them to get a bigger table and better value :
+Since the corner and triangle space for one tetrad (orbit) are small enough, we can combine them to get a bigger table (4.3 GB) and better value :
 
 ```
  - Triplets table (corners X triangles of one tetrad)
@@ -105,6 +105,29 @@ Since the corner and triangle space for one tetrad (orbit) are small enough, we 
 ```
 
 One big advantage of using the triplet coordinate is that it can be reused for the second tetrad after applying a z conjugation to the corners. This gives two pruning values for a given position from the same table.
+
+### Checkers
+
+When solving the corners and placing the edges on their respective RLBD faces (regardless of permutation), we get a triangular "checkerboard" pattern. This is what I call the checker pruning value of size 4.3 GB. Similarly to the triplet value, it can be reused for the second orbit using a z shift of the corners.
+
+```
+- Chercker table (corners X edge comb of one tetrad)
+        Table size = 4257792000
+       0 1
+       1 16
+       2 208
+       3 2688
+       4 34332
+       5 424659
+       6 5040598
+       7 54708259
+       8 473608911
+       9 2093331215
+       10 1605069411
+       11 25571546
+       12 156
+       Mean value: 9.24806
+```
 
 ##     The RLBD subgroup
 

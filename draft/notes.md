@@ -325,3 +325,51 @@ switch to backwards scan
 9 11337
 10 64
 ```
+
+25 septembre 2026 : test de solve optimal avec la nouvelle checker pruning value
+mon mélange de test : // auto scramble = Sequence<Move>{bR2, bL, F, R, D, bL, F2, L, F, bL2, D, F, bL, bR2, U, D2, B2, bL2};
+
+```
+Generating checker pruning table
+0 1
+1 16
+2 208
+3 2688
+4 34332
+5 424659
+6 5040598
+switch to forwards scan
+7 54708259
+8 473608911
+9 2093331215
+switch to backwards scan
+10 1605069411
+11 25571546
+12 156
+```
+
+```
+epicier@ACAB:~/Documents/FTOSearch$ make fto && ./obj/fto 
+g++ -std=c++20 -O1  -Isrc/ -Ilib -c src/main.cpp -o obj/main.o
+g++ -std=c++20 -O1  -Isrc/ -Ilib obj/main.o obj/coordinate_fto.o obj/fto.o obj/rlbd.o obj/solve.o  -o obj/fto
+bR' bL F R D bL F' L F bL' D F bL bR' U D' B' bL' (18) // Mon mélange favori
+Searching at depth 10
+Nodes generated: 17
+Searching at depth 11
+Nodes generated: 633
+Searching at depth 12
+Nodes generated: 9383
+Searching at depth 13
+Nodes generated: 124145
+Searching at depth 14
+Nodes generated: 1618935
+Searching at depth 15
+Nodes generated: 21045765
+Searching at depth 16
+Nodes generated: 271568621
+Searching at depth 17
+Nodes generated: 3489569077
+Searching at depth 18
+```
+
+On obtient un gain d'environ 15% noeuds par depth et on consomme 8.6 Go de RAM (deux tables de 4.3 Go).
