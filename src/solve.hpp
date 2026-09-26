@@ -22,6 +22,9 @@ void generate_triplet_table();
 
 unsigned estimate(const CubieFTO& fto);
 unsigned estimate(const FTO& fto);
+unsigned tri1_estimate(const CubieFTO&);
+unsigned e1_estimate(const FTO& fto);
+unsigned tri1_estimate(const FTO& fto);
 
 Solutions<FTO> optimal(const FTO &, const unsigned m = 23);
 Solutions<CubieFTO> optimal(const CubieFTO &, const unsigned m = 23);

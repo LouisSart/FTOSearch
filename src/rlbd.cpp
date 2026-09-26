@@ -1,4 +1,5 @@
 #include "rlbd.hpp"
+#include "solve.hpp" // triangle estimate
 #include "coordinate_fto.hpp"
 #include "../lib/pruning_table.hpp"
 #include <map>
@@ -54,7 +55,7 @@ void generate_edge_map(){
 void generate_pruning_table() {
     generate_edge_map();
     if (!pruning_table.load(pruning_table_path)){
-        print("Generating RLBD pruning table");    
+        print("Generating RLBD pruning table");
         pruning_table.generate<FTO, true>(index, from_index, moves, 6, 9);
         pruning_table.write(pruning_table_path);
     }
@@ -93,29 +94,18 @@ Solutions<FTO> optimal(const FTO &fto, const unsigned max_depth){
 
 }; // namespace rlbd
 
-// namespace reduction {
+namespace reduction {
 
-// constexpr unsigned EDGE_COSET_CARD = EDGE_CARD / RLBD::EDGE_CARD;
-// PruningTable<EDGE_CARD> edge_ptable;
-// fs::path edge_table_path = "pruning_tables/edge_reduction";
+bool centers_solved(const FTO &fto) {
+    return fto.tri1 == 0 && fto.e1 == 0 && RLBD::edge_reduction_map.contains(fto.e2);
+}
 
+unsigned center_estimate(const FTO &fto) {
+    return std::max(e1_estimate(fto), tri1_estimate(fto));
+}
 
-// void generate_edge_ptable() {
-//     if (!edge_ptable.load(edge_table_path)) {
-//         print("Generating edge RLBD reduction pruning table...");
-
-//         auto generators = make_generators<FTO, Move>(edge_index, RLBD::moves);
-//         unsigned depth = 0;
-//         edge_ptable.reset();
-//         for (auto g : generators) {
-//             CubieFTO fto;
-//             fto.edge_apply(g);
-//             edge_ptable[fto.ep.index()] = depth;
-//         }
-
-//         edge_ptable.generate<CubieFTO, true>(edge_index, edges_from_index, moves, 6, 9, RLBD::EDGE_CARD);
-//         edge_ptable.write(edge_table_path);
-//         edge_ptable.show_distribution();
-//     }
-// }
-// };
+Solutions<FTO> solve_centers(const FTO &fto, const unsigned max_depth) {
+    auto root = make_root(fto);
+    return IDAstar<true, FTO>(root, center_estimate, centers_solved, standard_directions<FTO>, max_depth);
+}
+}; // namespace reduction

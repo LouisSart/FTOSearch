@@ -9,5 +9,5 @@ namespace RLBD {
 };
 
 namespace reduction {
-void generate_edge_ptable();
+Solutions<FTO> solve_centers(const FTO&, const unsigned m = 23);
 };

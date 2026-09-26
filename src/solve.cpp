@@ -80,6 +80,19 @@ unsigned estimate(const FTO& fto) {
     });
 }
 
+unsigned tri1_estimate(const CubieFTO& cfto) {
+    return triangle_table.estimate(cfto.tri1.index());
+}
+
+unsigned e1_estimate(const FTO& fto) {
+    return edge_table.estimate(fto.e1);
+}
+
+unsigned tri1_estimate(const FTO& fto) {
+    return triangle_table.estimate(fto.tri1);
+}
+
+
 Solutions<CubieFTO> optimal(const CubieFTO &fto, const unsigned max_depth){
     
     auto root = make_root(fto);
