@@ -125,7 +125,9 @@ void e1_from_index(const unsigned &c, FTO& fto){
     fto.e1 = c;
 }
 unsigned e2_index(const FTO& fto){return fto.e2;}
-
+void e2_from_index(const unsigned &c, FTO& fto){
+    fto.e2 = c;
+}
 
 unsigned tri1_index(const FTO& fto){return fto.tri1;}
 void tri1_from_index(const unsigned &c, FTO& fto){
