@@ -96,16 +96,48 @@ Solutions<FTO> optimal(const FTO &fto, const unsigned max_depth){
 
 namespace reduction {
 
+fs::path e2_ptable_path = "pruning_tables/edge2_reduction";
+PruningTable<EDGE_COMB_CARD> e2_ptable;
+
+// bool is_visited (const typename Node<FTO>::sptr node){
+//     return e2_ptable.is_assigned(node->state.e2);
+// };
+// void process_depth_zero(const typename Node<FTO>::sptr node){
+//     e2_ptable.set(node->state.e2, 0);
+// };
+
+void generate_e2_ptable() {
+    for (auto item : RLBD::edge_reduction_map) {
+        e2_ptable.set(item.first, 0);
+    }
+    if (!e2_ptable.load(e2_ptable_path)){
+        print("Generating edge reduction pruning table");
+        e2_ptable.generate<FTO, true>(e2_index, e2_from_index, moves, 1, 5, RLBD::EDGE_CARD);
+        e2_ptable.write(e2_ptable_path);
+    }
+}
+
 bool centers_solved(const FTO &fto) {
     return fto.tri1 == 0 && fto.e1 == 0 && RLBD::edge_reduction_map.contains(fto.e2);
 }
 
 unsigned center_estimate(const FTO &fto) {
-    return std::max(e1_estimate(fto), tri1_estimate(fto));
+    return std::max({e1_estimate(fto),
+                e2_ptable.estimate(fto.e2),
+                tri1_estimate(fto)});
 }
 
 Solutions<FTO> solve_centers(const FTO &fto, const unsigned max_depth) {
     auto root = make_root(fto);
     return IDAstar<true, FTO>(root, center_estimate, centers_solved, standard_directions<FTO>, max_depth);
 }
+
+
+// std::set<unsigned> gen_set;
+// std::vector<Sequence<Move>> generators;
+
+// void edge_coset() {
+//     std::array<unsigned, EDGE_COMB_CARD> edge_coset_table;
+//     generate_right_coset_table<FTO, Move, EDGE_COMB_CARD>(e2_index, generators, moves, edge_coset_table);
+// }
 }; // namespace reduction
