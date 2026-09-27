@@ -16,9 +16,10 @@ const std::vector<Move>& standard_directions(const typename Node<Cube>::sptr nod
 void generate_corner_table();
 void generate_edge_table();
 void generate_triangle_table();
-
-void generate_pruning_tables();
 void generate_triplet_table();
+
+void generate_small_pruning_tables();
+void generate_big_pruning_tables();
 
 unsigned estimate(const CubieFTO& fto);
 unsigned estimate(const FTO& fto);

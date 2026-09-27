@@ -52,12 +52,15 @@ void generate_checker_table(){
     checker_table.show_distribution();
 }
 
-void generate_pruning_tables() {
+void generate_big_pruning_tables() {
+    if (!triplet_table.load(triplet_table_path)) generate_triplet_table();
+    if (!checker_table.load(checker_table_path)) generate_checker_table();
+};
+
+void generate_small_pruning_tables() {
     if (!corner_table.load(corner_table_path)) generate_corner_table();
     if (!edge_table.load(edge_table_path)) generate_edge_table();
     if (!triangle_table.load(triangle_table_path)) generate_triangle_table();
-    if (!triplet_table.load(triplet_table_path)) generate_triplet_table();
-    if (!checker_table.load(checker_table_path)) generate_checker_table();
 };
 
 unsigned estimate(const CubieFTO &fto){
