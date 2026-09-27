@@ -134,33 +134,25 @@ Solutions<Cube> IDAstar(const typename Node<Cube>::sptr root,
 }
 
 template<typename Cube, typename Move, std::size_t N, bool verbose = false>
-void generate_right_coset_table(unsigned (*index)(const Cube&), const std::vector<Sequence<Move>> generators, const auto &moves, std::array<unsigned, N> &table) {
+void generate_left_coset_table(std::function<unsigned(const Cube&)> index, std::function<void(const unsigned&, Cube&)> from_index, const std::vector<Sequence<Move>> generators, const auto &moves, std::array<unsigned, N> &table) {
     // Coset index table builder
     if constexpr (verbose) print("Generating coset table of size", N);
     Cube cube;
-    std::deque queue{make_root(Cube())};
+    // std::deque queue{make_root(Cube())};
     unsigned coset_index = 0;
     table.fill(N);
     unsigned counter = 0;
 
-    while (queue.size()) {
-        auto node = queue.back();
-        if (table[index(node->state)] == N) {
-            for (const auto &g : generators) {
-                cube = Cube();
-                cube.apply(g);
-                cube.apply(node->template get_path<Move>());
-                table[index(cube)] = coset_index;
-                ++counter;
+    for (unsigned k = 0; k < N; ++k) {
+        if (table[k] == N){
+            from_index(k, cube);
+            for (auto g : generators) {
+                Cube equivalent = cube;
+                equivalent.apply(g);
+                table[index(equivalent)] = coset_index;
             }
             ++coset_index;
         }
-        if (counter < N){
-            for (auto child : node->expand(moves)) {
-                queue.push_front((child));
-            }
-        }
-        queue.pop_back();
     }
     if constexpr (verbose) print(coset_index, "equivalence classes");
 }
