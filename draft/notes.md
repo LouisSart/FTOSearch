@@ -373,3 +373,20 @@ Searching at depth 18
 ```
 
 On obtient un gain d'environ 15% noeuds par depth et on consomme 8.6 Go de RAM (deux tables de 4.3 Go).
+
+# RLBD reduction avec la nouvelle coordonnée d'arêtes
+
+Pruning value pour le deuxième set d'arêtes.
+
+Generating edge reduction pruning table
+0 81
+switch to forwards scan
+1 624
+2 5070
+3 31040
+4 119591
+switch to backwards scan
+5 180659
+6 32362
+7 170
+8 3
