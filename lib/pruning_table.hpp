@@ -94,7 +94,7 @@ struct PruningTable {
         distribution = {};
         unsigned node_counter{0}, nodes, fill_depth{0};
         if (depth_zero_nodes > 0) {
-            print(fill_depth, depth_zero_nodes);
+            if constexpr (verbose )print(fill_depth, depth_zero_nodes);
             distribution.push_back(depth_zero_nodes);
             node_counter = depth_zero_nodes;
             fill_depth = 1;
