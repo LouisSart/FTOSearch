@@ -99,13 +99,6 @@ namespace reduction {
 fs::path e2_ptable_path = "pruning_tables/edge2_reduction";
 PruningTable<EDGE_COMB_CARD> e2_ptable;
 
-// bool is_visited (const typename Node<FTO>::sptr node){
-//     return e2_ptable.is_assigned(node->state.e2);
-// };
-// void process_depth_zero(const typename Node<FTO>::sptr node){
-//     e2_ptable.set(node->state.e2, 0);
-// };
-
 void generate_e2_ptable() {
     for (auto item : RLBD::edge_reduction_map) {
         e2_ptable.set(item.first, 0);
@@ -133,11 +126,36 @@ Solutions<FTO> solve_centers(const FTO &fto, const unsigned max_depth) {
 }
 
 
-// std::set<unsigned> gen_set;
-// std::vector<Sequence<Move>> generators;
+PruningTable<CORNER_CARD * TRIANGLE_CARD> triplet_ptable;
+fs::path triplet_table_path = "pruning_tables/triplet_reduction";
 
-// void edge_coset() {
-//     std::array<unsigned, EDGE_COMB_CARD> edge_coset_table;
-//     generate_right_coset_table<FTO, Move, EDGE_COMB_CARD>(e2_index, generators, moves, edge_coset_table);
-// }
+unsigned tripl_index(const FTO& fto) {
+    return fto.tri2 * CORNER_CARD + fto.cp;
+}
+
+bool triplet_solved(const FTO &fto) {
+    return triplet_ptable.estimate(tripl_index(fto));
+}
+
+void from_tripl_index(const unsigned &c, FTO &fto) {
+    fto.cp = c % CORNER_CARD;
+    fto.tri2 = c / CORNER_CARD;
+}
+
+void generate_triplet_ptable() {
+
+
+    auto generators = make_generators<FTO, Move>(tripl_index, RLBD::moves);
+    assert(generators.size() == CORNER_CARD);
+    for (auto g : generators) {
+        FTO fto;
+        fto.apply(g);
+        triplet_ptable.set(tripl_index(fto), 0);
+    }
+    // generate_left_coset_table<FTO, Move, TRIANGLE_CARD, true>(index, from_index, generators, moves, tri2_coset_table);
+
+    triplet_ptable.generate<FTO, true>(tripl_index, from_tripl_index, moves, 3, 7, CORNER_CARD);
+    triplet_ptable.write(triplet_table_path);
+}
+
 }; // namespace reduction

@@ -400,3 +400,16 @@ switch to backwards scan
 6 32362
 7 170
 8 3
+
+La pruning value pour les triplets :
+0 11520
+switch to forwards scan
+1 89856
+2 1000800
+3 10102680
+4 94276584
+5 647412036
+6 2146831308
+switch to backwards scan
+7 1337965452
+8 20101764

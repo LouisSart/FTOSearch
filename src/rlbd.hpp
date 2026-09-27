@@ -10,6 +10,6 @@ namespace RLBD {
 
 namespace reduction {
 Solutions<FTO> solve_centers(const FTO&, const unsigned m = 23);
-void edge_coset();
+void generate_triplet_ptable();
 void generate_e2_ptable();
 };
