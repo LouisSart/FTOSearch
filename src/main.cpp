@@ -6,22 +6,25 @@
 // #include <deque>
 // #include <set>
 // #include <cstdint>
+#include <cstdio>
+#include <cassert>
 
 
 
 int main(int argc, const char* argv[]) {
     generate_move_tables();
-    RLBD::generate_pruning_table();
+    // RLBD::generate_pruning_table();
+    // generate_big_pruning_tables();
+    reduction::generate_ptables();
 
-    // auto scramble = random_moves(15);
-    auto scramble = Sequence<Move>{R,L,B,D2,L,R2,B2,D2,L,R2,B2,D2,B};
+    auto scramble = random_moves(16);
     scramble.show();
-    
+
     FTO fto;
     fto.apply(scramble);
 
     auto f = [&fto](){
-        auto solutions = RLBD::optimal(fto);
+        auto solutions = reduction::optimal(fto);
         solutions.show<Move>();
     };
     time_fn(f);
