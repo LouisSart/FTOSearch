@@ -413,3 +413,4 @@ switch to forwards scan
 switch to backwards scan
 7 1337965452
 8 20101764
+Mean value: 6.11916
