@@ -143,8 +143,6 @@ void from_tripl_index(const unsigned &c, FTO &fto) {
 }
 
 void generate_triplet_ptable() {
-
-
     auto generators = make_generators<FTO, Move>(tripl_index, RLBD::moves);
     assert(generators.size() == CORNER_CARD);
     for (auto g : generators) {
@@ -152,10 +150,29 @@ void generate_triplet_ptable() {
         fto.apply(g);
         triplet_ptable.set(tripl_index(fto), 0);
     }
-    // generate_left_coset_table<FTO, Move, TRIANGLE_CARD, true>(index, from_index, generators, moves, tri2_coset_table);
 
     triplet_ptable.generate<FTO, true>(tripl_index, from_tripl_index, moves, 3, 7, CORNER_CARD);
     triplet_ptable.write(triplet_table_path);
+}
+
+void generate_ptables() {
+    RLBD::generate_edge_map();
+    generate_small_pruning_tables();
+    if (!e2_ptable.load(e2_ptable_path)) generate_e2_ptable();
+    if (!triplet_ptable.load(triplet_table_path)) generate_triplet_ptable();
+}
+
+unsigned estimate(const FTO &fto) {
+    return std::max(center_estimate(fto), triplet_ptable.estimate(tripl_index(fto)));
+}
+
+bool is_solved(const FTO& fto) {
+    return centers_solved(fto) && triplet_ptable.estimate(tripl_index(fto)) == 0;
+}
+
+Solutions<FTO> optimal(const FTO &fto, unsigned max_depth) {
+    auto root = make_root(fto);
+    return IDAstar<true, FTO>(root, estimate, is_solved, standard_directions<FTO>, max_depth);
 }
 
 }; // namespace reduction

@@ -10,6 +10,9 @@ namespace RLBD {
 
 namespace reduction {
 Solutions<FTO> solve_centers(const FTO&, const unsigned m = 23);
+bool is_solved(const FTO& fto);
 void generate_triplet_ptable();
 void generate_e2_ptable();
+void generate_ptables();
+Solutions<FTO> optimal(const FTO &fto, unsigned max_depth = 23);
 };
