@@ -305,6 +305,16 @@ L B' L' D L' R L D' (8)
 R D' L D' B' D L' D (8)
 R L D' L B' L' D L' (8)
 
+Un 2T2T qui peut servir pour TCP
+D' B L' bL B' L U D L R' F L' R (13)
+D R' L F' R L' U' D' L' B bL' L B' (13)
+B L' bL B' L U D L R' F L' R D' (13)
+B L' R D' B bR' D B' R' bL' B' L U' (13)
+R' L B' D R' bR D' R F B R L' U (13)
+R' L F' R L' U' D' L' B bL' L B' D (13)
+U' L R' F' B' R' D bR' R D' B L' R (13)
+U L' B R bL B D' bR B' D R' L B' (13)
+
 # Nouvelle coordonnée d'arête
 
 24 septembre 2026 : On reprend l'idée du 3 septembre. On définit une nouvelle coordonnée EComb qui représente la position des arêtes modulo leur appartenance à chacune des faces R, L, B et D. Ça nous donne donc un objet Center<12, 4> qui a un cardinal de 369600 (comme les triangles), qu'on pourra composer avec les coins pour faire une pruning value relativement bonne.
