@@ -27,6 +27,7 @@ constexpr unsigned EDGE_CARD = Permutation<NE, true>::CARD;
 constexpr unsigned TRIANGLE_CARD = Center<NE, NF>::CARD;
 
 static const Move zSHIFT[NMOVES] {L, L2, U, U2, R, R2, F, F2, bL, bL2, B, B2, bR, bR2, D, D2};
+extern const Permutation<NE, true> z_edge;
 
 struct CubieFTO {
     Permutation<NC, true> cp;   // Corner permutation

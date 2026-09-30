@@ -82,7 +82,6 @@ void generate_move_tables() {
 
 
 FTO::FTO(const CubieFTO& cfto){
-    static const Permutation<NE, true> z_edge{4,0,9,1,3,6,2,8,10,5,11,7}; // z'
     cp = corner_index(cfto);
     e1 = edge_comb_index(cfto.ep);
     e2 = edge_comb_index(cfto.ep.get_conjugate(z_edge));

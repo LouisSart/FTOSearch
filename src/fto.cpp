@@ -140,6 +140,9 @@ static const Permutation<NE, true> EP[NMOVES] {
         {0,1,2,3,4,11,6,5,8,9,10,7}, // bL'
 };
 
+// z' rotation of the edges
+const Permutation<NE, true> z_edge{4,0,9,1,3,6,2,8,10,5,11,7}; // z'
+
 // Triangles permutation
 static const Permutation<NT, true> TP[NMOVES] {
     {7,8,2,1,4,0,6,5,3,9,10,11}, // U

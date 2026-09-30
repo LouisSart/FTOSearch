@@ -129,7 +129,7 @@ int main(int argc, const char* argv[]) {
     for (auto m : scramble) {
         c1.apply(m);
         c2.apply(zSHIFT[m]);
-        EdgeComb ec1(c1.ep.get_conjugate(edge_z)), ec2(c2.ep);
+        EdgeComb ec1(c1.ep.get_conjugate(z_edge)), ec2(c2.ep);
         assert(edge_comb_index(ec2) == edge_comb_index(ec1));
     }
 
