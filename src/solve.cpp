@@ -1,42 +1,6 @@
 #include "solve.hpp"
 
-//  Small pruning tables are globals
-fs::path table_dir = "pruning_tables";
-fs::path corner_table_path = table_dir / "corners";
-fs::path edge_table_path = table_dir / "edges";
-fs::path triangle_table_path = table_dir / "triangles";
-
-PruningTable<CORNER_CARD> corner_table;
-PruningTable<EDGE_COMB_CARD> edge_table;
-PruningTable<TRIANGLE_CARD> triangle_table;
-
-void generate_corner_table(){  
-    print("Generating corner pruning table");  
-    corner_table.generate<FTO, true>(corner_index, corners_from_index, moves, 3, 4);
-    corner_table.write(corner_table_path);
-    // corner_table.show_distribution();
-}
-
-void generate_edge_table(){
-    print("Generating edge comb pruning table");
-    edge_table.generate<FTO, true>(e1_index, e1_from_index, moves, 3, 7);
-    edge_table.write(edge_table_path);
-    // edge_table.show_distribution();
-}
-
-void generate_triangle_table(){
-    print("Generating triangle pruning table");
-    triangle_table.generate<FTO, true>(tri1_index, tri1_from_index, moves, 3, 7);
-    triangle_table.write(triangle_table_path);
-    // triangle_table.show_distribution();
-}
-
-void generate_small_pruning_tables() {
-    if (!corner_table.load(corner_table_path)) generate_corner_table();
-    if (!edge_table.load(edge_table_path)) generate_edge_table();
-    if (!triangle_table.load(triangle_table_path)) generate_triangle_table();
-};
-
+const fs::path table_dir = "pruning_tables";
 
 // Big tables stored in object
 Optimal::Optimal() {
@@ -72,14 +36,6 @@ unsigned Optimal::estimate(const FTO& fto) {
         checker_table.estimate(checker_index(fto)),
         checker_table.estimate(checker2_index(fto))
     });
-}
-
-unsigned Optimal::e1_estimate(const FTO& fto) {
-    return edge_table.estimate(fto.e1);
-}
-
-unsigned Optimal::tri1_estimate(const FTO& fto) {
-    return triangle_table.estimate(fto.tri1);
 }
 
 Solutions<FTO> Optimal::solve(const FTO &fto, const unsigned max_depth){

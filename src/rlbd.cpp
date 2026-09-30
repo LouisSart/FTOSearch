@@ -1,12 +1,46 @@
 #include "rlbd.hpp"
-#include "solve.hpp" // triangle estimate
 #include "coordinate_fto.hpp"
 #include "../lib/pruning_table.hpp"
 #include <map>
 #include <set>
 
+//  Small pruning tables are globals
+const fs::path corner_table_path = table_dir / "corners";
+const fs::path edge_table_path = table_dir / "edges";
+const fs::path triangle_table_path = table_dir / "triangles";
 
-namespace fs = std::filesystem;
+PruningTable<CORNER_CARD> corner_table;
+PruningTable<EDGE_COMB_CARD> edge_table;
+PruningTable<TRIANGLE_CARD> triangle_table;
+
+void generate_corner_table(){  
+    print("Generating corner pruning table");  
+    corner_table.generate<FTO, true>(corner_index, corners_from_index, moves, 3, 4);
+    corner_table.write(corner_table_path);
+    // corner_table.show_distribution();
+}
+
+void generate_edge_table(){
+    print("Generating edge comb pruning table");
+    edge_table.generate<FTO, true>(e1_index, e1_from_index, moves, 3, 7);
+    edge_table.write(edge_table_path);
+    // edge_table.show_distribution();
+}
+
+void generate_triangle_table(){
+    print("Generating triangle pruning table");
+    triangle_table.generate<FTO, true>(tri1_index, tri1_from_index, moves, 3, 7);
+    triangle_table.write(triangle_table_path);
+    // triangle_table.show_distribution();
+}
+
+void generate_small_pruning_tables() {
+    if (!corner_table.load(corner_table_path)) generate_corner_table();
+    if (!edge_table.load(edge_table_path)) generate_edge_table();
+    if (!triangle_table.load(triangle_table_path)) generate_triangle_table();
+};
+
+
 namespace RLBD {
 
 constexpr unsigned EDGE_CARD = ipow(3, 4);
@@ -15,7 +49,7 @@ std::map<unsigned, unsigned> edge_reduction_map;  // map full space index to rlb
 std::array<unsigned, EDGE_CARD> edge_expansion_table; // map local rlbd to full space index
 constexpr std::array<Move, 8> moves {R, R2, L, L2, B, B2, D, D2};
 PruningTable<CARD> pruning_table;
-fs::path pruning_table_path = "pruning_tables/rlbd";
+const fs::path pruning_table_path = "pruning_tables/rlbd";
 
 unsigned index(const FTO &fto){
     // The e1 index is always going to be 0 in the RLBD subgroup
@@ -112,6 +146,14 @@ void generate_e2_ptable() {
 
 bool centers_solved(const FTO &fto) {
     return fto.tri1 == 0 && fto.e1 == 0 && RLBD::edge_reduction_map.contains(fto.e2);
+}
+
+unsigned e1_estimate(const FTO& fto) {
+    return edge_table.estimate(fto.e1);
+}
+
+unsigned tri1_estimate(const FTO& fto) {
+    return triangle_table.estimate(fto.tri1);
 }
 
 unsigned center_estimate(const FTO &fto) {

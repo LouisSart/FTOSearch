@@ -16,10 +16,7 @@ const std::vector<Move>& standard_directions(const typename Node<Cube>::sptr nod
     }
 }
 
-void generate_corner_table();
-void generate_edge_table();
-void generate_triangle_table();
-void generate_small_pruning_tables();
+extern const fs::path table_dir;
 
 struct Optimal {
 
@@ -36,8 +33,6 @@ struct Optimal {
     void generate_pruning_tables();
 
     unsigned estimate(const FTO& fto);
-    unsigned e1_estimate(const FTO& fto);
-    unsigned tri1_estimate(const FTO& fto);
 
     Solutions<FTO> solve(const FTO &, const unsigned m = 23);
 };
