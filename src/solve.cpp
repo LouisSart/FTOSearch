@@ -1,6 +1,15 @@
 #include "solve.hpp"
 
 //  Small pruning tables are globals
+fs::path table_dir = "pruning_tables";
+fs::path corner_table_path = table_dir / "corners";
+fs::path edge_table_path = table_dir / "edges";
+fs::path triangle_table_path = table_dir / "triangles";
+
+PruningTable<CORNER_CARD> corner_table;
+PruningTable<EDGE_COMB_CARD> edge_table;
+PruningTable<TRIANGLE_CARD> triangle_table;
+
 void generate_corner_table(){  
     print("Generating corner pruning table");  
     corner_table.generate<FTO, true>(corner_index, corners_from_index, moves, 3, 4);
@@ -30,6 +39,12 @@ void generate_small_pruning_tables() {
 
 
 // Big tables stored in object
+Optimal::Optimal() {
+    triplet_table_path = table_dir / "triplets";
+    checker_table_path = table_dir / "checker";
+    generate_pruning_tables();
+}
+
 void Optimal::generate_triplet_table(){
     print("Generating triplet pruning table");
     triplet_table.generate<FTO, true>(triplet_index, from_triplet_index, moves, 7, 10);
