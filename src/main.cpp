@@ -29,10 +29,19 @@ int main(int argc, const char* argv[]) {
             });
         }
         else if (strcmp(argv[1], "rlbd") == 0) {
-            RLBD::generate_pruning_table();
-        }
+            auto scramble = RLBD::random_moves(15);
+            scramble.show();
+            FTO fto;
+            fto.apply(scramble);
+
+            auto solver = RLBD::Finish();
+            time_fn([&fto, &solver](){
+                auto solutions = solver.solve(fto);
+                solutions.show<Move>();
+            });
+;        }
         else if (strcmp(argv[1], "reduction") == 0) {
-            reduction::generate_ptables();
+            // reduction::generate_ptables();
         } else {
             print("Wrong command line arguments found");
             print("Options : 'optimal', 'rlbd' and 'reduction'");

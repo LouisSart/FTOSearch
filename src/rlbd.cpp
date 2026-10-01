@@ -1,7 +1,6 @@
 #include "rlbd.hpp"
 #include "coordinate_fto.hpp"
 #include "../lib/pruning_table.hpp"
-#include <map>
 #include <set>
 
 //  Small pruning tables are globals
@@ -43,13 +42,8 @@ void generate_small_pruning_tables() {
 
 namespace RLBD {
 
-constexpr unsigned EDGE_CARD = ipow(3, 4);
-constexpr unsigned CARD = CORNER_CARD * EDGE_CARD;
 std::map<unsigned, unsigned> edge_reduction_map;  // map full space index to rlbd local index
 std::array<unsigned, EDGE_CARD> edge_expansion_table; // map local rlbd to full space index
-constexpr std::array<Move, 8> moves {R, R2, L, L2, B, B2, D, D2};
-PruningTable<CARD> pruning_table;
-const fs::path pruning_table_path = "pruning_tables/rlbd";
 
 unsigned index(const FTO &fto){
     // The e1 index is always going to be 0 in the RLBD subgroup
@@ -66,7 +60,8 @@ void from_index(const unsigned &idx, FTO &fto) {
     e2_from_index(edge_expansion_table[e], fto);
 }
 
-void generate_edge_map(){
+Finish::Finish() {
+    // BFS generation of the edge reduction map
     auto is_visited = [](const typename Node<FTO>::sptr node) {
         return edge_reduction_map.contains(e2_index(node->state));
     };
@@ -84,10 +79,8 @@ void generate_edge_map(){
     for (unsigned k = 0; k < EDGE_CARD; ++k) {
         assert(edge_reduction_map[edge_expansion_table[k]] == k);
     }
-}
 
-void generate_pruning_table() {
-    generate_edge_map();
+    // Loading optimal pruning table
     if (!pruning_table.load(pruning_table_path)){
         print("Generating RLBD pruning table");
         pruning_table.generate<FTO, true>(index, from_index, moves, 6, 9);
@@ -95,12 +88,31 @@ void generate_pruning_table() {
     }
 }
 
-unsigned estimate(const FTO &fto) {
-    return pruning_table.estimate(index(fto));
+const std::vector<Move> &rlbd_allowed_next(const Move &m) {
+    // CHECKME : would be nice if this didn't have to be reimplemented for every new puzzle / moveset
+    static const std::vector<Move> afterR {L, L2, B, B2, D, D2};
+    static const std::vector<Move> afterL {R, R2, B, B2, D, D2};
+    static const std::vector<Move> afterB {R, R2, L, L2, D, D2};
+    static const std::vector<Move> afterD {R, R2, L, L2, B, B2};
+    static const std::vector<Move> dflt {R, R2, L, L2, B, B2, D, D2};
+
+
+    switch (m) {
+        case R ... R2:
+            return afterR;
+        case L ... L2:
+            return afterL;
+        case B ... B2:
+            return afterB;
+        case D ... D2:
+            return afterD;
+        default:
+            return dflt;
+    }
 }
 
-std::array<Move, 8> directions(const typename Node<FTO>::sptr node) {
-    return moves;
+std::vector<Move> directions(const typename Node<FTO>::sptr node) {
+    return allowed_next(static_cast<Move>(node->last_move));
 }
 
 Sequence<Move> random_moves(const unsigned &n){
@@ -109,13 +121,13 @@ Sequence<Move> random_moves(const unsigned &n){
     Sequence<Move> ret;
     ret.push_back(moves[rand() % NMOVES]);
     for (unsigned k = 0; k < n - 1; ++k) {
-        auto next = allowed_next(ret.back());
+        auto next = rlbd_allowed_next(ret.back());
         ret.push_back(next[rand() % next.size()]);
     }
     return ret;
 }
 
-Solutions<FTO> optimal(const FTO &fto, const unsigned max_depth){
+Solutions<FTO> Finish::solve(const FTO &fto, const unsigned max_depth){
     // check me : should we make sure the triplets are solved ?
     // CHECKME : Yes but how ?
     assert(e1_index(fto) == 0);
