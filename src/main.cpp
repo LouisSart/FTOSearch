@@ -41,7 +41,17 @@ int main(int argc, const char* argv[]) {
             });
 ;        }
         else if (strcmp(argv[1], "reduction") == 0) {
-            // reduction::generate_ptables();
+            auto scramble = random_moves(13);
+            scramble.show();
+
+            FTO fto;
+            fto.apply(scramble);
+
+            auto solver = RLBD::Reduction();
+            time_fn([&fto, &solver](){
+                auto solutions = solver.solve(fto);
+                solutions.show<Move>();
+            });
         } else {
             print("Wrong command line arguments found");
             print("Options : 'optimal', 'rlbd' and 'reduction'");
