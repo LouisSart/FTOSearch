@@ -29,7 +29,7 @@ struct Solutions : public std::vector<typename Node<Cube>::sptr> {
 template <bool verbose = false, typename Cube>
 Solutions<Cube> depth_first_search(std::deque<typename Node<Cube>::sptr> queue,
                                       std::function<unsigned(const Cube&)> estimate,
-                                      bool (*is_solved)(const Cube&),
+                                      std::function<bool(const Cube&)> is_solved,
                                       const auto &directions,
                                       const unsigned max_depth = 4) {
     // Main implementation starting from any number of root states
@@ -65,7 +65,7 @@ Solutions<Cube> depth_first_search(std::deque<typename Node<Cube>::sptr> queue,
 template <bool verbose = false, typename Cube>
 Solutions<Cube> depth_first_search(const typename Node<Cube>::sptr root,
                                       std::function<unsigned(const Cube&)> estimate,
-                                      bool (*is_solved)(const Cube&),
+                                      std::function<bool(const Cube&)> is_solved,
                                       const auto &directions,
                                       const unsigned max_depth = 4) {
     // Overload for solving a single starting position
@@ -76,7 +76,7 @@ Solutions<Cube> depth_first_search(const typename Node<Cube>::sptr root,
 
 template <bool verbose = false, typename Cube>
 Solutions<Cube> IDAstar(std::deque<typename Node<Cube>::sptr> roots,
-                           std::function<unsigned(const Cube&)> estimate, bool (*is_solved)(const Cube&),
+                           std::function<unsigned(const Cube&)> estimate, std::function<bool(const Cube&)> is_solved,
                            const auto &directions,
                            const unsigned max_depth = 20,
                            const unsigned slackness = 0) {
@@ -123,7 +123,7 @@ Solutions<Cube> IDAstar(std::deque<typename Node<Cube>::sptr> roots,
 
 template <bool verbose = false, typename Cube>
 Solutions<Cube> IDAstar(const typename Node<Cube>::sptr root,
-                           std::function<unsigned(const Cube&)> estimate, bool (*is_solved)(const Cube&),
+                           std::function<unsigned(const Cube&)> estimate, std::function<bool(const Cube&)> is_solved,
                            const auto &directions,
                            const unsigned max_depth = 20,
                            const unsigned slackness = 0) {
