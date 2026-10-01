@@ -4,8 +4,6 @@ Some code for the FTO. Ideally I'd like to have an optimal solver that takes a r
 
 Below is the numbering of pieces that I use for defining permutations of pieces. Since the triangles of the second tetrad are equivalent to the first through a z rotation we can use the same numbering and conjugate the moves (e.g. Doing an F move on the second tetrad achieves the same as doing an R move on the first)
 
-![numbering](./draft/numbering.jpg)
-
 ##     Compiling
 
 This should do the trick if you have a c++ compiler and make installed
@@ -14,9 +12,14 @@ This should do the trick if you have a c++ compiler and make installed
 
 ##     Running
 
-`/obj/fto`
+`/obj/fto <option>`
 
-Note that move tables and pruning tables will be generated on the first run. This might take a few minutes to an hour and use about 6 GB of RAM
+Note that move tables and pruning tables will be generated on the first run and stored on disk in directories `./move_tables` and `./pruning_tables`.
+
+Available options : 
+- `optimal` : Generate a 13 random move scramble and solve it optimally
+- `rlbd` : Generate a random scramble of moves from {R,L,B,D} and solve it optimally
+- `reduction` : Generate a 13 random move scramble and bring it back to the rlbd subgroup
 
 ##     Pruning tables
 
@@ -111,7 +114,7 @@ One big advantage of using the triplet coordinate is that it can be reused for t
 When solving the corners and placing the edges on their respective RLBD faces (regardless of permutation), we get a triangular "checkerboard" pattern. This is what I call the checker pruning value of size 4.3 GB. Similarly to the triplet value, it can be reused for the second orbit using a z shift of the corners.
 
 ```
-- Chercker table (corners X edge comb of one tetrad)
+- Checker table (corners X edge comb of one tetrad)
         Table size = 4257792000
        0 1
        1 16
@@ -162,7 +165,7 @@ One idea for a two phase solver of the FTO is to bring the scrambled state into 
 Here are the distributions of distance to the RLBD subgroup for some groups of pieces :
 
 ```
- - Edge table (size 239500800)
+ - Full edge table (size 239500800)
        0 81
        1 648
        2 5832
@@ -177,4 +180,27 @@ Here are the distributions of distance to the RLBD subgroup for some groups of p
        11 1539
        12 81
        Mean value: 7.84441
+
+ - Edge comb table for the second orbit (size 369600)
+       0 81
+       1 624
+       2 5070
+       3 31040
+       4 119591
+       5 180659
+       6 32362
+       7 170
+       8 3
+
+ - Triplet table (size 4257792000)
+       0 11520
+       1 89856
+       2 1000800
+       3 10102680
+       4 94276584
+       5 647412036
+       6 2146831308
+       7 1337965452
+       8 20101764
+       Mean value: 6.11916
 ```
